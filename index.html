@@ -344,6 +344,46 @@
             letter-spacing: 0.5px;
         }
 
+        .example-sentence {
+            margin-top: 12px;
+            padding: 10px 12px;
+            background: var(--input-bg);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .example-greek {
+            font-size: 15px;
+            color: var(--text);
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+
+        .example-greek .word-link {
+            color: var(--primary-light);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .example-greek .word-link:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .example-greek .word-link.current {
+            color: var(--accent);
+            font-weight: 600;
+            border-bottom: none;
+        }
+
+        .example-translation {
+            font-size: 13px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
         .form-row {
             display: flex;
             gap: 12px;
@@ -641,81 +681,81 @@
     <script>
         // Default dictionary of basic Ancient Greek words
         const defaultWords = [
-            { id: 1, greek: "λόγος", romanized: "logos", meaning: "Word, reason, speech, logic. One of the most important Greek philosophical terms, referring to rational discourse or the divine principle ordering the universe.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
-            { id: 2, greek: "σοφία", romanized: "sophia", meaning: "Wisdom. The root of 'philosophy' (love of wisdom).", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 3, greek: "ἀρετή", romanized: "arete", meaning: "Excellence, virtue, moral goodness. The highest effectiveness and living up to one's full potential.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 4, greek: "πόλις", romanized: "polis", meaning: "City-state. The fundamental political unit of ancient Greece.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
-            { id: 5, greek: "ἀγάπη", romanized: "agape", meaning: "Unconditional love, divine love, selfless love for others.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 6, greek: "ἔρως", romanized: "eros", meaning: "Romantic love, desire, passionate love.", category: "noun", declension: "3rd", gender: "m", number: "sg", custom: false },
-            { id: 7, greek: "φιλία", romanized: "philia", meaning: "Friendship, brotherly love, affection between friends.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 8, greek: "στοργή", romanized: "storge", meaning: "Family love, natural affection, especially between parents and children.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 9, greek: "ψυχή", romanized: "psyche", meaning: "Soul, mind, spirit, breath of life.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 10, greek: "νοῦς", romanized: "nous", meaning: "Mind, intellect, reason, understanding.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
-            { id: 11, greek: "ἀλήθεια", romanized: "aletheia", meaning: "Truth, disclosure, unconcealment.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 12, greek: "καλός", romanized: "kalos", meaning: "Beautiful, noble, good. Often paired with 'agathos' (good).", category: "adjective", declension: "1st/2nd", gender: "m/f/n", number: "sg", custom: false },
-            { id: 13, greek: "ἀγαθός", romanized: "agathos", meaning: "Good, noble, brave, capable.", category: "adjective", declension: "1st/2nd", gender: "m/f/n", number: "sg", custom: false },
-            { id: 14, greek: "θεός", romanized: "theos", meaning: "God, deity, divine being.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
-            { id: 15, greek: "κόσμος", romanized: "kosmos", meaning: "Order, world, universe. Also means ornament or decoration.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
-            { id: 16, greek: "χάος", romanized: "chaos", meaning: "Void, chasm, the primordial state before creation.", category: "noun", declension: "2nd", gender: "n", number: "sg", custom: false },
-            { id: 17, greek: "ἄνθρωπος", romanized: "anthropos", meaning: "Human being, person, mankind.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
-            { id: 18, greek: "δῆμος", romanized: "demos", meaning: "The people, the common people, the populace.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
-            { id: 19, greek: "κράτος", romanized: "kratos", meaning: "Power, strength, rule, authority.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false },
-            { id: 20, greek: "δημοκρατία", romanized: "demokratia", meaning: "Democracy - rule by the people (demos + kratos).", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 21, greek: "τέχνη", romanized: "techne", meaning: "Art, skill, craft, technique. The root of 'technology'.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 22, greek: "ἐπιστήμη", romanized: "episteme", meaning: "Knowledge, science, systematic understanding.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 23, greek: "δόξα", romanized: "doxa", meaning: "Opinion, belief, glory, reputation.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 24, greek: "εὐδαιμονία", romanized: "eudaimonia", meaning: "Happiness, flourishing, well-being. The ultimate goal of life in Greek ethics.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 25, greek: "ἦθος", romanized: "ethos", meaning: "Character, custom, habit. The root of 'ethics'.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false },
-            { id: 26, greek: "πάθος", romanized: "pathos", meaning: "Suffering, experience, emotion, passion.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false },
-            { id: 27, greek: "ὕβρις", romanized: "hubris", meaning: "Excessive pride, arrogance against the gods.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
-            { id: 28, greek: "νέμεσις", romanized: "nemesis", meaning: "Righteous anger, divine retribution, just punishment.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
-            { id: 29, greek: "καιρός", romanized: "kairos", meaning: "The right moment, opportune time, critical time.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
-            { id: 30, greek: "χρόνος", romanized: "chronos", meaning: "Time (sequential, quantitative time).", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
-            { id: 31, greek: "ἀρχή", romanized: "arche", meaning: "Beginning, origin, first principle, sovereignty.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 32, greek: "τέλος", romanized: "telos", meaning: "End, goal, purpose, fulfillment.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false },
-            { id: 33, greek: "πρᾶγμα", romanized: "pragma", meaning: "Thing, matter, affair, deed.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false },
-            { id: 34, greek: "ἔργον", romanized: "ergon", meaning: "Work, deed, task, function.", category: "noun", declension: "2nd", gender: "n", number: "sg", custom: false },
-            { id: 35, greek: "οἶκος", romanized: "oikos", meaning: "House, household, family. Root of 'economy' and 'ecology'.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
-            { id: 36, greek: "νόμος", romanized: "nomos", meaning: "Law, custom, convention.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
-            { id: 37, greek: "φύσις", romanized: "physis", meaning: "Nature, natural order, growth.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
-            { id: 38, greek: "δύναμις", romanized: "dynamis", meaning: "Power, ability, potential, capacity.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
-            { id: 39, greek: "ἐνέργεια", romanized: "energeia", meaning: "Activity, actuality, being-at-work. Root of 'energy'.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 40, greek: "μετάνοια", romanized: "metanoia", meaning: "Change of mind, repentance, transformation of heart.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 41, greek: "γνῶσις", romanized: "gnosis", meaning: "Knowledge, especially spiritual or esoteric knowledge.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
-            { id: 42, greek: "μεταμόρφωσις", romanized: "metamorphosis", meaning: "Transformation, change of form.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
-            { id: 43, greek: "φιλοσοφία", romanized: "philosophia", meaning: "Love of wisdom (philo + sophia). Philosophy.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 44, greek: "φιλανθρωπία", romanized: "philanthropia", meaning: "Love of humanity (philo + anthropos). Philanthropy.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 45, greek: "ἀπάθεια", romanized: "apatheia", meaning: "Freedom from passion, equanimity. Stoic ideal of emotional calm.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 46, greek: "ἀταραξία", romanized: "ataraxia", meaning: "Tranquility, freedom from disturbance. Epicurean ideal.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
-            { id: 47, greek: "παράδεισος", romanized: "paradeisos", meaning: "Paradise, garden, enclosed park.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
-            { id: 48, greek: "εὕρηκα", romanized: "eureka", meaning: "I have found it! Exclamation of discovery.", category: "verb", declension: "", gender: "", number: "1st sg", custom: false },
-            { id: 49, greek: "γνῶθι σεαυτόν", romanized: "gnothi seauton", meaning: "Know thyself. Famous inscription at the Temple of Apollo at Delphi.", category: "phrase", declension: "", gender: "", number: "", custom: false },
-            { id: 50, greek: "καλοκἀγαθία", romanized: "kalokagathia", meaning: "The ideal of being beautiful and good; nobility of character combined with physical beauty.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 1, greek: "λόγος", romanized: "logos", meaning: "Word, reason, speech, logic. One of the most important Greek philosophical terms, referring to rational discourse or the divine principle ordering the universe.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"λόγος",id:1},{t:"ἀλήθειαν",id:11},{t:"φέρει",id:59}], translation: "The word brings truth." } },
+            { id: 2, greek: "σοφία", romanized: "sophia", meaning: "Wisdom. The root of 'philosophy' (love of wisdom).", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"ἡ",id:null},{t:"σοφία",id:2},{t:"ἀρετή",id:3},{t:"ἐστιν",id:53}], translation: "Wisdom is virtue." } },
+            { id: 3, greek: "ἀρετή", romanized: "arete", meaning: "Excellence, virtue, moral goodness. The highest effectiveness and living up to one's full potential.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"ἀρετὴν",id:3},{t:"ζητοῦμεν",id:66},{t:"ἐν",id:null},{t:"τῇ",id:null},{t:"ψυχῇ",id:9}], translation: "We seek virtue in the soul." } },
+            { id: 4, greek: "πόλις", romanized: "polis", meaning: "City-state. The fundamental political unit of ancient Greece.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false, example: { words: [{t:"ἡ",id:null},{t:"πόλις",id:4},{t:"νόμους",id:36},{t:"ἔχει",id:52}], translation: "The city has laws." } },
+            { id: 5, greek: "ἀγάπη", romanized: "agape", meaning: "Unconditional love, divine love, selfless love for others.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"ἡ",id:null},{t:"ἀγάπη",id:5},{t:"τοῦ",id:null},{t:"θεοῦ",id:14},{t:"μένει",id:null}], translation: "The love of God remains." } },
+            { id: 6, greek: "ἔρως", romanized: "eros", meaning: "Romantic love, desire, passionate love.", category: "noun", declension: "3rd", gender: "m", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"ἔρως",id:6},{t:"πάθος",id:26},{t:"ψυχῆς",id:9},{t:"ἐστιν",id:53}], translation: "Eros is a passion of the soul." } },
+            { id: 7, greek: "φιλία", romanized: "philia", meaning: "Friendship, brotherly love, affection between friends.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"φιλία",id:7},{t:"ἀγαθόν",id:13},{t:"ἐστιν",id:53}], translation: "Friendship is good." } },
+            { id: 8, greek: "στοργή", romanized: "storge", meaning: "Family love, natural affection, especially between parents and children.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"στοργὴ",id:8},{t:"ἐν",id:null},{t:"οἴκῳ",id:35},{t:"μένει",id:null}], translation: "Family love remains in the house." } },
+            { id: 9, greek: "ψυχή", romanized: "psyche", meaning: "Soul, mind, spirit, breath of life.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"ἡ",id:null},{t:"ψυχὴ",id:9},{t:"ἀλήθειαν",id:11},{t:"ζητεῖ",id:66}], translation: "The soul seeks truth." } },
+            { id: 10, greek: "νοῦς", romanized: "nous", meaning: "Mind, intellect, reason, understanding.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"νοῦς",id:10},{t:"γιγνώσκει",id:60},{t:"τὴν",id:null},{t:"ἀλήθειαν",id:11}], translation: "The mind knows the truth." } },
+            { id: 11, greek: "ἀλήθεια", romanized: "aletheia", meaning: "Truth, disclosure, unconcealment.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"ἀλήθειαν",id:11},{t:"λέγομεν",id:51}], translation: "We speak the truth." } },
+            { id: 12, greek: "καλός", romanized: "kalos", meaning: "Beautiful, noble, good. Often paired with 'agathos' (good).", category: "adjective", declension: "1st/2nd", gender: "m/f/n", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"κόσμος",id:15},{t:"καλός",id:12},{t:"ἐστιν",id:53}], translation: "The world is beautiful." } },
+            { id: 13, greek: "ἀγαθός", romanized: "agathos", meaning: "Good, noble, brave, capable.", category: "adjective", declension: "1st/2nd", gender: "m/f/n", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"ἄνθρωπος",id:17},{t:"ἀγαθός",id:13},{t:"ἐστιν",id:53}], translation: "The human is good." } },
+            { id: 14, greek: "θεός", romanized: "theos", meaning: "God, deity, divine being.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"θεὸς",id:14},{t:"τὸν",id:null},{t:"κόσμον",id:15},{t:"ποιεῖ",id:58}], translation: "God creates the world." } },
+            { id: 15, greek: "κόσμος", romanized: "kosmos", meaning: "Order, world, universe. Also means ornament or decoration.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false, example: { words: [{t:"ἐκ",id:null},{t:"χάους",id:16},{t:"κόσμος",id:15},{t:"γίγνεται",id:null}], translation: "From chaos, order comes." } },
+            { id: 16, greek: "χάος", romanized: "chaos", meaning: "Void, chasm, the primordial state before creation.", category: "noun", declension: "2nd", gender: "n", number: "sg", custom: false, example: { words: [{t:"ἐν",id:null},{t:"ἀρχῇ",id:31},{t:"χάος",id:16},{t:"ἦν",id:53}], translation: "In the beginning there was chaos." } },
+            { id: 17, greek: "ἄνθρωπος", romanized: "anthropos", meaning: "Human being, person, mankind.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"ἄνθρωπος",id:17},{t:"σοφίαν",id:2},{t:"φιλεῖ",id:65}], translation: "The human loves wisdom." } },
+            { id: 18, greek: "δῆμος", romanized: "demos", meaning: "The people, the common people, the populace.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"δῆμος",id:18},{t:"κράτος",id:19},{t:"ἔχει",id:52}], translation: "The people have power." } },
+            { id: 19, greek: "κράτος", romanized: "kratos", meaning: "Power, strength, rule, authority.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false, example: { words: [{t:"κράτος",id:19},{t:"ἐν",id:null},{t:"νόμῳ",id:36},{t:"ἐστιν",id:53}], translation: "Power is in the law." } },
+            { id: 20, greek: "δημοκρατία", romanized: "demokratia", meaning: "Democracy - rule by the people (demos + kratos).", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"δημοκρατία",id:20},{t:"τοῦ",id:null},{t:"δήμου",id:18},{t:"κράτος",id:19},{t:"ἐστιν",id:53}], translation: "Democracy is the power of the people." } },
+            { id: 21, greek: "τέχνη", romanized: "techne", meaning: "Art, skill, craft, technique. The root of 'technology'.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"τέχνη",id:21},{t:"ἔργον",id:34},{t:"ποιεῖ",id:58}], translation: "Art makes work." } },
+            { id: 22, greek: "ἐπιστήμη", romanized: "episteme", meaning: "Knowledge, science, systematic understanding.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"ἐπιστήμη",id:22},{t:"γνῶσις",id:41},{t:"ἀληθείας",id:11},{t:"ἐστιν",id:53}], translation: "Science is knowledge of truth." } },
+            { id: 23, greek: "δόξα", romanized: "doxa", meaning: "Opinion, belief, glory, reputation.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"δόξα",id:23},{t:"οὐκ",id:null},{t:"ἐπιστήμη",id:22},{t:"ἐστιν",id:53}], translation: "Opinion is not knowledge." } },
+            { id: 24, greek: "εὐδαιμονία", romanized: "eudaimonia", meaning: "Happiness, flourishing, well-being. The ultimate goal of life in Greek ethics.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"εὐδαιμονία",id:24},{t:"τέλος",id:32},{t:"τοῦ",id:null},{t:"βίου",id:null},{t:"ἐστιν",id:53}], translation: "Happiness is the goal of life." } },
+            { id: 25, greek: "ἦθος", romanized: "ethos", meaning: "Character, custom, habit. The root of 'ethics'.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false, example: { words: [{t:"τὸ",id:null},{t:"ἦθος",id:25},{t:"τὴν",id:null},{t:"ἀρετὴν",id:3},{t:"δείκνυσιν",id:null}], translation: "Character shows virtue." } },
+            { id: 26, greek: "πάθος", romanized: "pathos", meaning: "Suffering, experience, emotion, passion.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false, example: { words: [{t:"πάθος",id:26},{t:"τὴν",id:null},{t:"ψυχὴν",id:9},{t:"κινεῖ",id:null}], translation: "Passion moves the soul." } },
+            { id: 27, greek: "ὕβρις", romanized: "hubris", meaning: "Excessive pride, arrogance against the gods.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false, example: { words: [{t:"ὕβρις",id:27},{t:"νέμεσιν",id:28},{t:"φέρει",id:59}], translation: "Hubris brings nemesis." } },
+            { id: 28, greek: "νέμεσις", romanized: "nemesis", meaning: "Righteous anger, divine retribution, just punishment.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false, example: { words: [{t:"νέμεσις",id:28},{t:"τοῦ",id:null},{t:"θεοῦ",id:14},{t:"δικαία",id:null},{t:"ἐστιν",id:53}], translation: "The nemesis of God is just." } },
+            { id: 29, greek: "καιρός", romanized: "kairos", meaning: "The right moment, opportune time, critical time.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"καιρὸς",id:29},{t:"πάντα",id:null},{t:"φέρει",id:59}], translation: "The right moment brings all things." } },
+            { id: 30, greek: "χρόνος", romanized: "chronos", meaning: "Time (sequential, quantitative time).", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"χρόνος",id:30},{t:"πάντα",id:null},{t:"δείκνυσιν",id:null}], translation: "Time reveals all things." } },
+            { id: 31, greek: "ἀρχή", romanized: "arche", meaning: "Beginning, origin, first principle, sovereignty.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"ἐν",id:null},{t:"ἀρχῇ",id:31},{t:"ἦν",id:53},{t:"ὁ",id:null},{t:"λόγος",id:1}], translation: "In the beginning was the word." } },
+            { id: 32, greek: "τέλος", romanized: "telos", meaning: "End, goal, purpose, fulfillment.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false, example: { words: [{t:"τέλος",id:32},{t:"ἀρετῆς",id:3},{t:"εὐδαιμονία",id:24},{t:"ἐστιν",id:53}], translation: "The goal of virtue is happiness." } },
+            { id: 33, greek: "πρᾶγμα", romanized: "pragma", meaning: "Thing, matter, affair, deed.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false, example: { words: [{t:"τὸ",id:null},{t:"πρᾶγμα",id:33},{t:"ἔργον",id:34},{t:"ζητεῖ",id:66}], translation: "The matter requires action." } },
+            { id: 34, greek: "ἔργον", romanized: "ergon", meaning: "Work, deed, task, function.", category: "noun", declension: "2nd", gender: "n", number: "sg", custom: false, example: { words: [{t:"λόγος",id:1},{t:"καὶ",id:null},{t:"ἔργον",id:34}], translation: "Word and deed." } },
+            { id: 35, greek: "οἶκος", romanized: "oikos", meaning: "House, household, family. Root of 'economy' and 'ecology'.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"οἶκος",id:35},{t:"νόμους",id:36},{t:"ἔχει",id:52}], translation: "The household has laws." } },
+            { id: 36, greek: "νόμος", romanized: "nomos", meaning: "Law, custom, convention.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"νόμος",id:36},{t:"τὴν",id:null},{t:"πόλιν",id:4},{t:"σῴζει",id:null}], translation: "The law saves the city." } },
+            { id: 37, greek: "φύσις", romanized: "physis", meaning: "Nature, natural order, growth.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false, example: { words: [{t:"ἡ",id:null},{t:"φύσις",id:37},{t:"ἀρχὴ",id:31},{t:"κινήσεως",id:null},{t:"ἐστιν",id:53}], translation: "Nature is the origin of motion." } },
+            { id: 38, greek: "δύναμις", romanized: "dynamis", meaning: "Power, ability, potential, capacity.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false, example: { words: [{t:"δύναμις",id:38},{t:"ἐνέργειαν",id:39},{t:"ζητεῖ",id:66}], translation: "Potential seeks actuality." } },
+            { id: 39, greek: "ἐνέργεια", romanized: "energeia", meaning: "Activity, actuality, being-at-work. Root of 'energy'.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"ἐνέργεια",id:39},{t:"τέλος",id:32},{t:"δυνάμεως",id:38},{t:"ἐστιν",id:53}], translation: "Actuality is the goal of potential." } },
+            { id: 40, greek: "μετάνοια", romanized: "metanoia", meaning: "Change of mind, repentance, transformation of heart.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"μετάνοια",id:40},{t:"τὴν",id:null},{t:"ψυχὴν",id:9},{t:"σῴζει",id:null}], translation: "Repentance saves the soul." } },
+            { id: 41, greek: "γνῶσις", romanized: "gnosis", meaning: "Knowledge, especially spiritual or esoteric knowledge.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false, example: { words: [{t:"γνῶσις",id:41},{t:"ἀληθείας",id:11},{t:"ἐλευθερία",id:null},{t:"ἐστιν",id:53}], translation: "Knowledge of truth is freedom." } },
+            { id: 42, greek: "μεταμόρφωσις", romanized: "metamorphosis", meaning: "Transformation, change of form.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false, example: { words: [{t:"μεταμόρφωσις",id:42},{t:"τῆς",id:null},{t:"ψυχῆς",id:9}], translation: "Transformation of the soul." } },
+            { id: 43, greek: "φιλοσοφία", romanized: "philosophia", meaning: "Love of wisdom (philo + sophia). Philosophy.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"φιλοσοφία",id:43},{t:"σοφίας",id:2},{t:"ἔρως",id:6},{t:"ἐστιν",id:53}], translation: "Philosophy is the love of wisdom." } },
+            { id: 44, greek: "φιλανθρωπία", romanized: "philanthropia", meaning: "Love of humanity (philo + anthropos). Philanthropy.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"φιλανθρωπία",id:44},{t:"ἀγάπη",id:5},{t:"ἀνθρώπων",id:17},{t:"ἐστιν",id:53}], translation: "Philanthropy is love of humans." } },
+            { id: 45, greek: "ἀπάθεια", romanized: "apatheia", meaning: "Freedom from passion, equanimity. Stoic ideal of emotional calm.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"ἀπάθεια",id:45},{t:"ἀταραξίαν",id:46},{t:"φέρει",id:59}], translation: "Apatheia brings tranquility." } },
+            { id: 46, greek: "ἀταραξία", romanized: "ataraxia", meaning: "Tranquility, freedom from disturbance. Epicurean ideal.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"ἀταραξία",id:46},{t:"εὐδαιμονίας",id:24},{t:"μέρος",id:null},{t:"ἐστιν",id:53}], translation: "Tranquility is part of happiness." } },
+            { id: 47, greek: "παράδεισος", romanized: "paradeisos", meaning: "Paradise, garden, enclosed park.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false, example: { words: [{t:"ὁ",id:null},{t:"παράδεισος",id:47},{t:"καλός",id:12},{t:"ἐστιν",id:53}], translation: "Paradise is beautiful." } },
+            { id: 48, greek: "εὕρηκα", romanized: "eureka", meaning: "I have found it! Exclamation of discovery.", category: "verb", declension: "", gender: "", number: "1st sg", custom: false, example: { words: [{t:"εὕρηκα",id:48},{t:"τὴν",id:null},{t:"ἀλήθειαν",id:11}], translation: "I have found the truth!" } },
+            { id: 49, greek: "γνῶθι σεαυτόν", romanized: "gnothi seauton", meaning: "Know thyself. Famous inscription at the Temple of Apollo at Delphi.", category: "phrase", declension: "", gender: "", number: "", custom: false, example: { words: [{t:"γνῶθι σεαυτόν",id:49},{t:"καὶ",id:null},{t:"γνώσῃ",id:41},{t:"τὸν",id:null},{t:"κόσμον",id:15}], translation: "Know thyself and you will know the cosmos." } },
+            { id: 50, greek: "καλοκἀγαθία", romanized: "kalokagathia", meaning: "The ideal of being beautiful and good; nobility of character combined with physical beauty.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false, example: { words: [{t:"καλοκἀγαθία",id:50},{t:"ἀρετὴ",id:3},{t:"τελεία",id:null},{t:"ἐστιν",id:53}], translation: "Kalokagathia is perfect virtue." } },
             // Common verbs
-            { id: 51, greek: "λέγω", romanized: "lego", meaning: "I say, speak, tell, mean. One of the most common Greek verbs.", category: "verb", conjugation: "ω-regular", stem: "λεγ", custom: false },
-            { id: 52, greek: "ἔχω", romanized: "echo", meaning: "I have, hold, possess. Also means 'to be in a certain state'.", category: "verb", conjugation: "ω-regular", stem: "ἐχ", custom: false },
-            { id: 53, greek: "εἰμί", romanized: "eimi", meaning: "I am, exist. The most important irregular verb in Greek.", category: "verb", conjugation: "εἰμί", stem: "", custom: false },
-            { id: 54, greek: "γράφω", romanized: "grapho", meaning: "I write, draw, paint. Root of 'graph' and 'graphic'.", category: "verb", conjugation: "ω-regular", stem: "γραφ", custom: false },
-            { id: 55, greek: "βλέπω", romanized: "blepo", meaning: "I see, look at, perceive.", category: "verb", conjugation: "ω-regular", stem: "βλεπ", custom: false },
-            { id: 56, greek: "ἀκούω", romanized: "akouo", meaning: "I hear, listen to. Root of 'acoustic'.", category: "verb", conjugation: "ω-regular", stem: "ἀκου", custom: false },
-            { id: 57, greek: "λαμβάνω", romanized: "lambano", meaning: "I take, receive, grasp, seize.", category: "verb", conjugation: "ω-regular", stem: "λαμβαν", custom: false },
-            { id: 58, greek: "ποιέω", romanized: "poieo", meaning: "I make, do, create, compose. Root of 'poet' and 'poetry'.", category: "verb", conjugation: "ω-contract-ε", stem: "ποι", custom: false },
-            { id: 59, greek: "φέρω", romanized: "phero", meaning: "I carry, bear, bring, endure.", category: "verb", conjugation: "ω-regular", stem: "φερ", custom: false },
-            { id: 60, greek: "γιγνώσκω", romanized: "gignosko", meaning: "I know, perceive, understand, recognize. Root of 'gnosis'.", category: "verb", conjugation: "ω-regular", stem: "γιγνωσκ", custom: false },
-            { id: 61, greek: "εὑρίσκω", romanized: "heurisko", meaning: "I find, discover. Root of 'eureka' and 'heuristic'.", category: "verb", conjugation: "ω-regular", stem: "εὑρισκ", custom: false },
-            { id: 62, greek: "δίδωμι", romanized: "didomi", meaning: "I give, grant, offer. Important μι-verb.", category: "verb", conjugation: "μι-verb", stem: "διδ", custom: false },
-            { id: 63, greek: "τίθημι", romanized: "tithemi", meaning: "I place, put, set, establish. Root of 'thesis'.", category: "verb", conjugation: "μι-verb", stem: "τιθ", custom: false },
-            { id: 64, greek: "ἵστημι", romanized: "histemi", meaning: "I stand, set up, establish. Related to 'static'.", category: "verb", conjugation: "μι-verb", stem: "ἱστ", custom: false },
-            { id: 65, greek: "φιλέω", romanized: "phileo", meaning: "I love, like, am fond of. Root of 'philo-' words.", category: "verb", conjugation: "ω-contract-ε", stem: "φιλ", custom: false },
-            { id: 66, greek: "ζητέω", romanized: "zeteo", meaning: "I seek, search for, inquire.", category: "verb", conjugation: "ω-contract-ε", stem: "ζητ", custom: false },
-            { id: 67, greek: "καλέω", romanized: "kaleo", meaning: "I call, summon, name, invite.", category: "verb", conjugation: "ω-contract-ε", stem: "καλ", custom: false },
-            { id: 68, greek: "πιστεύω", romanized: "pisteuo", meaning: "I believe, trust, have faith in.", category: "verb", conjugation: "ω-regular", stem: "πιστευ", custom: false },
-            { id: 69, greek: "θέλω", romanized: "thelo", meaning: "I wish, want, desire, will.", category: "verb", conjugation: "ω-regular", stem: "θελ", custom: false },
-            { id: 70, greek: "δύναμαι", romanized: "dynamai", meaning: "I am able, can, have power. Root of 'dynamic'.", category: "verb", conjugation: "deponent", stem: "δυνα", custom: false }
+            { id: 51, greek: "λέγω", romanized: "lego", meaning: "I say, speak, tell, mean. One of the most common Greek verbs.", category: "verb", conjugation: "ω-regular", stem: "λεγ", custom: false, example: { words: [{t:"λέγω",id:51},{t:"τὴν",id:null},{t:"ἀλήθειαν",id:11},{t:"τῷ",id:null},{t:"δήμῳ",id:18}], translation: "I speak the truth to the people." } },
+            { id: 52, greek: "ἔχω", romanized: "echo", meaning: "I have, hold, possess. Also means 'to be in a certain state'.", category: "verb", conjugation: "ω-regular", stem: "ἐχ", custom: false, example: { words: [{t:"ἔχω",id:52},{t:"σοφίαν",id:2},{t:"ἐν",id:null},{t:"τῇ",id:null},{t:"ψυχῇ",id:9}], translation: "I have wisdom in my soul." } },
+            { id: 53, greek: "εἰμί", romanized: "eimi", meaning: "I am, exist. The most important irregular verb in Greek.", category: "verb", conjugation: "εἰμί", stem: "", custom: false, example: { words: [{t:"ἄνθρωπος",id:17},{t:"εἰμί",id:53},{t:"καὶ",id:null},{t:"ἀλήθειαν",id:11},{t:"ζητῶ",id:66}], translation: "I am a human and I seek truth." } },
+            { id: 54, greek: "γράφω", romanized: "grapho", meaning: "I write, draw, paint. Root of 'graph' and 'graphic'.", category: "verb", conjugation: "ω-regular", stem: "γραφ", custom: false, example: { words: [{t:"γράφω",id:54},{t:"λόγους",id:1},{t:"περὶ",id:null},{t:"φιλοσοφίας",id:43}], translation: "I write words about philosophy." } },
+            { id: 55, greek: "βλέπω", romanized: "blepo", meaning: "I see, look at, perceive.", category: "verb", conjugation: "ω-regular", stem: "βλεπ", custom: false, example: { words: [{t:"βλέπω",id:55},{t:"τὸν",id:null},{t:"κόσμον",id:15},{t:"καλόν",id:12}], translation: "I see the world as beautiful." } },
+            { id: 56, greek: "ἀκούω", romanized: "akouo", meaning: "I hear, listen to. Root of 'acoustic'.", category: "verb", conjugation: "ω-regular", stem: "ἀκου", custom: false, example: { words: [{t:"ἀκούω",id:56},{t:"τοῦ",id:null},{t:"λόγου",id:1},{t:"τοῦ",id:null},{t:"θεοῦ",id:14}], translation: "I hear the word of God." } },
+            { id: 57, greek: "λαμβάνω", romanized: "lambano", meaning: "I take, receive, grasp, seize.", category: "verb", conjugation: "ω-regular", stem: "λαμβαν", custom: false, example: { words: [{t:"λαμβάνω",id:57},{t:"γνῶσιν",id:41},{t:"ἐκ",id:null},{t:"τῆς",id:null},{t:"ἐπιστήμης",id:22}], translation: "I receive knowledge from science." } },
+            { id: 58, greek: "ποιέω", romanized: "poieo", meaning: "I make, do, create, compose. Root of 'poet' and 'poetry'.", category: "verb", conjugation: "ω-contract-ε", stem: "ποι", custom: false, example: { words: [{t:"ποιῶ",id:58},{t:"ἔργον",id:34},{t:"διὰ",id:null},{t:"τέχνης",id:21}], translation: "I create a work through art." } },
+            { id: 59, greek: "φέρω", romanized: "phero", meaning: "I carry, bear, bring, endure.", category: "verb", conjugation: "ω-regular", stem: "φερ", custom: false, example: { words: [{t:"φέρω",id:59},{t:"ἀγάπην",id:5},{t:"εἰς",id:null},{t:"τὸν",id:null},{t:"οἶκον",id:35}], translation: "I bring love to the house." } },
+            { id: 60, greek: "γιγνώσκω", romanized: "gignosko", meaning: "I know, perceive, understand, recognize. Root of 'gnosis'.", category: "verb", conjugation: "ω-regular", stem: "γιγνωσκ", custom: false, example: { words: [{t:"γιγνώσκω",id:60},{t:"τὴν",id:null},{t:"ἀρετήν",id:3},{t:"διὰ",id:null},{t:"τοῦ",id:null},{t:"νοῦ",id:10}], translation: "I know virtue through the mind." } },
+            { id: 61, greek: "εὑρίσκω", romanized: "heurisko", meaning: "I find, discover. Root of 'eureka' and 'heuristic'.", category: "verb", conjugation: "ω-regular", stem: "εὑρισκ", custom: false, example: { words: [{t:"εὑρίσκω",id:61},{t:"εὐδαιμονίαν",id:24},{t:"ἐν",id:null},{t:"φιλίᾳ",id:7}], translation: "I find happiness in friendship." } },
+            { id: 62, greek: "δίδωμι", romanized: "didomi", meaning: "I give, grant, offer. Important μι-verb.", category: "verb", conjugation: "μι-verb", stem: "διδ", custom: false, example: { words: [{t:"δίδωμι",id:62},{t:"δόξαν",id:23},{t:"τῷ",id:null},{t:"θεῷ",id:14}], translation: "I give glory to God." } },
+            { id: 63, greek: "τίθημι", romanized: "tithemi", meaning: "I place, put, set, establish. Root of 'thesis'.", category: "verb", conjugation: "μι-verb", stem: "τιθ", custom: false, example: { words: [{t:"τίθημι",id:63},{t:"νόμους",id:36},{t:"ἐν",id:null},{t:"τῇ",id:null},{t:"πόλει",id:4}], translation: "I establish laws in the city." } },
+            { id: 64, greek: "ἵστημι", romanized: "histemi", meaning: "I stand, set up, establish. Related to 'static'.", category: "verb", conjugation: "μι-verb", stem: "ἱστ", custom: false, example: { words: [{t:"ἵστημι",id:64},{t:"ἐν",id:null},{t:"ἀληθείᾳ",id:11},{t:"καὶ",id:null},{t:"δικαιοσύνῃ",id:null}], translation: "I stand in truth and justice." } },
+            { id: 65, greek: "φιλέω", romanized: "phileo", meaning: "I love, like, am fond of. Root of 'philo-' words.", category: "verb", conjugation: "ω-contract-ε", stem: "φιλ", custom: false, example: { words: [{t:"φιλῶ",id:65},{t:"τὴν",id:null},{t:"σοφίαν",id:2},{t:"καὶ",id:null},{t:"τὴν",id:null},{t:"ἀρετήν",id:3}], translation: "I love wisdom and virtue." } },
+            { id: 66, greek: "ζητέω", romanized: "zeteo", meaning: "I seek, search for, inquire.", category: "verb", conjugation: "ω-contract-ε", stem: "ζητ", custom: false, example: { words: [{t:"ζητῶ",id:66},{t:"τὸ",id:null},{t:"τέλος",id:32},{t:"τοῦ",id:null},{t:"βίου",id:null}], translation: "I seek the purpose of life." } },
+            { id: 67, greek: "καλέω", romanized: "kaleo", meaning: "I call, summon, name, invite.", category: "verb", conjugation: "ω-contract-ε", stem: "καλ", custom: false, example: { words: [{t:"καλῶ",id:67},{t:"τοὺς",id:null},{t:"ἀνθρώπους",id:17},{t:"πρὸς",id:null},{t:"φιλοσοφίαν",id:43}], translation: "I call humans to philosophy." } },
+            { id: 68, greek: "πιστεύω", romanized: "pisteuo", meaning: "I believe, trust, have faith in.", category: "verb", conjugation: "ω-regular", stem: "πιστευ", custom: false, example: { words: [{t:"πιστεύω",id:68},{t:"ἐν",id:null},{t:"τῷ",id:null},{t:"θεῷ",id:14},{t:"καὶ",id:null},{t:"τῇ",id:null},{t:"ἀληθείᾳ",id:11}], translation: "I believe in God and truth." } },
+            { id: 69, greek: "θέλω", romanized: "thelo", meaning: "I wish, want, desire, will.", category: "verb", conjugation: "ω-regular", stem: "θελ", custom: false, example: { words: [{t:"θέλω",id:69},{t:"γιγνώσκειν",id:60},{t:"τὴν",id:null},{t:"ἀλήθειαν",id:11}], translation: "I wish to know the truth." } },
+            { id: 70, greek: "δύναμαι", romanized: "dynamai", meaning: "I am able, can, have power. Root of 'dynamic'.", category: "verb", conjugation: "deponent", stem: "δυνα", custom: false, example: { words: [{t:"δύναμαι",id:70},{t:"λέγειν",id:51},{t:"καὶ",id:null},{t:"ποιεῖν",id:58}], translation: "I am able to speak and to act." } }
         ];
 
         // Version - increment this when dictionary structure changes
-        const DICT_VERSION = 7;
+        const DICT_VERSION = 8;
 
         // State
         let words = [];
@@ -912,7 +952,7 @@
             }
 
             container.innerHTML = filtered.map(word => `
-                <div class="word-card">
+                <div class="word-card" data-word-id="${word.id}">
                     <div class="word-header">
                         <div>
                             <div class="greek-word">${escapeHtml(word.greek)}</div>
@@ -935,6 +975,7 @@
                         ${word.conjugation ? `<span class="grammar-tag">${formatConjugation(word.conjugation)}</span>` : ''}
                     </div>
                     ` : ''}
+                    ${renderExampleSentence(word)}
                     ${word.category === 'verb' ? renderConjugationTable(word) : renderDeclensionTable(word)}
                 </div>
             `).join('');
@@ -1193,6 +1234,65 @@
                     </table>
                 </div>
             `;
+        }
+
+        // Render example sentence with clickable words
+        function renderExampleSentence(word) {
+            if (!word.example) return '';
+
+            const greekWords = word.example.words.map(w => {
+                if (w.id === null) {
+                    // Non-dictionary word (article, particle, etc.)
+                    return `<span>${escapeHtml(w.t)}</span>`;
+                } else if (w.id === word.id) {
+                    // Current word - highlight it
+                    return `<span class="word-link current">${escapeHtml(w.t)}</span>`;
+                } else {
+                    // Clickable link to another word
+                    return `<span class="word-link" onclick="scrollToWord(${w.id})">${escapeHtml(w.t)}</span>`;
+                }
+            }).join(' ');
+
+            return `
+                <div class="example-sentence">
+                    <div class="example-greek">${greekWords}</div>
+                    <div class="example-translation">${escapeHtml(word.example.translation)}</div>
+                </div>
+            `;
+        }
+
+        // Scroll to a word card when clicking a word link in example
+        function scrollToWord(id) {
+            // Find the word in the current list
+            const wordExists = words.find(w => w.id === id);
+            if (!wordExists) return;
+
+            // Switch to "All" tab if not already there
+            if (currentTab !== 'all') {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelector('[data-tab="all"]').classList.add('active');
+                currentTab = 'all';
+            }
+
+            // Clear search to make sure word is visible
+            document.getElementById('search').value = '';
+            searchQuery = '';
+
+            // Re-render and then scroll
+            render();
+
+            // Find and scroll to the word card
+            setTimeout(() => {
+                const card = document.querySelector(`[data-word-id="${id}"]`);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Brief highlight effect
+                    card.style.boxShadow = '0 0 0 2px var(--accent)';
+                    setTimeout(() => {
+                        card.style.boxShadow = '';
+                    }, 1500);
+                }
+            }, 50);
         }
 
         // Start the app
