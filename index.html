@@ -195,6 +195,88 @@
         .grammar-tag.gender-f { color: #d99bc9; }
         .grammar-tag.gender-n { color: #a8d4a0; }
 
+        .declension-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--primary-light);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .declension-toggle:hover {
+            background: var(--border);
+        }
+
+        .declension-toggle .arrow {
+            transition: transform 0.2s;
+        }
+
+        .declension-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .declension-table {
+            display: none;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .declension-table.open {
+            display: block;
+        }
+
+        .declension-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .declension-table th,
+        .declension-table td {
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .declension-table th {
+            background: var(--border);
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .declension-table td {
+            background: var(--input-bg);
+        }
+
+        .declension-table td:first-child {
+            color: var(--text-light);
+            font-size: 11px;
+            text-transform: uppercase;
+            width: 70px;
+        }
+
+        .declension-table td:nth-child(2),
+        .declension-table td:nth-child(3) {
+            color: var(--primary-light);
+            font-size: 15px;
+        }
+
+        .declension-table tr:last-child td {
+            border-bottom: none;
+        }
+
         .form-row {
             display: flex;
             gap: 12px;
@@ -545,7 +627,7 @@
         ];
 
         // Version - increment this when dictionary structure changes
-        const DICT_VERSION = 4;
+        const DICT_VERSION = 5;
 
         // State
         let words = [];
@@ -764,6 +846,7 @@
                         ${word.number ? `<span class="grammar-tag">${formatNumber(word.number)}</span>` : ''}
                     </div>
                     ` : ''}
+                    ${renderDeclensionTable(word)}
                 </div>
             `).join('');
         }
@@ -792,6 +875,136 @@
                 '1st sg': '1st pers. sg.'
             };
             return numbers[n] || n;
+        }
+
+        // Toggle declension table visibility
+        function toggleDeclension(id) {
+            const toggle = document.querySelector(`[data-toggle="${id}"]`);
+            const table = document.querySelector(`[data-table="${id}"]`);
+            if (toggle && table) {
+                toggle.classList.toggle('open');
+                table.classList.toggle('open');
+            }
+        }
+
+        // Generate declension forms based on word properties
+        function generateDeclension(word) {
+            const { greek, declension, gender } = word;
+            if (!declension || declension === '' || word.category === 'verb' || word.category === 'phrase') {
+                return null;
+            }
+
+            const cases = ['Nom.', 'Gen.', 'Dat.', 'Acc.', 'Voc.'];
+            let forms = { sg: [], pl: [] };
+
+            // 2nd declension masculine (-ος)
+            if (declension === '2nd' && gender === 'm') {
+                const stem = greek.replace(/ος$/, '');
+                forms.sg = [greek, stem + 'ου', stem + 'ῳ', stem + 'ον', stem + 'ε'];
+                forms.pl = [stem + 'οι', stem + 'ων', stem + 'οις', stem + 'ους', stem + 'οι'];
+            }
+            // 2nd declension neuter (-ον or -ος for some)
+            else if (declension === '2nd' && gender === 'n') {
+                let stem;
+                if (greek.endsWith('ον')) {
+                    stem = greek.replace(/ον$/, '');
+                    forms.sg = [greek, stem + 'ου', stem + 'ῳ', greek, greek];
+                    forms.pl = [stem + 'α', stem + 'ων', stem + 'οις', stem + 'α', stem + 'α'];
+                } else if (greek.endsWith('ος')) {
+                    stem = greek.replace(/ος$/, '');
+                    forms.sg = [greek, stem + 'ους', stem + 'ει', greek, greek];
+                    forms.pl = [stem + 'η', stem + 'ων', stem + 'εσι(ν)', stem + 'η', stem + 'η'];
+                }
+            }
+            // 1st declension feminine η-type (-η)
+            else if (declension === '1st' && gender === 'f' && greek.endsWith('η')) {
+                const stem = greek.replace(/η$/, '');
+                forms.sg = [greek, stem + 'ης', stem + 'ῃ', stem + 'ην', greek];
+                forms.pl = [stem + 'αι', stem + 'ῶν', stem + 'αις', stem + 'ας', stem + 'αι'];
+            }
+            // 1st declension feminine α-type (-α after ε, ι, ρ)
+            else if (declension === '1st' && gender === 'f' && greek.endsWith('α')) {
+                const stem = greek.replace(/α$/, '');
+                forms.sg = [greek, stem + 'ας', stem + 'ᾳ', stem + 'αν', greek];
+                forms.pl = [stem + 'αι', stem + 'ῶν', stem + 'αις', stem + 'ας', stem + 'αι'];
+            }
+            // 1st declension feminine -ια type
+            else if (declension === '1st' && gender === 'f' && greek.endsWith('ια')) {
+                const stem = greek.replace(/ια$/, '');
+                forms.sg = [greek, stem + 'ιας', stem + 'ιᾳ', stem + 'ιαν', greek];
+                forms.pl = [stem + 'ιαι', stem + 'ιῶν', stem + 'ιαις', stem + 'ιας', stem + 'ιαι'];
+            }
+            // 3rd declension -ις feminine (πόλις, φύσις type)
+            else if (declension === '3rd' && gender === 'f' && greek.endsWith('ις')) {
+                const stem = greek.replace(/ις$/, '');
+                forms.sg = [greek, stem + 'εως', stem + 'ει', stem + 'ιν', greek];
+                forms.pl = [stem + 'εις', stem + 'εων', stem + 'εσι(ν)', stem + 'εις', stem + 'εις'];
+            }
+            // 3rd declension -ος neuter (τέλος, ἔθος type)
+            else if (declension === '3rd' && gender === 'n' && greek.endsWith('ος')) {
+                const stem = greek.replace(/ος$/, '');
+                forms.sg = [greek, stem + 'ους', stem + 'ει', greek, greek];
+                forms.pl = [stem + 'η', stem + 'ῶν', stem + 'εσι(ν)', stem + 'η', stem + 'η'];
+            }
+            // 3rd declension -μα neuter (πρᾶγμα type)
+            else if (declension === '3rd' && gender === 'n' && greek.endsWith('μα')) {
+                const stem = greek.replace(/α$/, '');
+                forms.sg = [greek, stem + 'ατος', stem + 'ατι', greek, greek];
+                forms.pl = [stem + 'ατα', stem + 'άτων', stem + 'ασι(ν)', stem + 'ατα', stem + 'ατα'];
+            }
+            // 3rd declension -ως masculine (ἔρως type)
+            else if (declension === '3rd' && gender === 'm' && greek.endsWith('ως')) {
+                const stem = greek.replace(/ως$/, '');
+                forms.sg = [greek, stem + 'ωτος', stem + 'ωτι', stem + 'ωτα', greek];
+                forms.pl = [stem + 'ωτες', stem + 'ώτων', stem + 'ωσι(ν)', stem + 'ωτας', stem + 'ωτες'];
+            }
+            // 3rd declension -σις feminine (γνῶσις type)
+            else if (declension === '3rd' && gender === 'f' && greek.endsWith('σις')) {
+                const stem = greek.replace(/σις$/, '');
+                forms.sg = [greek, stem + 'σεως', stem + 'σει', stem + 'σιν', greek];
+                forms.pl = [stem + 'σεις', stem + 'σεων', stem + 'σεσι(ν)', stem + 'σεις', stem + 'σεις'];
+            }
+            // Adjectives 1st/2nd declension - show masculine forms
+            else if (declension === '1st/2nd') {
+                const stem = greek.replace(/ος$/, '');
+                forms.sg = [greek, stem + 'ου', stem + 'ῳ', stem + 'ον', stem + 'ε'];
+                forms.pl = [stem + 'οι', stem + 'ων', stem + 'οις', stem + 'ους', stem + 'οι'];
+            }
+            else {
+                return null; // Pattern not recognized
+            }
+
+            return { cases, forms };
+        }
+
+        // Render declension table HTML
+        function renderDeclensionTable(word) {
+            const decl = generateDeclension(word);
+            if (!decl) return '';
+
+            const rows = decl.cases.map((c, i) => `
+                <tr>
+                    <td>${c}</td>
+                    <td>${decl.forms.sg[i] || '-'}</td>
+                    <td>${decl.forms.pl[i] || '-'}</td>
+                </tr>
+            `).join('');
+
+            return `
+                <button class="declension-toggle" data-toggle="${word.id}" onclick="toggleDeclension(${word.id})">
+                    <span class="arrow">&#9660;</span> Show declension
+                </button>
+                <div class="declension-table" data-table="${word.id}">
+                    <table>
+                        <tr>
+                            <th>Case</th>
+                            <th>Singular</th>
+                            <th>Plural</th>
+                        </tr>
+                        ${rows}
+                    </table>
+                </div>
+            `;
         }
 
         // Start the app
