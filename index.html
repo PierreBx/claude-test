@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Greek Dict">
+    <title>Ancient Greek Dictionary</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #d4a27c;
+            --primary-light: #e8c4a8;
+            --accent: #c97c5d;
+            --bg: #1a1915;
+            --card-bg: #2a2722;
+            --text: #e8e4de;
+            --text-light: #a8a29e;
+            --border: #3d3830;
+            --input-bg: #1f1d19;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        header {
+            background: var(--card-bg);
+            color: var(--text);
+            padding: 20px 16px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .search-container {
+            margin-top: 14px;
+            position: relative;
+        }
+
+        #search {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            background: var(--input-bg);
+            color: var(--text);
+        }
+
+        #search::placeholder {
+            color: var(--text-light);
+        }
+
+        #search:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 118px;
+            z-index: 99;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-light);
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: var(--primary-light);
+            border-bottom-color: var(--primary);
+        }
+
+        .content {
+            padding: 12px;
+        }
+
+        .word-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+        }
+
+        .word-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .greek-word {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .transliteration {
+            font-size: 14px;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        .meaning {
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--text);
+            margin-top: 8px;
+        }
+
+        .category {
+            display: inline-block;
+            font-size: 11px;
+            padding: 4px 10px;
+            background: var(--border);
+            color: var(--primary-light);
+            border-radius: 20px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .favorite-btn {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 4px;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+
+        .favorite-btn.active {
+            color: #e07b5d;
+        }
+
+        .add-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(201,124,93,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 200;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px 20px 0 0;
+            padding: 24px 20px 40px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--primary-light);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-light);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            background: var(--input-bg);
+            color: var(--text);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #e07b5d;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 4px 8px;
+            margin-left: 8px;
+        }
+
+        .word-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            padding: 16px;
+            background: var(--card-bg);
+            margin: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .stat {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-light);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Ancient Greek Dictionary</h1>
+        <p class="subtitle">Learn the language of philosophers</p>
+        <div class="search-container">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" id="search" placeholder="Search Greek or English...">
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="all">All Words</button>
+        <button class="tab" data-tab="favorites">Favorites</button>
+        <button class="tab" data-tab="custom">My Words</button>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-value" id="total-count">0</div>
+            <div class="stat-label">Total Words</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="favorites-count">0</div>
+            <div class="stat-label">Favorites</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="custom-count">0</div>
+            <div class="stat-label">My Words</div>
+        </div>
+    </div>
+
+    <div class="content" id="word-list"></div>
+
+    <button class="add-btn" id="add-btn">+</button>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h2>Add New Word</h2>
+            <div class="form-group">
+                <label>Greek Word</label>
+                <input type="text" id="input-greek" placeholder="e.g., sophia">
+            </div>
+            <div class="form-group">
+                <label>Transliteration (optional)</label>
+                <input type="text" id="input-translit" placeholder="e.g., soh-FEE-ah">
+            </div>
+            <div class="form-group">
+                <label>Meaning</label>
+                <textarea id="input-meaning" placeholder="e.g., wisdom, knowledge"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select id="input-category">
+                    <option value="noun">Noun</option>
+                    <option value="verb">Verb</option>
+                    <option value="adjective">Adjective</option>
+                    <option value="adverb">Adverb</option>
+                    <option value="preposition">Preposition</option>
+                    <option value="phrase">Phrase</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancel-btn">Cancel</button>
+                <button class="btn btn-primary" id="save-btn">Save Word</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default dictionary of basic Ancient Greek words
+        const defaultWords = [
+            { id: 1, greek: "logos", translit: "LOH-gos", meaning: "Word, reason, speech, logic. One of the most important Greek philosophical terms, referring to rational discourse or the divine principle ordering the universe.", category: "noun", custom: false },
+            { id: 2, greek: "sophia", translit: "soh-FEE-ah", meaning: "Wisdom. The root of 'philosophy' (love of wisdom).", category: "noun", custom: false },
+            { id: 3, greek: "arete", translit: "ah-reh-TAY", meaning: "Excellence, virtue, moral goodness. The highest effectiveness and living up to one's full potential.", category: "noun", custom: false },
+            { id: 4, greek: "polis", translit: "POH-lis", meaning: "City-state. The fundamental political unit of ancient Greece.", category: "noun", custom: false },
+            { id: 5, greek: "agape", translit: "ah-GAH-pay", meaning: "Unconditional love, divine love, selfless love for others.", category: "noun", custom: false },
+            { id: 6, greek: "eros", translit: "EH-ros", meaning: "Romantic love, desire, passionate love.", category: "noun", custom: false },
+            { id: 7, greek: "philia", translit: "fee-LEE-ah", meaning: "Friendship, brotherly love, affection between friends.", category: "noun", custom: false },
+            { id: 8, greek: "storge", translit: "STOR-gay", meaning: "Family love, natural affection, especially between parents and children.", category: "noun", custom: false },
+            { id: 9, greek: "psyche", translit: "psoo-KHAY", meaning: "Soul, mind, spirit, breath of life.", category: "noun", custom: false },
+            { id: 10, greek: "nous", translit: "NOOS", meaning: "Mind, intellect, reason, understanding.", category: "noun", custom: false },
+            { id: 11, greek: "aletheia", translit: "ah-LAY-thay-ah", meaning: "Truth, disclosure, unconcealment.", category: "noun", custom: false },
+            { id: 12, greek: "kalos", translit: "kah-LOS", meaning: "Beautiful, noble, good. Often paired with 'agathos' (good).", category: "adjective", custom: false },
+            { id: 13, greek: "agathos", translit: "ah-gah-THOS", meaning: "Good, noble, brave, capable.", category: "adjective", custom: false },
+            { id: 14, greek: "theos", translit: "THEH-os", meaning: "God, deity, divine being.", category: "noun", custom: false },
+            { id: 15, greek: "cosmos", translit: "KOS-mos", meaning: "Order, world, universe. Also means ornament or decoration.", category: "noun", custom: false },
+            { id: 16, greek: "chaos", translit: "KHAH-os", meaning: "Void, chasm, the primordial state before creation.", category: "noun", custom: false },
+            { id: 17, greek: "anthropos", translit: "AN-thro-pos", meaning: "Human being, person, mankind.", category: "noun", custom: false },
+            { id: 18, greek: "demos", translit: "DAY-mos", meaning: "The people, the common people, the populace.", category: "noun", custom: false },
+            { id: 19, greek: "kratos", translit: "KRAH-tos", meaning: "Power, strength, rule, authority.", category: "noun", custom: false },
+            { id: 20, greek: "demokratia", translit: "day-moh-krah-TEE-ah", meaning: "Democracy - rule by the people (demos + kratos).", category: "noun", custom: false },
+            { id: 21, greek: "techne", translit: "TEKH-nay", meaning: "Art, skill, craft, technique. The root of 'technology'.", category: "noun", custom: false },
+            { id: 22, greek: "episteme", translit: "eh-pee-STAY-may", meaning: "Knowledge, science, systematic understanding.", category: "noun", custom: false },
+            { id: 23, greek: "doxa", translit: "DOK-sah", meaning: "Opinion, belief, glory, reputation.", category: "noun", custom: false },
+            { id: 24, greek: "eudaimonia", translit: "eu-dai-moh-NEE-ah", meaning: "Happiness, flourishing, well-being. The ultimate goal of life in Greek ethics.", category: "noun", custom: false },
+            { id: 25, greek: "ethos", translit: "EH-thos", meaning: "Character, custom, habit. The root of 'ethics'.", category: "noun", custom: false },
+            { id: 26, greek: "pathos", translit: "PAH-thos", meaning: "Suffering, experience, emotion, passion.", category: "noun", custom: false },
+            { id: 27, greek: "hubris", translit: "HOO-bris", meaning: "Excessive pride, arrogance against the gods.", category: "noun", custom: false },
+            { id: 28, greek: "nemesis", translit: "NEH-meh-sis", meaning: "Righteous anger, divine retribution, just punishment.", category: "noun", custom: false },
+            { id: 29, greek: "kairos", translit: "kai-ROS", meaning: "The right moment, opportune time, critical time.", category: "noun", custom: false },
+            { id: 30, greek: "chronos", translit: "KHRO-nos", meaning: "Time (sequential, quantitative time).", category: "noun", custom: false },
+            { id: 31, greek: "arche", translit: "ar-KHAY", meaning: "Beginning, origin, first principle, sovereignty.", category: "noun", custom: false },
+            { id: 32, greek: "telos", translit: "TEH-los", meaning: "End, goal, purpose, fulfillment.", category: "noun", custom: false },
+            { id: 33, greek: "pragma", translit: "PRAHG-mah", meaning: "Thing, matter, affair, deed.", category: "noun", custom: false },
+            { id: 34, greek: "ergon", translit: "EHR-gon", meaning: "Work, deed, task, function.", category: "noun", custom: false },
+            { id: 35, greek: "oikos", translit: "OI-kos", meaning: "House, household, family. Root of 'economy' and 'ecology'.", category: "noun", custom: false },
+            { id: 36, greek: "nomos", translit: "NOH-mos", meaning: "Law, custom, convention.", category: "noun", custom: false },
+            { id: 37, greek: "physis", translit: "FOO-sis", meaning: "Nature, natural order, growth.", category: "noun", custom: false },
+            { id: 38, greek: "dynamis", translit: "DOO-nah-mis", meaning: "Power, ability, potential, capacity.", category: "noun", custom: false },
+            { id: 39, greek: "energeia", translit: "en-EHR-gay-ah", meaning: "Activity, actuality, being-at-work. Root of 'energy'.", category: "noun", custom: false },
+            { id: 40, greek: "metanoia", translit: "meh-tah-NOI-ah", meaning: "Change of mind, repentance, transformation of heart.", category: "noun", custom: false },
+            { id: 41, greek: "gnosis", translit: "GNOH-sis", meaning: "Knowledge, especially spiritual or esoteric knowledge.", category: "noun", custom: false },
+            { id: 42, greek: "metamorphosis", translit: "meh-tah-MOR-foh-sis", meaning: "Transformation, change of form.", category: "noun", custom: false },
+            { id: 43, greek: "philosophia", translit: "fee-loh-soh-FEE-ah", meaning: "Love of wisdom (philo + sophia). Philosophy.", category: "noun", custom: false },
+            { id: 44, greek: "philanthropia", translit: "fee-lan-THROH-pee-ah", meaning: "Love of humanity (philo + anthropos). Philanthropy.", category: "noun", custom: false },
+            { id: 45, greek: "apatheia", translit: "ah-pah-THAY-ah", meaning: "Freedom from passion, equanimity. Stoic ideal of emotional calm.", category: "noun", custom: false },
+            { id: 46, greek: "ataraxia", translit: "ah-tah-rak-SEE-ah", meaning: "Tranquility, freedom from disturbance. Epicurean ideal.", category: "noun", custom: false },
+            { id: 47, greek: "paradeisos", translit: "pah-RAH-day-sos", meaning: "Paradise, garden, enclosed park.", category: "noun", custom: false },
+            { id: 48, greek: "eureka", translit: "eu-RAY-kah", meaning: "I have found it! Exclamation of discovery.", category: "phrase", custom: false },
+            { id: 49, greek: "gnothi seauton", translit: "GNOH-thee say-au-TON", meaning: "Know thyself. Famous inscription at the Temple of Apollo at Delphi.", category: "phrase", custom: false },
+            { id: 50, greek: "kalokagathia", translit: "kah-loh-kah-gah-THEE-ah", meaning: "The ideal of being beautiful and good; nobility of character combined with physical beauty.", category: "noun", custom: false }
+        ];
+
+        // State
+        let words = [];
+        let favorites = [];
+        let currentTab = 'all';
+        let searchQuery = '';
+
+        // Initialize
+        function init() {
+            loadData();
+            setupEventListeners();
+            render();
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const savedWords = localStorage.getItem('greek-dict-words');
+            const savedFavorites = localStorage.getItem('greek-dict-favorites');
+
+            if (savedWords) {
+                words = JSON.parse(savedWords);
+            } else {
+                words = [...defaultWords];
+                saveWords();
+            }
+
+            favorites = savedFavorites ? JSON.parse(savedFavorites) : [];
+        }
+
+        // Save data to localStorage
+        function saveWords() {
+            localStorage.setItem('greek-dict-words', JSON.stringify(words));
+        }
+
+        function saveFavorites() {
+            localStorage.setItem('greek-dict-favorites', JSON.stringify(favorites));
+        }
+
+        // Event listeners
+        function setupEventListeners() {
+            // Search
+            document.getElementById('search').addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                render();
+            });
+
+            // Tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentTab = tab.dataset.tab;
+                    render();
+                });
+            });
+
+            // Add button
+            document.getElementById('add-btn').addEventListener('click', () => {
+                document.getElementById('modal').classList.add('active');
+            });
+
+            // Cancel button
+            document.getElementById('cancel-btn').addEventListener('click', closeModal);
+
+            // Save button
+            document.getElementById('save-btn').addEventListener('click', saveNewWord);
+
+            // Close modal on overlay click
+            document.getElementById('modal').addEventListener('click', (e) => {
+                if (e.target.id === 'modal') closeModal();
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.getElementById('input-greek').value = '';
+            document.getElementById('input-translit').value = '';
+            document.getElementById('input-meaning').value = '';
+            document.getElementById('input-category').value = 'noun';
+        }
+
+        function saveNewWord() {
+            const greek = document.getElementById('input-greek').value.trim();
+            const translit = document.getElementById('input-translit').value.trim();
+            const meaning = document.getElementById('input-meaning').value.trim();
+            const category = document.getElementById('input-category').value;
+
+            if (!greek || !meaning) {
+                alert('Please enter at least the Greek word and its meaning.');
+                return;
+            }
+
+            const newWord = {
+                id: Date.now(),
+                greek,
+                translit: translit || '',
+                meaning,
+                category,
+                custom: true
+            };
+
+            words.push(newWord);
+            saveWords();
+            closeModal();
+            render();
+        }
+
+        function toggleFavorite(id) {
+            const index = favorites.indexOf(id);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(id);
+            }
+            saveFavorites();
+            render();
+        }
+
+        function deleteWord(id) {
+            if (confirm('Delete this word?')) {
+                words = words.filter(w => w.id !== id);
+                favorites = favorites.filter(f => f !== id);
+                saveWords();
+                saveFavorites();
+                render();
+            }
+        }
+
+        function getFilteredWords() {
+            let filtered = words;
+
+            // Filter by tab
+            if (currentTab === 'favorites') {
+                filtered = filtered.filter(w => favorites.includes(w.id));
+            } else if (currentTab === 'custom') {
+                filtered = filtered.filter(w => w.custom);
+            }
+
+            // Filter by search
+            if (searchQuery) {
+                filtered = filtered.filter(w =>
+                    w.greek.toLowerCase().includes(searchQuery) ||
+                    w.meaning.toLowerCase().includes(searchQuery) ||
+                    (w.translit && w.translit.toLowerCase().includes(searchQuery))
+                );
+            }
+
+            return filtered;
+        }
+
+        function render() {
+            const filtered = getFilteredWords();
+            const container = document.getElementById('word-list');
+
+            // Update stats
+            document.getElementById('total-count').textContent = words.length;
+            document.getElementById('favorites-count').textContent = favorites.length;
+            document.getElementById('custom-count').textContent = words.filter(w => w.custom).length;
+
+            if (filtered.length === 0) {
+                const emptyMessages = {
+                    all: 'No words found',
+                    favorites: 'No favorites yet. Tap the heart to add!',
+                    custom: 'No custom words yet. Tap + to add!'
+                };
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">${currentTab === 'favorites' ? '&#9825;' : '&#128218;'}</div>
+                        <p>${emptyMessages[currentTab]}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(word => `
+                <div class="word-card">
+                    <div class="word-header">
+                        <div>
+                            <div class="greek-word">${escapeHtml(word.greek)}</div>
+                            ${word.translit ? `<div class="transliteration">${escapeHtml(word.translit)}</div>` : ''}
+                        </div>
+                        <div class="word-actions">
+                            <button class="favorite-btn ${favorites.includes(word.id) ? 'active' : ''}" onclick="toggleFavorite(${word.id})">
+                                ${favorites.includes(word.id) ? '&#9829;' : '&#9825;'}
+                            </button>
+                            ${word.custom ? `<button class="delete-btn" onclick="deleteWord(${word.id})">&#128465;</button>` : ''}
+                        </div>
+                    </div>
+                    <div class="meaning">${escapeHtml(word.meaning)}</div>
+                    <span class="category">${escapeHtml(word.category)}</span>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>
