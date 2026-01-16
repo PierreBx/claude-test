@@ -277,6 +277,73 @@
             border-bottom: none;
         }
 
+        .conjugation-table {
+            display: none;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .conjugation-table.open {
+            display: block;
+        }
+
+        .conjugation-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .conjugation-table th,
+        .conjugation-table td {
+            padding: 8px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .conjugation-table th {
+            background: var(--border);
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .conjugation-table td {
+            background: var(--input-bg);
+        }
+
+        .conjugation-table td:first-child {
+            color: var(--text-light);
+            font-size: 11px;
+            width: 60px;
+        }
+
+        .conjugation-table td:nth-child(2),
+        .conjugation-table td:nth-child(3) {
+            color: var(--primary-light);
+            font-size: 15px;
+        }
+
+        .conjugation-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tense-section {
+            margin-bottom: 2px;
+        }
+
+        .tense-header {
+            background: var(--card-bg);
+            color: var(--accent);
+            padding: 6px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .form-row {
             display: flex;
             gap: 12px;
@@ -623,11 +690,32 @@
             { id: 47, greek: "παράδεισος", romanized: "paradeisos", meaning: "Paradise, garden, enclosed park.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
             { id: 48, greek: "εὕρηκα", romanized: "eureka", meaning: "I have found it! Exclamation of discovery.", category: "verb", declension: "", gender: "", number: "1st sg", custom: false },
             { id: 49, greek: "γνῶθι σεαυτόν", romanized: "gnothi seauton", meaning: "Know thyself. Famous inscription at the Temple of Apollo at Delphi.", category: "phrase", declension: "", gender: "", number: "", custom: false },
-            { id: 50, greek: "καλοκἀγαθία", romanized: "kalokagathia", meaning: "The ideal of being beautiful and good; nobility of character combined with physical beauty.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false }
+            { id: 50, greek: "καλοκἀγαθία", romanized: "kalokagathia", meaning: "The ideal of being beautiful and good; nobility of character combined with physical beauty.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            // Common verbs
+            { id: 51, greek: "λέγω", romanized: "lego", meaning: "I say, speak, tell, mean. One of the most common Greek verbs.", category: "verb", conjugation: "ω-regular", stem: "λεγ", custom: false },
+            { id: 52, greek: "ἔχω", romanized: "echo", meaning: "I have, hold, possess. Also means 'to be in a certain state'.", category: "verb", conjugation: "ω-regular", stem: "ἐχ", custom: false },
+            { id: 53, greek: "εἰμί", romanized: "eimi", meaning: "I am, exist. The most important irregular verb in Greek.", category: "verb", conjugation: "εἰμί", stem: "", custom: false },
+            { id: 54, greek: "γράφω", romanized: "grapho", meaning: "I write, draw, paint. Root of 'graph' and 'graphic'.", category: "verb", conjugation: "ω-regular", stem: "γραφ", custom: false },
+            { id: 55, greek: "βλέπω", romanized: "blepo", meaning: "I see, look at, perceive.", category: "verb", conjugation: "ω-regular", stem: "βλεπ", custom: false },
+            { id: 56, greek: "ἀκούω", romanized: "akouo", meaning: "I hear, listen to. Root of 'acoustic'.", category: "verb", conjugation: "ω-regular", stem: "ἀκου", custom: false },
+            { id: 57, greek: "λαμβάνω", romanized: "lambano", meaning: "I take, receive, grasp, seize.", category: "verb", conjugation: "ω-regular", stem: "λαμβαν", custom: false },
+            { id: 58, greek: "ποιέω", romanized: "poieo", meaning: "I make, do, create, compose. Root of 'poet' and 'poetry'.", category: "verb", conjugation: "ω-contract-ε", stem: "ποι", custom: false },
+            { id: 59, greek: "φέρω", romanized: "phero", meaning: "I carry, bear, bring, endure.", category: "verb", conjugation: "ω-regular", stem: "φερ", custom: false },
+            { id: 60, greek: "γιγνώσκω", romanized: "gignosko", meaning: "I know, perceive, understand, recognize. Root of 'gnosis'.", category: "verb", conjugation: "ω-regular", stem: "γιγνωσκ", custom: false },
+            { id: 61, greek: "εὑρίσκω", romanized: "heurisko", meaning: "I find, discover. Root of 'eureka' and 'heuristic'.", category: "verb", conjugation: "ω-regular", stem: "εὑρισκ", custom: false },
+            { id: 62, greek: "δίδωμι", romanized: "didomi", meaning: "I give, grant, offer. Important μι-verb.", category: "verb", conjugation: "μι-verb", stem: "διδ", custom: false },
+            { id: 63, greek: "τίθημι", romanized: "tithemi", meaning: "I place, put, set, establish. Root of 'thesis'.", category: "verb", conjugation: "μι-verb", stem: "τιθ", custom: false },
+            { id: 64, greek: "ἵστημι", romanized: "histemi", meaning: "I stand, set up, establish. Related to 'static'.", category: "verb", conjugation: "μι-verb", stem: "ἱστ", custom: false },
+            { id: 65, greek: "φιλέω", romanized: "phileo", meaning: "I love, like, am fond of. Root of 'philo-' words.", category: "verb", conjugation: "ω-contract-ε", stem: "φιλ", custom: false },
+            { id: 66, greek: "ζητέω", romanized: "zeteo", meaning: "I seek, search for, inquire.", category: "verb", conjugation: "ω-contract-ε", stem: "ζητ", custom: false },
+            { id: 67, greek: "καλέω", romanized: "kaleo", meaning: "I call, summon, name, invite.", category: "verb", conjugation: "ω-contract-ε", stem: "καλ", custom: false },
+            { id: 68, greek: "πιστεύω", romanized: "pisteuo", meaning: "I believe, trust, have faith in.", category: "verb", conjugation: "ω-regular", stem: "πιστευ", custom: false },
+            { id: 69, greek: "θέλω", romanized: "thelo", meaning: "I wish, want, desire, will.", category: "verb", conjugation: "ω-regular", stem: "θελ", custom: false },
+            { id: 70, greek: "δύναμαι", romanized: "dynamai", meaning: "I am able, can, have power. Root of 'dynamic'.", category: "verb", conjugation: "deponent", stem: "δυνα", custom: false }
         ];
 
         // Version - increment this when dictionary structure changes
-        const DICT_VERSION = 6;
+        const DICT_VERSION = 7;
 
         // State
         let words = [];
@@ -839,14 +927,15 @@
                     </div>
                     <div class="meaning">${escapeHtml(word.meaning)}</div>
                     <span class="category">${escapeHtml(word.category)}</span>
-                    ${(word.declension || word.gender || word.number) ? `
+                    ${(word.declension || word.gender || word.number || word.conjugation) ? `
                     <div class="grammar">
                         ${word.declension ? `<span class="grammar-tag">${escapeHtml(word.declension)} decl.</span>` : ''}
                         ${word.gender ? `<span class="grammar-tag gender-${word.gender.charAt(0)}">${formatGender(word.gender)}</span>` : ''}
-                        ${word.number ? `<span class="grammar-tag">${formatNumber(word.number)}</span>` : ''}
+                        ${word.number && word.category !== 'verb' ? `<span class="grammar-tag">${formatNumber(word.number)}</span>` : ''}
+                        ${word.conjugation ? `<span class="grammar-tag">${formatConjugation(word.conjugation)}</span>` : ''}
                     </div>
                     ` : ''}
-                    ${renderDeclensionTable(word)}
+                    ${word.category === 'verb' ? renderConjugationTable(word) : renderDeclensionTable(word)}
                 </div>
             `).join('');
         }
@@ -875,6 +964,19 @@
                 '1st sg': '1st pers. sg.'
             };
             return numbers[n] || n;
+        }
+
+        function formatConjugation(c) {
+            const types = {
+                'ω-regular': 'ω-verb',
+                'ω-contract-ε': 'contract -έω',
+                'ω-contract-α': 'contract -άω',
+                'ω-contract-ο': 'contract -όω',
+                'μι-verb': 'μι-verb',
+                'εἰμί': 'irregular',
+                'deponent': 'deponent'
+            };
+            return types[c] || c;
         }
 
         // Toggle declension table visibility
@@ -998,6 +1100,92 @@
                     <table>
                         <tr>
                             <th>Case</th>
+                            <th>Singular</th>
+                            <th>Plural</th>
+                        </tr>
+                        ${rows}
+                    </table>
+                </div>
+            `;
+        }
+
+        // Generate conjugation forms for verbs
+        function generateConjugation(word) {
+            if (word.category !== 'verb' || !word.conjugation) return null;
+
+            const { stem, conjugation } = word;
+            const persons = ['1st', '2nd', '3rd'];
+            let forms = { sg: [], pl: [] };
+
+            // Regular ω-verbs (Present Active Indicative)
+            if (conjugation === 'ω-regular') {
+                forms.sg = [stem + 'ω', stem + 'εις', stem + 'ει'];
+                forms.pl = [stem + 'ομεν', stem + 'ετε', stem + 'ουσι(ν)'];
+            }
+            // Contract verbs in -έω
+            else if (conjugation === 'ω-contract-ε') {
+                forms.sg = [stem + 'ῶ', stem + 'εῖς', stem + 'εῖ'];
+                forms.pl = [stem + 'οῦμεν', stem + 'εῖτε', stem + 'οῦσι(ν)'];
+            }
+            // εἰμί (to be) - irregular
+            else if (conjugation === 'εἰμί') {
+                forms.sg = ['εἰμί', 'εἶ', 'ἐστί(ν)'];
+                forms.pl = ['ἐσμέν', 'ἐστέ', 'εἰσί(ν)'];
+            }
+            // μι-verbs (δίδωμι pattern)
+            else if (conjugation === 'μι-verb') {
+                if (word.greek === 'δίδωμι') {
+                    forms.sg = ['δίδωμι', 'δίδως', 'δίδωσι(ν)'];
+                    forms.pl = ['δίδομεν', 'δίδοτε', 'διδόασι(ν)'];
+                } else if (word.greek === 'τίθημι') {
+                    forms.sg = ['τίθημι', 'τίθης', 'τίθησι(ν)'];
+                    forms.pl = ['τίθεμεν', 'τίθετε', 'τιθέασι(ν)'];
+                } else if (word.greek === 'ἵστημι') {
+                    forms.sg = ['ἵστημι', 'ἵστης', 'ἵστησι(ν)'];
+                    forms.pl = ['ἵσταμεν', 'ἵστατε', 'ἱστᾶσι(ν)'];
+                } else {
+                    return null;
+                }
+            }
+            // Deponent verbs
+            else if (conjugation === 'deponent') {
+                forms.sg = [stem + 'μαι', stem + 'σαι', stem + 'ται'];
+                forms.pl = [stem + 'μεθα', stem + 'σθε', stem + 'νται'];
+            }
+            else {
+                return null;
+            }
+
+            return { persons, forms };
+        }
+
+        // Render conjugation table HTML for verbs
+        function renderConjugationTable(word) {
+            const conj = generateConjugation(word);
+            if (!conj) return '';
+
+            const rows = conj.persons.map((p, i) => `
+                <tr>
+                    <td>${p}</td>
+                    <td>${conj.forms.sg[i] || '-'}</td>
+                    <td>${conj.forms.pl[i] || '-'}</td>
+                </tr>
+            `).join('');
+
+            const conjugationType = word.conjugation === 'εἰμί' ? 'irregular' :
+                                   word.conjugation === 'μι-verb' ? 'μι-verb' :
+                                   word.conjugation === 'deponent' ? 'deponent' :
+                                   word.conjugation === 'ω-contract-ε' ? 'contract (-έω)' : 'ω-verb';
+
+            return `
+                <button class="declension-toggle" data-toggle="${word.id}" onclick="toggleDeclension(${word.id})">
+                    <span class="arrow">&#9660;</span> Show conjugation (${conjugationType})
+                </button>
+                <div class="conjugation-table" data-table="${word.id}">
+                    <div class="tense-header">Present Active Indicative</div>
+                    <table>
+                        <tr>
+                            <th>Person</th>
                             <th>Singular</th>
                             <th>Plural</th>
                         </tr>
