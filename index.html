@@ -171,6 +171,39 @@
             font-weight: 500;
         }
 
+        .grammar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+        }
+
+        .grammar-tag {
+            font-size: 10px;
+            padding: 3px 8px;
+            background: var(--input-bg);
+            color: var(--text-light);
+            border-radius: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .grammar-tag.gender-m { color: #7cb3d9; }
+        .grammar-tag.gender-f { color: #d99bc9; }
+        .grammar-tag.gender-n { color: #a8d4a0; }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
         .favorite-btn {
             background: none;
             border: none;
@@ -420,6 +453,35 @@
                     <option value="other">Other</option>
                 </select>
             </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Declension</label>
+                    <select id="input-declension">
+                        <option value="">-</option>
+                        <option value="1st">1st</option>
+                        <option value="2nd">2nd</option>
+                        <option value="3rd">3rd</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="input-gender">
+                        <option value="">-</option>
+                        <option value="m">Masculine</option>
+                        <option value="f">Feminine</option>
+                        <option value="n">Neuter</option>
+                        <option value="m/f">Masc/Fem</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Number</label>
+                    <select id="input-number">
+                        <option value="">-</option>
+                        <option value="sg">Singular</option>
+                        <option value="pl">Plural</option>
+                    </select>
+                </div>
+            </div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" id="cancel-btn">Cancel</button>
                 <button class="btn btn-primary" id="save-btn">Save Word</button>
@@ -430,56 +492,56 @@
     <script>
         // Default dictionary of basic Ancient Greek words
         const defaultWords = [
-            { id: 1, greek: "λόγος", romanized: "logos", meaning: "Word, reason, speech, logic. One of the most important Greek philosophical terms, referring to rational discourse or the divine principle ordering the universe.", category: "noun", custom: false },
-            { id: 2, greek: "σοφία", romanized: "sophia", meaning: "Wisdom. The root of 'philosophy' (love of wisdom).", category: "noun", custom: false },
-            { id: 3, greek: "ἀρετή", romanized: "arete", meaning: "Excellence, virtue, moral goodness. The highest effectiveness and living up to one's full potential.", category: "noun", custom: false },
-            { id: 4, greek: "πόλις", romanized: "polis", meaning: "City-state. The fundamental political unit of ancient Greece.", category: "noun", custom: false },
-            { id: 5, greek: "ἀγάπη", romanized: "agape", meaning: "Unconditional love, divine love, selfless love for others.", category: "noun", custom: false },
-            { id: 6, greek: "ἔρως", romanized: "eros", meaning: "Romantic love, desire, passionate love.", category: "noun", custom: false },
-            { id: 7, greek: "φιλία", romanized: "philia", meaning: "Friendship, brotherly love, affection between friends.", category: "noun", custom: false },
-            { id: 8, greek: "στοργή", romanized: "storge", meaning: "Family love, natural affection, especially between parents and children.", category: "noun", custom: false },
-            { id: 9, greek: "ψυχή", romanized: "psyche", meaning: "Soul, mind, spirit, breath of life.", category: "noun", custom: false },
-            { id: 10, greek: "νοῦς", romanized: "nous", meaning: "Mind, intellect, reason, understanding.", category: "noun", custom: false },
-            { id: 11, greek: "ἀλήθεια", romanized: "aletheia", meaning: "Truth, disclosure, unconcealment.", category: "noun", custom: false },
-            { id: 12, greek: "καλός", romanized: "kalos", meaning: "Beautiful, noble, good. Often paired with 'agathos' (good).", category: "adjective", custom: false },
-            { id: 13, greek: "ἀγαθός", romanized: "agathos", meaning: "Good, noble, brave, capable.", category: "adjective", custom: false },
-            { id: 14, greek: "θεός", romanized: "theos", meaning: "God, deity, divine being.", category: "noun", custom: false },
-            { id: 15, greek: "κόσμος", romanized: "kosmos", meaning: "Order, world, universe. Also means ornament or decoration.", category: "noun", custom: false },
-            { id: 16, greek: "χάος", romanized: "chaos", meaning: "Void, chasm, the primordial state before creation.", category: "noun", custom: false },
-            { id: 17, greek: "ἄνθρωπος", romanized: "anthropos", meaning: "Human being, person, mankind.", category: "noun", custom: false },
-            { id: 18, greek: "δῆμος", romanized: "demos", meaning: "The people, the common people, the populace.", category: "noun", custom: false },
-            { id: 19, greek: "κράτος", romanized: "kratos", meaning: "Power, strength, rule, authority.", category: "noun", custom: false },
-            { id: 20, greek: "δημοκρατία", romanized: "demokratia", meaning: "Democracy - rule by the people (demos + kratos).", category: "noun", custom: false },
-            { id: 21, greek: "τέχνη", romanized: "techne", meaning: "Art, skill, craft, technique. The root of 'technology'.", category: "noun", custom: false },
-            { id: 22, greek: "ἐπιστήμη", romanized: "episteme", meaning: "Knowledge, science, systematic understanding.", category: "noun", custom: false },
-            { id: 23, greek: "δόξα", romanized: "doxa", meaning: "Opinion, belief, glory, reputation.", category: "noun", custom: false },
-            { id: 24, greek: "εὐδαιμονία", romanized: "eudaimonia", meaning: "Happiness, flourishing, well-being. The ultimate goal of life in Greek ethics.", category: "noun", custom: false },
-            { id: 25, greek: "ἦθος", romanized: "ethos", meaning: "Character, custom, habit. The root of 'ethics'.", category: "noun", custom: false },
-            { id: 26, greek: "πάθος", romanized: "pathos", meaning: "Suffering, experience, emotion, passion.", category: "noun", custom: false },
-            { id: 27, greek: "ὕβρις", romanized: "hubris", meaning: "Excessive pride, arrogance against the gods.", category: "noun", custom: false },
-            { id: 28, greek: "νέμεσις", romanized: "nemesis", meaning: "Righteous anger, divine retribution, just punishment.", category: "noun", custom: false },
-            { id: 29, greek: "καιρός", romanized: "kairos", meaning: "The right moment, opportune time, critical time.", category: "noun", custom: false },
-            { id: 30, greek: "χρόνος", romanized: "chronos", meaning: "Time (sequential, quantitative time).", category: "noun", custom: false },
-            { id: 31, greek: "ἀρχή", romanized: "arche", meaning: "Beginning, origin, first principle, sovereignty.", category: "noun", custom: false },
-            { id: 32, greek: "τέλος", romanized: "telos", meaning: "End, goal, purpose, fulfillment.", category: "noun", custom: false },
-            { id: 33, greek: "πρᾶγμα", romanized: "pragma", meaning: "Thing, matter, affair, deed.", category: "noun", custom: false },
-            { id: 34, greek: "ἔργον", romanized: "ergon", meaning: "Work, deed, task, function.", category: "noun", custom: false },
-            { id: 35, greek: "οἶκος", romanized: "oikos", meaning: "House, household, family. Root of 'economy' and 'ecology'.", category: "noun", custom: false },
-            { id: 36, greek: "νόμος", romanized: "nomos", meaning: "Law, custom, convention.", category: "noun", custom: false },
-            { id: 37, greek: "φύσις", romanized: "physis", meaning: "Nature, natural order, growth.", category: "noun", custom: false },
-            { id: 38, greek: "δύναμις", romanized: "dynamis", meaning: "Power, ability, potential, capacity.", category: "noun", custom: false },
-            { id: 39, greek: "ἐνέργεια", romanized: "energeia", meaning: "Activity, actuality, being-at-work. Root of 'energy'.", category: "noun", custom: false },
-            { id: 40, greek: "μετάνοια", romanized: "metanoia", meaning: "Change of mind, repentance, transformation of heart.", category: "noun", custom: false },
-            { id: 41, greek: "γνῶσις", romanized: "gnosis", meaning: "Knowledge, especially spiritual or esoteric knowledge.", category: "noun", custom: false },
-            { id: 42, greek: "μεταμόρφωσις", romanized: "metamorphosis", meaning: "Transformation, change of form.", category: "noun", custom: false },
-            { id: 43, greek: "φιλοσοφία", romanized: "philosophia", meaning: "Love of wisdom (philo + sophia). Philosophy.", category: "noun", custom: false },
-            { id: 44, greek: "φιλανθρωπία", romanized: "philanthropia", meaning: "Love of humanity (philo + anthropos). Philanthropy.", category: "noun", custom: false },
-            { id: 45, greek: "ἀπάθεια", romanized: "apatheia", meaning: "Freedom from passion, equanimity. Stoic ideal of emotional calm.", category: "noun", custom: false },
-            { id: 46, greek: "ἀταραξία", romanized: "ataraxia", meaning: "Tranquility, freedom from disturbance. Epicurean ideal.", category: "noun", custom: false },
-            { id: 47, greek: "παράδεισος", romanized: "paradeisos", meaning: "Paradise, garden, enclosed park.", category: "noun", custom: false },
-            { id: 48, greek: "εὕρηκα", romanized: "eureka", meaning: "I have found it! Exclamation of discovery.", category: "phrase", custom: false },
-            { id: 49, greek: "γνῶθι σεαυτόν", romanized: "gnothi seauton", meaning: "Know thyself. Famous inscription at the Temple of Apollo at Delphi.", category: "phrase", custom: false },
-            { id: 50, greek: "καλοκἀγαθία", romanized: "kalokagathia", meaning: "The ideal of being beautiful and good; nobility of character combined with physical beauty.", category: "noun", custom: false }
+            { id: 1, greek: "λόγος", romanized: "logos", meaning: "Word, reason, speech, logic. One of the most important Greek philosophical terms, referring to rational discourse or the divine principle ordering the universe.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
+            { id: 2, greek: "σοφία", romanized: "sophia", meaning: "Wisdom. The root of 'philosophy' (love of wisdom).", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 3, greek: "ἀρετή", romanized: "arete", meaning: "Excellence, virtue, moral goodness. The highest effectiveness and living up to one's full potential.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 4, greek: "πόλις", romanized: "polis", meaning: "City-state. The fundamental political unit of ancient Greece.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
+            { id: 5, greek: "ἀγάπη", romanized: "agape", meaning: "Unconditional love, divine love, selfless love for others.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 6, greek: "ἔρως", romanized: "eros", meaning: "Romantic love, desire, passionate love.", category: "noun", declension: "3rd", gender: "m", number: "sg", custom: false },
+            { id: 7, greek: "φιλία", romanized: "philia", meaning: "Friendship, brotherly love, affection between friends.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 8, greek: "στοργή", romanized: "storge", meaning: "Family love, natural affection, especially between parents and children.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 9, greek: "ψυχή", romanized: "psyche", meaning: "Soul, mind, spirit, breath of life.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 10, greek: "νοῦς", romanized: "nous", meaning: "Mind, intellect, reason, understanding.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
+            { id: 11, greek: "ἀλήθεια", romanized: "aletheia", meaning: "Truth, disclosure, unconcealment.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 12, greek: "καλός", romanized: "kalos", meaning: "Beautiful, noble, good. Often paired with 'agathos' (good).", category: "adjective", declension: "1st/2nd", gender: "m/f/n", number: "sg", custom: false },
+            { id: 13, greek: "ἀγαθός", romanized: "agathos", meaning: "Good, noble, brave, capable.", category: "adjective", declension: "1st/2nd", gender: "m/f/n", number: "sg", custom: false },
+            { id: 14, greek: "θεός", romanized: "theos", meaning: "God, deity, divine being.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
+            { id: 15, greek: "κόσμος", romanized: "kosmos", meaning: "Order, world, universe. Also means ornament or decoration.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
+            { id: 16, greek: "χάος", romanized: "chaos", meaning: "Void, chasm, the primordial state before creation.", category: "noun", declension: "2nd", gender: "n", number: "sg", custom: false },
+            { id: 17, greek: "ἄνθρωπος", romanized: "anthropos", meaning: "Human being, person, mankind.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
+            { id: 18, greek: "δῆμος", romanized: "demos", meaning: "The people, the common people, the populace.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
+            { id: 19, greek: "κράτος", romanized: "kratos", meaning: "Power, strength, rule, authority.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false },
+            { id: 20, greek: "δημοκρατία", romanized: "demokratia", meaning: "Democracy - rule by the people (demos + kratos).", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 21, greek: "τέχνη", romanized: "techne", meaning: "Art, skill, craft, technique. The root of 'technology'.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 22, greek: "ἐπιστήμη", romanized: "episteme", meaning: "Knowledge, science, systematic understanding.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 23, greek: "δόξα", romanized: "doxa", meaning: "Opinion, belief, glory, reputation.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 24, greek: "εὐδαιμονία", romanized: "eudaimonia", meaning: "Happiness, flourishing, well-being. The ultimate goal of life in Greek ethics.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 25, greek: "ἦθος", romanized: "ethos", meaning: "Character, custom, habit. The root of 'ethics'.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false },
+            { id: 26, greek: "πάθος", romanized: "pathos", meaning: "Suffering, experience, emotion, passion.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false },
+            { id: 27, greek: "ὕβρις", romanized: "hubris", meaning: "Excessive pride, arrogance against the gods.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
+            { id: 28, greek: "νέμεσις", romanized: "nemesis", meaning: "Righteous anger, divine retribution, just punishment.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
+            { id: 29, greek: "καιρός", romanized: "kairos", meaning: "The right moment, opportune time, critical time.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
+            { id: 30, greek: "χρόνος", romanized: "chronos", meaning: "Time (sequential, quantitative time).", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
+            { id: 31, greek: "ἀρχή", romanized: "arche", meaning: "Beginning, origin, first principle, sovereignty.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 32, greek: "τέλος", romanized: "telos", meaning: "End, goal, purpose, fulfillment.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false },
+            { id: 33, greek: "πρᾶγμα", romanized: "pragma", meaning: "Thing, matter, affair, deed.", category: "noun", declension: "3rd", gender: "n", number: "sg", custom: false },
+            { id: 34, greek: "ἔργον", romanized: "ergon", meaning: "Work, deed, task, function.", category: "noun", declension: "2nd", gender: "n", number: "sg", custom: false },
+            { id: 35, greek: "οἶκος", romanized: "oikos", meaning: "House, household, family. Root of 'economy' and 'ecology'.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
+            { id: 36, greek: "νόμος", romanized: "nomos", meaning: "Law, custom, convention.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
+            { id: 37, greek: "φύσις", romanized: "physis", meaning: "Nature, natural order, growth.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
+            { id: 38, greek: "δύναμις", romanized: "dynamis", meaning: "Power, ability, potential, capacity.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
+            { id: 39, greek: "ἐνέργεια", romanized: "energeia", meaning: "Activity, actuality, being-at-work. Root of 'energy'.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 40, greek: "μετάνοια", romanized: "metanoia", meaning: "Change of mind, repentance, transformation of heart.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 41, greek: "γνῶσις", romanized: "gnosis", meaning: "Knowledge, especially spiritual or esoteric knowledge.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
+            { id: 42, greek: "μεταμόρφωσις", romanized: "metamorphosis", meaning: "Transformation, change of form.", category: "noun", declension: "3rd", gender: "f", number: "sg", custom: false },
+            { id: 43, greek: "φιλοσοφία", romanized: "philosophia", meaning: "Love of wisdom (philo + sophia). Philosophy.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 44, greek: "φιλανθρωπία", romanized: "philanthropia", meaning: "Love of humanity (philo + anthropos). Philanthropy.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 45, greek: "ἀπάθεια", romanized: "apatheia", meaning: "Freedom from passion, equanimity. Stoic ideal of emotional calm.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 46, greek: "ἀταραξία", romanized: "ataraxia", meaning: "Tranquility, freedom from disturbance. Epicurean ideal.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false },
+            { id: 47, greek: "παράδεισος", romanized: "paradeisos", meaning: "Paradise, garden, enclosed park.", category: "noun", declension: "2nd", gender: "m", number: "sg", custom: false },
+            { id: 48, greek: "εὕρηκα", romanized: "eureka", meaning: "I have found it! Exclamation of discovery.", category: "verb", declension: "", gender: "", number: "1st sg", custom: false },
+            { id: 49, greek: "γνῶθι σεαυτόν", romanized: "gnothi seauton", meaning: "Know thyself. Famous inscription at the Temple of Apollo at Delphi.", category: "phrase", declension: "", gender: "", number: "", custom: false },
+            { id: 50, greek: "καλοκἀγαθία", romanized: "kalokagathia", meaning: "The ideal of being beautiful and good; nobility of character combined with physical beauty.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false }
         ];
 
         // State
@@ -560,6 +622,9 @@
             document.getElementById('input-romanized').value = '';
             document.getElementById('input-meaning').value = '';
             document.getElementById('input-category').value = 'noun';
+            document.getElementById('input-declension').value = '';
+            document.getElementById('input-gender').value = '';
+            document.getElementById('input-number').value = '';
         }
 
         function saveNewWord() {
@@ -567,6 +632,9 @@
             const romanized = document.getElementById('input-romanized').value.trim();
             const meaning = document.getElementById('input-meaning').value.trim();
             const category = document.getElementById('input-category').value;
+            const declension = document.getElementById('input-declension').value;
+            const gender = document.getElementById('input-gender').value;
+            const number = document.getElementById('input-number').value;
 
             if (!greek || !meaning) {
                 alert('Please enter at least the Greek word and its meaning.');
@@ -579,6 +647,9 @@
                 romanized: romanized || '',
                 meaning,
                 category,
+                declension: declension || '',
+                gender: gender || '',
+                number: number || '',
                 custom: true
             };
 
@@ -671,6 +742,13 @@
                     </div>
                     <div class="meaning">${escapeHtml(word.meaning)}</div>
                     <span class="category">${escapeHtml(word.category)}</span>
+                    ${(word.declension || word.gender || word.number) ? `
+                    <div class="grammar">
+                        ${word.declension ? `<span class="grammar-tag">${escapeHtml(word.declension)} decl.</span>` : ''}
+                        ${word.gender ? `<span class="grammar-tag gender-${word.gender.charAt(0)}">${formatGender(word.gender)}</span>` : ''}
+                        ${word.number ? `<span class="grammar-tag">${formatNumber(word.number)}</span>` : ''}
+                    </div>
+                    ` : ''}
                 </div>
             `).join('');
         }
@@ -679,6 +757,26 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        function formatGender(g) {
+            const genders = {
+                'm': 'masc.',
+                'f': 'fem.',
+                'n': 'neut.',
+                'm/f': 'masc./fem.',
+                'm/f/n': 'all genders'
+            };
+            return genders[g] || g;
+        }
+
+        function formatNumber(n) {
+            const numbers = {
+                'sg': 'singular',
+                'pl': 'plural',
+                '1st sg': '1st pers. sg.'
+            };
+            return numbers[n] || n;
         }
 
         // Start the app
