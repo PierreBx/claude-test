@@ -544,6 +544,9 @@
             { id: 50, greek: "καλοκἀγαθία", romanized: "kalokagathia", meaning: "The ideal of being beautiful and good; nobility of character combined with physical beauty.", category: "noun", declension: "1st", gender: "f", number: "sg", custom: false }
         ];
 
+        // Version - increment this when dictionary structure changes
+        const DICT_VERSION = 3;
+
         // State
         let words = [];
         let favorites = [];
@@ -559,13 +562,25 @@
 
         // Load data from localStorage
         function loadData() {
+            const savedVersion = localStorage.getItem('greek-dict-version');
             const savedWords = localStorage.getItem('greek-dict-words');
             const savedFavorites = localStorage.getItem('greek-dict-favorites');
 
-            if (savedWords) {
+            // If version changed, reload defaults but keep custom words
+            if (savedVersion !== String(DICT_VERSION)) {
+                let customWords = [];
+                if (savedWords) {
+                    const oldWords = JSON.parse(savedWords);
+                    customWords = oldWords.filter(w => w.custom);
+                }
+                words = [...defaultWords, ...customWords];
+                localStorage.setItem('greek-dict-version', DICT_VERSION);
+                saveWords();
+            } else if (savedWords) {
                 words = JSON.parse(savedWords);
             } else {
                 words = [...defaultWords];
+                localStorage.setItem('greek-dict-version', DICT_VERSION);
                 saveWords();
             }
 
