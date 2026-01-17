@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Dictionnaire">
+    <title>Dictionnaire Multilingue</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #d4a27c;
+            --primary-light: #e8c4a8;
+            --accent: #c97c5d;
+            --bg: #1a1915;
+            --card-bg: #2a2722;
+            --text: #e8e4de;
+            --text-light: #a8a29e;
+            --border: #3d3830;
+            --input-bg: #1f1d19;
+            --italian: #4a9d6b;
+            --greek: #6b8fd4;
+            --english: #d49b6b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        header {
+            background: var(--card-bg);
+            color: var(--text);
+            padding: 20px 16px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+        .search-container {
+            margin-top: 14px;
+            position: relative;
+        }
+
+        #search {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            background: var(--input-bg);
+            color: var(--text);
+        }
+
+        #search::placeholder {
+            color: var(--text-light);
+        }
+
+        #search:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .filter-btn {
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text-light);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: var(--bg);
+            border-color: var(--primary);
+        }
+
+        .filter-btn .flag {
+            margin-right: 4px;
+        }
+
+        .sort-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sort-row select {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .content {
+            padding: 12px;
+        }
+
+        .word-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+        }
+
+        .word-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .french-word {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .category-badge {
+            display: inline-block;
+            font-size: 11px;
+            padding: 3px 8px;
+            background: var(--border);
+            color: var(--primary-light);
+            border-radius: 4px;
+            margin-left: 10px;
+            font-weight: 500;
+            text-transform: lowercase;
+            vertical-align: middle;
+        }
+
+        .gender-badge {
+            font-size: 11px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            font-weight: 500;
+        }
+
+        .gender-m { background: rgba(107, 143, 212, 0.2); color: #7cb3d9; }
+        .gender-f { background: rgba(217, 155, 201, 0.2); color: #d99bc9; }
+        .gender-n { background: rgba(168, 212, 160, 0.2); color: #a8d4a0; }
+
+        .translation-section {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--input-bg);
+            border-radius: 8px;
+            border-left: 3px solid var(--border);
+        }
+
+        .translation-section.italian {
+            border-left-color: var(--italian);
+        }
+
+        .translation-section.greek {
+            border-left-color: var(--greek);
+        }
+
+        .translation-section.english {
+            border-left-color: var(--english);
+        }
+
+        .translation-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .lang-flag {
+            font-size: 16px;
+        }
+
+        .lang-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .translation-word {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .romanized {
+            font-size: 13px;
+            color: var(--text-light);
+            font-style: italic;
+            margin-left: 8px;
+        }
+
+        .meaning {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        .grammar-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .grammar-tag {
+            font-size: 10px;
+            padding: 3px 8px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-light);
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .conjugation-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            padding: 6px 10px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-light);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .conjugation-toggle:hover {
+            background: var(--border);
+        }
+
+        .conjugation-toggle .arrow {
+            transition: transform 0.2s;
+            font-size: 10px;
+        }
+
+        .conjugation-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .conjugation-table {
+            display: none;
+            margin-top: 8px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .conjugation-table.open {
+            display: block;
+        }
+
+        .conjugation-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .conjugation-table th,
+        .conjugation-table td {
+            padding: 6px 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .conjugation-table th {
+            background: var(--border);
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .conjugation-table td {
+            background: var(--card-bg);
+        }
+
+        .conjugation-table td:first-child {
+            color: var(--text-light);
+            font-size: 10px;
+            width: 50px;
+        }
+
+        .conjugation-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .example-sentence {
+            margin-top: 10px;
+            padding: 8px 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 6px;
+        }
+
+        .example-text {
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .example-text .word-link {
+            color: var(--primary-light);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--primary);
+            cursor: pointer;
+        }
+
+        .example-text .word-link.current {
+            color: var(--accent);
+            font-weight: 600;
+            border-bottom: none;
+        }
+
+        .example-translation {
+            font-size: 12px;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        .word-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+
+        .action-btn.favorite.active {
+            color: #e07b5d;
+        }
+
+        .add-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(201,124,93,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 200;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px 20px 0 0;
+            padding: 24px 20px 40px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--primary-light);
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text-light);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            background: var(--input-bg);
+            color: var(--text);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .lang-section {
+            margin-top: 16px;
+            padding: 12px;
+            background: var(--input-bg);
+            border-radius: 8px;
+            border-left: 3px solid var(--border);
+        }
+
+        .lang-section.italian { border-left-color: var(--italian); }
+        .lang-section.greek { border-left-color: var(--greek); }
+        .lang-section.english { border-left-color: var(--english); }
+
+        .lang-section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Dictionnaire Multilingue</h1>
+        <p class="subtitle">Francais - Italien - Grec Ancien - Anglais</p>
+        <div class="search-container">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" id="search" placeholder="Rechercher...">
+        </div>
+    </header>
+
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all">Tous</button>
+        <button class="filter-btn" data-filter="italian"><span class="flag">&#127470;&#127481;</span>Italien</button>
+        <button class="filter-btn" data-filter="greek"><span class="flag">&#127468;&#127479;</span>Grec</button>
+        <button class="filter-btn" data-filter="english"><span class="flag">&#127468;&#127463;</span>Anglais</button>
+        <button class="filter-btn" data-filter="favorites"><span class="flag">&#9829;</span>Favoris</button>
+    </div>
+
+    <div class="sort-row">
+        <div class="stats">
+            <span class="stat-item"><span id="total-count">0</span> mots</span>
+            <span class="stat-item">&#127470;&#127481; <span id="italian-count">0</span></span>
+            <span class="stat-item">&#127468;&#127479; <span id="greek-count">0</span></span>
+        </div>
+        <select id="sort-select">
+            <option value="alpha-asc">A → Z</option>
+            <option value="alpha-desc">Z → A</option>
+            <option value="category">Categorie</option>
+        </select>
+    </div>
+
+    <div class="content" id="word-list"></div>
+
+    <button class="add-btn" id="add-btn">+</button>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h2 id="modal-title">Ajouter un mot</h2>
+
+            <div class="form-group">
+                <label>Mot francais *</label>
+                <input type="text" id="input-french" placeholder="ex: aimer">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Categorie</label>
+                    <select id="input-category">
+                        <option value="nom">Nom</option>
+                        <option value="verbe">Verbe</option>
+                        <option value="adjectif">Adjectif</option>
+                        <option value="adverbe">Adverbe</option>
+                        <option value="preposition">Preposition</option>
+                        <option value="conjonction">Conjonction</option>
+                        <option value="expression">Expression</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Genre</label>
+                    <select id="input-gender">
+                        <option value="">-</option>
+                        <option value="m">Masculin</option>
+                        <option value="f">Feminin</option>
+                        <option value="n">Neutre</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="lang-section italian">
+                <div class="lang-section-header">
+                    <span>&#127470;&#127481;</span> Italien
+                </div>
+                <div class="form-group">
+                    <label>Traduction italienne</label>
+                    <input type="text" id="input-italian" placeholder="ex: amare">
+                </div>
+            </div>
+
+            <div class="lang-section greek">
+                <div class="lang-section-header">
+                    <span>&#127468;&#127479;</span> Grec ancien
+                </div>
+                <div class="form-group">
+                    <label>Traduction grecque</label>
+                    <input type="text" id="input-greek" placeholder="ex: φιλέω">
+                </div>
+                <div class="form-group">
+                    <label>Romanisation</label>
+                    <input type="text" id="input-romanized" placeholder="ex: phileo">
+                </div>
+                <div class="form-group">
+                    <label>Sens (anglais)</label>
+                    <input type="text" id="input-greek-meaning" placeholder="ex: I love, am fond of">
+                </div>
+            </div>
+
+            <div class="lang-section english">
+                <div class="lang-section-header">
+                    <span>&#127468;&#127463;</span> Anglais
+                </div>
+                <div class="form-group">
+                    <label>Traduction anglaise</label>
+                    <input type="text" id="input-english" placeholder="ex: to love">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancel-btn">Annuler</button>
+                <button class="btn btn-primary" id="save-btn">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DATA ====================
+        const DICT_VERSION = 1;
+
+        // Default dictionary entries
+        // Structure: French as primary, translations as object
+        const defaultWords = [
+            // ===== GREEK-DERIVED ENTRIES =====
+            { id: 1, french: "parole", category: "nom", gender: "f", translations: { greek: { word: "λόγος", romanized: "logos", meaning: "Word, reason, speech, logic. One of the most important Greek philosophical terms.", declension: "2nd", gender: "m", conjugation: null, example: { words: [{t:"ὁ",id:null},{t:"λόγος",id:1},{t:"ἀλήθειαν",id:11},{t:"φέρει",id:53}], translation: "The word brings truth." } }, italian: { word: "parola", gender: "f", conjugation: null }, english: { word: "word" } } },
+            { id: 2, french: "sagesse", category: "nom", gender: "f", translations: { greek: { word: "σοφία", romanized: "sophia", meaning: "Wisdom. The root of 'philosophy' (love of wisdom).", declension: "1st", gender: "f", conjugation: null, example: { words: [{t:"ἡ",id:null},{t:"σοφία",id:2},{t:"ἀρετή",id:3},{t:"ἐστιν",id:47}], translation: "Wisdom is virtue." } }, italian: { word: "saggezza", gender: "f", conjugation: null }, english: { word: "wisdom" } } },
+            { id: 3, french: "vertu", category: "nom", gender: "f", translations: { greek: { word: "ἀρετή", romanized: "arete", meaning: "Excellence, virtue, moral goodness. Living up to one's full potential.", declension: "1st", gender: "f", conjugation: null, example: { words: [{t:"ἀρετὴν",id:3},{t:"ζητοῦμεν",id:60},{t:"ἐν",id:null},{t:"τῇ",id:null},{t:"ψυχῇ",id:9}], translation: "We seek virtue in the soul." } }, italian: { word: "virtu", gender: "f", conjugation: null }, english: { word: "virtue" } } },
+            { id: 4, french: "cite", category: "nom", gender: "f", translations: { greek: { word: "πόλις", romanized: "polis", meaning: "City-state. The fundamental political unit of ancient Greece.", declension: "3rd", gender: "f", conjugation: null, example: { words: [{t:"ἡ",id:null},{t:"πόλις",id:4},{t:"νόμους",id:34},{t:"ἔχει",id:46}], translation: "The city has laws." } }, italian: { word: "citta", gender: "f", conjugation: null }, english: { word: "city" } } },
+            { id: 5, french: "amour", category: "nom", gender: "m", translations: { greek: { word: "ἀγάπη", romanized: "agape", meaning: "Unconditional love, divine love, selfless love for others.", declension: "1st", gender: "f", conjugation: null, example: { words: [{t:"ἡ",id:null},{t:"ἀγάπη",id:5},{t:"τοῦ",id:null},{t:"θεοῦ",id:14},{t:"μένει",id:null}], translation: "The love of God remains." } }, italian: { word: "amore", gender: "m", conjugation: null }, english: { word: "love" } } },
+            { id: 6, french: "desir", category: "nom", gender: "m", translations: { greek: { word: "ἔρως", romanized: "eros", meaning: "Romantic love, desire, passionate love.", declension: "3rd", gender: "m", conjugation: null }, italian: { word: "desiderio", gender: "m", conjugation: null }, english: { word: "desire" } } },
+            { id: 7, french: "amitie", category: "nom", gender: "f", translations: { greek: { word: "φιλία", romanized: "philia", meaning: "Friendship, brotherly love, affection between friends.", declension: "1st", gender: "f", conjugation: null, example: { words: [{t:"φιλία",id:7},{t:"ἀγαθόν",id:13},{t:"ἐστιν",id:47}], translation: "Friendship is good." } }, italian: { word: "amicizia", gender: "f", conjugation: null }, english: { word: "friendship" } } },
+            { id: 8, french: "affection", category: "nom", gender: "f", translations: { greek: { word: "στοργή", romanized: "storge", meaning: "Family love, natural affection, especially between parents and children.", declension: "1st", gender: "f", conjugation: null }, english: { word: "affection" } } },
+            { id: 9, french: "ame", category: "nom", gender: "f", translations: { greek: { word: "ψυχή", romanized: "psyche", meaning: "Soul, mind, spirit, breath of life.", declension: "1st", gender: "f", conjugation: null, example: { words: [{t:"ἡ",id:null},{t:"ψυχὴ",id:9},{t:"ἀλήθειαν",id:11},{t:"ζητεῖ",id:60}], translation: "The soul seeks truth." } }, italian: { word: "anima", gender: "f", conjugation: null }, english: { word: "soul" } } },
+            { id: 10, french: "esprit", category: "nom", gender: "m", translations: { greek: { word: "νοῦς", romanized: "nous", meaning: "Mind, intellect, reason, understanding.", declension: "2nd", gender: "m", conjugation: null, example: { words: [{t:"ὁ",id:null},{t:"νοῦς",id:10},{t:"γιγνώσκει",id:54},{t:"τὴν",id:null},{t:"ἀλήθειαν",id:11}], translation: "The mind knows the truth." } }, english: { word: "mind" } } },
+            { id: 11, french: "verite", category: "nom", gender: "f", translations: { greek: { word: "ἀλήθεια", romanized: "aletheia", meaning: "Truth, disclosure, unconcealment.", declension: "1st", gender: "f", conjugation: null, example: { words: [{t:"ἀλήθειαν",id:11},{t:"λέγομεν",id:45}], translation: "We speak the truth." } }, italian: { word: "verita", gender: "f", conjugation: null }, english: { word: "truth" } } },
+            { id: 12, french: "beau", category: "adjectif", gender: "m", translations: { greek: { word: "καλός", romanized: "kalos", meaning: "Beautiful, noble, good.", declension: "1st/2nd", gender: "m/f/n", conjugation: null, example: { words: [{t:"ὁ",id:null},{t:"κόσμος",id:15},{t:"καλός",id:12},{t:"ἐστιν",id:47}], translation: "The world is beautiful." } }, italian: { word: "bello", gender: "m", conjugation: null }, english: { word: "beautiful" } } },
+            { id: 13, french: "bon", category: "adjectif", gender: "m", translations: { greek: { word: "ἀγαθός", romanized: "agathos", meaning: "Good, noble, brave, capable.", declension: "1st/2nd", gender: "m/f/n", conjugation: null, example: { words: [{t:"ὁ",id:null},{t:"ἄνθρωπος",id:17},{t:"ἀγαθός",id:13},{t:"ἐστιν",id:47}], translation: "The human is good." } }, italian: { word: "buono", gender: "m", conjugation: null }, english: { word: "good" } } },
+            { id: 14, french: "dieu", category: "nom", gender: "m", translations: { greek: { word: "θεός", romanized: "theos", meaning: "God, deity, divine being.", declension: "2nd", gender: "m", conjugation: null, example: { words: [{t:"ὁ",id:null},{t:"θεὸς",id:14},{t:"τὸν",id:null},{t:"κόσμον",id:15},{t:"ποιεῖ",id:52}], translation: "God creates the world." } }, italian: { word: "dio", gender: "m", conjugation: null }, english: { word: "god" } } },
+            { id: 15, french: "monde", category: "nom", gender: "m", translations: { greek: { word: "κόσμος", romanized: "kosmos", meaning: "Order, world, universe.", declension: "2nd", gender: "m", conjugation: null }, italian: { word: "mondo", gender: "m", conjugation: null }, english: { word: "world" } } },
+            { id: 16, french: "chaos", category: "nom", gender: "m", translations: { greek: { word: "χάος", romanized: "chaos", meaning: "Void, chasm, the primordial state before creation.", declension: "2nd", gender: "n", conjugation: null }, english: { word: "chaos" } } },
+            { id: 17, french: "homme", category: "nom", gender: "m", translations: { greek: { word: "ἄνθρωπος", romanized: "anthropos", meaning: "Human being, person, mankind.", declension: "2nd", gender: "m", conjugation: null, example: { words: [{t:"ὁ",id:null},{t:"ἄνθρωπος",id:17},{t:"σοφίαν",id:2},{t:"φιλεῖ",id:59}], translation: "The human loves wisdom." } }, italian: { word: "uomo", gender: "m", conjugation: null }, english: { word: "human" } } },
+            { id: 18, french: "peuple", category: "nom", gender: "m", translations: { greek: { word: "δῆμος", romanized: "demos", meaning: "The people, the common people, the populace.", declension: "2nd", gender: "m", conjugation: null }, italian: { word: "popolo", gender: "m", conjugation: null }, english: { word: "people" } } },
+            { id: 19, french: "pouvoir", category: "nom", gender: "m", translations: { greek: { word: "κράτος", romanized: "kratos", meaning: "Power, strength, rule, authority.", declension: "3rd", gender: "n", conjugation: null }, italian: { word: "potere", gender: "m", conjugation: null }, english: { word: "power" } } },
+            { id: 20, french: "democratie", category: "nom", gender: "f", translations: { greek: { word: "δημοκρατία", romanized: "demokratia", meaning: "Democracy - rule by the people (demos + kratos).", declension: "1st", gender: "f", conjugation: null }, italian: { word: "democrazia", gender: "f", conjugation: null }, english: { word: "democracy" } } },
+            { id: 21, french: "art", category: "nom", gender: "m", translations: { greek: { word: "τέχνη", romanized: "techne", meaning: "Art, skill, craft, technique. The root of 'technology'.", declension: "1st", gender: "f", conjugation: null }, italian: { word: "arte", gender: "f", conjugation: null }, english: { word: "art" } } },
+            { id: 22, french: "science", category: "nom", gender: "f", translations: { greek: { word: "ἐπιστήμη", romanized: "episteme", meaning: "Knowledge, science, systematic understanding.", declension: "1st", gender: "f", conjugation: null }, italian: { word: "scienza", gender: "f", conjugation: null }, english: { word: "science" } } },
+            { id: 23, french: "opinion", category: "nom", gender: "f", translations: { greek: { word: "δόξα", romanized: "doxa", meaning: "Opinion, belief, glory, reputation.", declension: "1st", gender: "f", conjugation: null }, italian: { word: "opinione", gender: "f", conjugation: null }, english: { word: "opinion" } } },
+            { id: 24, french: "bonheur", category: "nom", gender: "m", translations: { greek: { word: "εὐδαιμονία", romanized: "eudaimonia", meaning: "Happiness, flourishing, well-being. The ultimate goal of life in Greek ethics.", declension: "1st", gender: "f", conjugation: null }, italian: { word: "felicita", gender: "f", conjugation: null }, english: { word: "happiness" } } },
+            { id: 25, french: "caractere", category: "nom", gender: "m", translations: { greek: { word: "ἦθος", romanized: "ethos", meaning: "Character, custom, habit. The root of 'ethics'.", declension: "3rd", gender: "n", conjugation: null }, italian: { word: "carattere", gender: "m", conjugation: null }, english: { word: "character" } } },
+            { id: 26, french: "passion", category: "nom", gender: "f", translations: { greek: { word: "πάθος", romanized: "pathos", meaning: "Suffering, experience, emotion, passion.", declension: "3rd", gender: "n", conjugation: null }, italian: { word: "passione", gender: "f", conjugation: null }, english: { word: "passion" } } },
+            { id: 27, french: "orgueil", category: "nom", gender: "m", translations: { greek: { word: "ὕβρις", romanized: "hubris", meaning: "Excessive pride, arrogance against the gods.", declension: "3rd", gender: "f", conjugation: null }, english: { word: "hubris" } } },
+            { id: 28, french: "chatiment", category: "nom", gender: "m", translations: { greek: { word: "νέμεσις", romanized: "nemesis", meaning: "Righteous anger, divine retribution, just punishment.", declension: "3rd", gender: "f", conjugation: null }, english: { word: "nemesis" } } },
+            { id: 29, french: "moment", category: "nom", gender: "m", translations: { greek: { word: "καιρός", romanized: "kairos", meaning: "The right moment, opportune time, critical time.", declension: "2nd", gender: "m", conjugation: null }, italian: { word: "momento", gender: "m", conjugation: null }, english: { word: "moment" } } },
+            { id: 30, french: "temps", category: "nom", gender: "m", translations: { greek: { word: "χρόνος", romanized: "chronos", meaning: "Time (sequential, quantitative time).", declension: "2nd", gender: "m", conjugation: null }, italian: { word: "tempo", gender: "m", conjugation: null }, english: { word: "time" } } },
+            { id: 31, french: "commencement", category: "nom", gender: "m", translations: { greek: { word: "ἀρχή", romanized: "arche", meaning: "Beginning, origin, first principle, sovereignty.", declension: "1st", gender: "f", conjugation: null, example: { words: [{t:"ἐν",id:null},{t:"ἀρχῇ",id:31},{t:"ἦν",id:47},{t:"ὁ",id:null},{t:"λόγος",id:1}], translation: "In the beginning was the word." } }, italian: { word: "inizio", gender: "m", conjugation: null }, english: { word: "beginning" } } },
+            { id: 32, french: "but", category: "nom", gender: "m", translations: { greek: { word: "τέλος", romanized: "telos", meaning: "End, goal, purpose, fulfillment.", declension: "3rd", gender: "n", conjugation: null }, italian: { word: "scopo", gender: "m", conjugation: null }, english: { word: "goal" } } },
+            { id: 33, french: "chose", category: "nom", gender: "f", translations: { greek: { word: "πρᾶγμα", romanized: "pragma", meaning: "Thing, matter, affair, deed.", declension: "3rd", gender: "n", conjugation: null }, italian: { word: "cosa", gender: "f", conjugation: null }, english: { word: "thing" } } },
+            { id: 34, french: "loi", category: "nom", gender: "f", translations: { greek: { word: "νόμος", romanized: "nomos", meaning: "Law, custom, convention.", declension: "2nd", gender: "m", conjugation: null }, italian: { word: "legge", gender: "f", conjugation: null }, english: { word: "law" } } },
+            { id: 35, french: "maison", category: "nom", gender: "f", translations: { greek: { word: "οἶκος", romanized: "oikos", meaning: "House, household, family. Root of 'economy' and 'ecology'.", declension: "2nd", gender: "m", conjugation: null }, italian: { word: "casa", gender: "f", conjugation: null }, english: { word: "house" } } },
+            { id: 36, french: "travail", category: "nom", gender: "m", translations: { greek: { word: "ἔργον", romanized: "ergon", meaning: "Work, deed, task, function.", declension: "2nd", gender: "n", conjugation: null }, italian: { word: "lavoro", gender: "m", conjugation: null }, english: { word: "work" } } },
+            { id: 37, french: "nature", category: "nom", gender: "f", translations: { greek: { word: "φύσις", romanized: "physis", meaning: "Nature, natural order, growth.", declension: "3rd", gender: "f", conjugation: null }, italian: { word: "natura", gender: "f", conjugation: null }, english: { word: "nature" } } },
+            { id: 38, french: "puissance", category: "nom", gender: "f", translations: { greek: { word: "δύναμις", romanized: "dynamis", meaning: "Power, ability, potential, capacity.", declension: "3rd", gender: "f", conjugation: null }, english: { word: "power" } } },
+            { id: 39, french: "energie", category: "nom", gender: "f", translations: { greek: { word: "ἐνέργεια", romanized: "energeia", meaning: "Activity, actuality, being-at-work. Root of 'energy'.", declension: "1st", gender: "f", conjugation: null }, italian: { word: "energia", gender: "f", conjugation: null }, english: { word: "energy" } } },
+            { id: 40, french: "connaissance", category: "nom", gender: "f", translations: { greek: { word: "γνῶσις", romanized: "gnosis", meaning: "Knowledge, especially spiritual or esoteric knowledge.", declension: "3rd", gender: "f", conjugation: null }, italian: { word: "conoscenza", gender: "f", conjugation: null }, english: { word: "knowledge" } } },
+            { id: 41, french: "transformation", category: "nom", gender: "f", translations: { greek: { word: "μεταμόρφωσις", romanized: "metamorphosis", meaning: "Transformation, change of form.", declension: "3rd", gender: "f", conjugation: null }, english: { word: "transformation" } } },
+            { id: 42, french: "philosophie", category: "nom", gender: "f", translations: { greek: { word: "φιλοσοφία", romanized: "philosophia", meaning: "Love of wisdom (philo + sophia). Philosophy.", declension: "1st", gender: "f", conjugation: null }, italian: { word: "filosofia", gender: "f", conjugation: null }, english: { word: "philosophy" } } },
+            { id: 43, french: "tranquillite", category: "nom", gender: "f", translations: { greek: { word: "ἀταραξία", romanized: "ataraxia", meaning: "Tranquility, freedom from disturbance. Epicurean ideal.", declension: "1st", gender: "f", conjugation: null }, italian: { word: "tranquillita", gender: "f", conjugation: null }, english: { word: "tranquility" } } },
+            { id: 44, french: "paradis", category: "nom", gender: "m", translations: { greek: { word: "παράδεισος", romanized: "paradeisos", meaning: "Paradise, garden, enclosed park.", declension: "2nd", gender: "m", conjugation: null }, italian: { word: "paradiso", gender: "m", conjugation: null }, english: { word: "paradise" } } },
+
+            // ===== GREEK VERBS =====
+            { id: 45, french: "dire", category: "verbe", gender: null, translations: { greek: { word: "λέγω", romanized: "lego", meaning: "I say, speak, tell, mean.", conjugation: { type: "ω-regular", stem: "λεγ" }, example: { words: [{t:"λέγω",id:45},{t:"τὴν",id:null},{t:"ἀλήθειαν",id:11}], translation: "I speak the truth." } }, italian: { word: "dire", conjugation: { type: "ire-irreg", forms: ["dico","dici","dice","diciamo","dite","dicono"] } }, english: { word: "to say" } } },
+            { id: 46, french: "avoir", category: "verbe", gender: null, translations: { greek: { word: "ἔχω", romanized: "echo", meaning: "I have, hold, possess.", conjugation: { type: "ω-regular", stem: "ἐχ" } }, italian: { word: "avere", conjugation: { type: "irreg", forms: ["ho","hai","ha","abbiamo","avete","hanno"] } }, english: { word: "to have" } } },
+            { id: 47, french: "etre", category: "verbe", gender: null, translations: { greek: { word: "εἰμί", romanized: "eimi", meaning: "I am, exist. The most important irregular verb.", conjugation: { type: "εἰμί" } }, italian: { word: "essere", conjugation: { type: "irreg", forms: ["sono","sei","e","siamo","siete","sono"] } }, english: { word: "to be" } } },
+            { id: 48, french: "ecrire", category: "verbe", gender: null, translations: { greek: { word: "γράφω", romanized: "grapho", meaning: "I write, draw, paint.", conjugation: { type: "ω-regular", stem: "γραφ" } }, italian: { word: "scrivere", conjugation: { type: "ere", stem: "scriv" } }, english: { word: "to write" } } },
+            { id: 49, french: "voir", category: "verbe", gender: null, translations: { greek: { word: "βλέπω", romanized: "blepo", meaning: "I see, look at, perceive.", conjugation: { type: "ω-regular", stem: "βλεπ" } }, italian: { word: "vedere", conjugation: { type: "ere-irreg", forms: ["vedo","vedi","vede","vediamo","vedete","vedono"] } }, english: { word: "to see" } } },
+            { id: 50, french: "entendre", category: "verbe", gender: null, translations: { greek: { word: "ἀκούω", romanized: "akouo", meaning: "I hear, listen to.", conjugation: { type: "ω-regular", stem: "ἀκου" } }, italian: { word: "sentire", conjugation: { type: "ire", stem: "sent" } }, english: { word: "to hear" } } },
+            { id: 51, french: "prendre", category: "verbe", gender: null, translations: { greek: { word: "λαμβάνω", romanized: "lambano", meaning: "I take, receive, grasp.", conjugation: { type: "ω-regular", stem: "λαμβαν" } }, italian: { word: "prendere", conjugation: { type: "ere-irreg", forms: ["prendo","prendi","prende","prendiamo","prendete","prendono"] } }, english: { word: "to take" } } },
+            { id: 52, french: "faire", category: "verbe", gender: null, translations: { greek: { word: "ποιέω", romanized: "poieo", meaning: "I make, do, create.", conjugation: { type: "ω-contract-ε", stem: "ποι" } }, italian: { word: "fare", conjugation: { type: "irreg", forms: ["faccio","fai","fa","facciamo","fate","fanno"] } }, english: { word: "to make" } } },
+            { id: 53, french: "porter", category: "verbe", gender: null, translations: { greek: { word: "φέρω", romanized: "phero", meaning: "I carry, bear, bring.", conjugation: { type: "ω-regular", stem: "φερ" } }, italian: { word: "portare", conjugation: { type: "are", stem: "port" } }, english: { word: "to carry" } } },
+            { id: 54, french: "connaitre", category: "verbe", gender: null, translations: { greek: { word: "γιγνώσκω", romanized: "gignosko", meaning: "I know, perceive, understand.", conjugation: { type: "ω-regular", stem: "γιγνωσκ" } }, italian: { word: "conoscere", conjugation: { type: "ere-irreg", forms: ["conosco","conosci","conosce","conosciamo","conoscete","conoscono"] } }, english: { word: "to know" } } },
+            { id: 55, french: "trouver", category: "verbe", gender: null, translations: { greek: { word: "εὑρίσκω", romanized: "heurisko", meaning: "I find, discover.", conjugation: { type: "ω-regular", stem: "εὑρισκ" } }, italian: { word: "trovare", conjugation: { type: "are", stem: "trov" } }, english: { word: "to find" } } },
+            { id: 56, french: "donner", category: "verbe", gender: null, translations: { greek: { word: "δίδωμι", romanized: "didomi", meaning: "I give, grant, offer.", conjugation: { type: "μι-verb", stem: "διδ" } }, italian: { word: "dare", conjugation: { type: "irreg", forms: ["do","dai","da","diamo","date","danno"] } }, english: { word: "to give" } } },
+            { id: 57, french: "mettre", category: "verbe", gender: null, translations: { greek: { word: "τίθημι", romanized: "tithemi", meaning: "I place, put, set.", conjugation: { type: "μι-verb", stem: "τιθ" } }, italian: { word: "mettere", conjugation: { type: "ere", stem: "mett" } }, english: { word: "to put" } } },
+            { id: 58, french: "se tenir", category: "verbe", gender: null, translations: { greek: { word: "ἵστημι", romanized: "histemi", meaning: "I stand, set up, establish.", conjugation: { type: "μι-verb", stem: "ἱστ" } }, italian: { word: "stare", conjugation: { type: "irreg", forms: ["sto","stai","sta","stiamo","state","stanno"] } }, english: { word: "to stand" } } },
+            { id: 59, french: "aimer", category: "verbe", gender: null, translations: { greek: { word: "φιλέω", romanized: "phileo", meaning: "I love, like, am fond of.", conjugation: { type: "ω-contract-ε", stem: "φιλ" }, example: { words: [{t:"φιλῶ",id:59},{t:"τὴν",id:null},{t:"σοφίαν",id:2}], translation: "I love wisdom." } }, italian: { word: "amare", conjugation: { type: "are", stem: "am" } }, english: { word: "to love" } } },
+            { id: 60, french: "chercher", category: "verbe", gender: null, translations: { greek: { word: "ζητέω", romanized: "zeteo", meaning: "I seek, search for, inquire.", conjugation: { type: "ω-contract-ε", stem: "ζητ" } }, italian: { word: "cercare", conjugation: { type: "are", stem: "cerc" } }, english: { word: "to seek" } } },
+            { id: 61, french: "appeler", category: "verbe", gender: null, translations: { greek: { word: "καλέω", romanized: "kaleo", meaning: "I call, summon, name.", conjugation: { type: "ω-contract-ε", stem: "καλ" } }, italian: { word: "chiamare", conjugation: { type: "are", stem: "chiam" } }, english: { word: "to call" } } },
+            { id: 62, french: "croire", category: "verbe", gender: null, translations: { greek: { word: "πιστεύω", romanized: "pisteuo", meaning: "I believe, trust, have faith in.", conjugation: { type: "ω-regular", stem: "πιστευ" } }, italian: { word: "credere", conjugation: { type: "ere", stem: "cred" } }, english: { word: "to believe" } } },
+            { id: 63, french: "vouloir", category: "verbe", gender: null, translations: { greek: { word: "θέλω", romanized: "thelo", meaning: "I wish, want, desire.", conjugation: { type: "ω-regular", stem: "θελ" } }, italian: { word: "volere", conjugation: { type: "irreg", forms: ["voglio","vuoi","vuole","vogliamo","volete","vogliono"] } }, english: { word: "to want" } } },
+            { id: 64, french: "pouvoir", category: "verbe", gender: null, translations: { greek: { word: "δύναμαι", romanized: "dynamai", meaning: "I am able, can, have power.", conjugation: { type: "deponent", stem: "δυνα" } }, italian: { word: "potere", conjugation: { type: "irreg", forms: ["posso","puoi","puo","possiamo","potete","possono"] } }, english: { word: "can" } } },
+            { id: 65, french: "venir", category: "verbe", gender: null, translations: { italian: { word: "venire", conjugation: { type: "irreg", forms: ["vengo","vieni","viene","veniamo","venite","vengono"] } }, english: { word: "to come" } } },
+            { id: 66, french: "aller", category: "verbe", gender: null, translations: { italian: { word: "andare", conjugation: { type: "irreg", forms: ["vado","vai","va","andiamo","andate","vanno"] } }, english: { word: "to go" } } },
+
+            // ===== ITALIAN-ONLY COMMON WORDS =====
+            { id: 100, french: "bonjour", category: "expression", gender: null, translations: { italian: { word: "buongiorno", conjugation: null }, english: { word: "hello" } } },
+            { id: 101, french: "au revoir", category: "expression", gender: null, translations: { italian: { word: "arrivederci", conjugation: null }, english: { word: "goodbye" } } },
+            { id: 102, french: "salut", category: "expression", gender: null, translations: { italian: { word: "ciao", conjugation: null }, english: { word: "hi/bye" } } },
+            { id: 103, french: "merci", category: "expression", gender: null, translations: { italian: { word: "grazie", conjugation: null }, english: { word: "thank you" } } },
+            { id: 104, french: "s'il vous plait", category: "expression", gender: null, translations: { italian: { word: "per favore", conjugation: null }, english: { word: "please" } } },
+            { id: 105, french: "oui", category: "adverbe", gender: null, translations: { italian: { word: "si", conjugation: null }, english: { word: "yes" } } },
+            { id: 106, french: "non", category: "adverbe", gender: null, translations: { italian: { word: "no", conjugation: null }, english: { word: "no" } } },
+            { id: 107, french: "eau", category: "nom", gender: "f", translations: { italian: { word: "acqua", gender: "f", conjugation: null }, english: { word: "water" } } },
+            { id: 108, french: "vin", category: "nom", gender: "m", translations: { italian: { word: "vino", gender: "m", conjugation: null }, english: { word: "wine" } } },
+            { id: 109, french: "pain", category: "nom", gender: "m", translations: { italian: { word: "pane", gender: "m", conjugation: null }, english: { word: "bread" } } },
+            { id: 110, french: "fromage", category: "nom", gender: "m", translations: { italian: { word: "formaggio", gender: "m", conjugation: null }, english: { word: "cheese" } } },
+            { id: 111, french: "cafe", category: "nom", gender: "m", translations: { italian: { word: "caffe", gender: "m", conjugation: null }, english: { word: "coffee" } } },
+            { id: 112, french: "restaurant", category: "nom", gender: "m", translations: { italian: { word: "ristorante", gender: "m", conjugation: null }, english: { word: "restaurant" } } },
+            { id: 113, french: "hotel", category: "nom", gender: "m", translations: { italian: { word: "albergo", gender: "m", conjugation: null }, english: { word: "hotel" } } },
+            { id: 114, french: "rue", category: "nom", gender: "f", translations: { italian: { word: "via", gender: "f", conjugation: null }, english: { word: "street" } } },
+            { id: 115, french: "voiture", category: "nom", gender: "f", translations: { italian: { word: "macchina", gender: "f", conjugation: null }, english: { word: "car" } } },
+            { id: 116, french: "train", category: "nom", gender: "m", translations: { italian: { word: "treno", gender: "m", conjugation: null }, english: { word: "train" } } },
+            { id: 117, french: "avion", category: "nom", gender: "m", translations: { italian: { word: "aereo", gender: "m", conjugation: null }, english: { word: "airplane" } } },
+            { id: 118, french: "aeroport", category: "nom", gender: "m", translations: { italian: { word: "aeroporto", gender: "m", conjugation: null }, english: { word: "airport" } } },
+            { id: 119, french: "gare", category: "nom", gender: "f", translations: { italian: { word: "stazione", gender: "f", conjugation: null }, english: { word: "station" } } },
+            { id: 120, french: "billet", category: "nom", gender: "m", translations: { italian: { word: "biglietto", gender: "m", conjugation: null }, english: { word: "ticket" } } },
+            { id: 121, french: "jour", category: "nom", gender: "m", translations: { italian: { word: "giorno", gender: "m", conjugation: null }, english: { word: "day" } } },
+            { id: 122, french: "nuit", category: "nom", gender: "f", translations: { italian: { word: "notte", gender: "f", conjugation: null }, english: { word: "night" } } },
+            { id: 123, french: "matin", category: "nom", gender: "m", translations: { italian: { word: "mattina", gender: "f", conjugation: null }, english: { word: "morning" } } },
+            { id: 124, french: "soir", category: "nom", gender: "m", translations: { italian: { word: "sera", gender: "f", conjugation: null }, english: { word: "evening" } } },
+            { id: 125, french: "semaine", category: "nom", gender: "f", translations: { italian: { word: "settimana", gender: "f", conjugation: null }, english: { word: "week" } } },
+            { id: 126, french: "mois", category: "nom", gender: "m", translations: { italian: { word: "mese", gender: "m", conjugation: null }, english: { word: "month" } } },
+            { id: 127, french: "annee", category: "nom", gender: "f", translations: { italian: { word: "anno", gender: "m", conjugation: null }, english: { word: "year" } } },
+            { id: 128, french: "heure", category: "nom", gender: "f", translations: { italian: { word: "ora", gender: "f", conjugation: null }, english: { word: "hour" } } },
+            { id: 129, french: "minute", category: "nom", gender: "f", translations: { italian: { word: "minuto", gender: "m", conjugation: null }, english: { word: "minute" } } },
+            { id: 130, french: "lundi", category: "nom", gender: "m", translations: { italian: { word: "lunedi", conjugation: null }, english: { word: "Monday" } } },
+            { id: 131, french: "mardi", category: "nom", gender: "m", translations: { italian: { word: "martedi", conjugation: null }, english: { word: "Tuesday" } } },
+            { id: 132, french: "mercredi", category: "nom", gender: "m", translations: { italian: { word: "mercoledi", conjugation: null }, english: { word: "Wednesday" } } },
+            { id: 133, french: "jeudi", category: "nom", gender: "m", translations: { italian: { word: "giovedi", conjugation: null }, english: { word: "Thursday" } } },
+            { id: 134, french: "vendredi", category: "nom", gender: "m", translations: { italian: { word: "venerdi", conjugation: null }, english: { word: "Friday" } } },
+            { id: 135, french: "samedi", category: "nom", gender: "m", translations: { italian: { word: "sabato", conjugation: null }, english: { word: "Saturday" } } },
+            { id: 136, french: "dimanche", category: "nom", gender: "m", translations: { italian: { word: "domenica", gender: "f", conjugation: null }, english: { word: "Sunday" } } },
+            { id: 137, french: "janvier", category: "nom", gender: "m", translations: { italian: { word: "gennaio", gender: "m", conjugation: null }, english: { word: "January" } } },
+            { id: 138, french: "fevrier", category: "nom", gender: "m", translations: { italian: { word: "febbraio", gender: "m", conjugation: null }, english: { word: "February" } } },
+            { id: 139, french: "mars", category: "nom", gender: "m", translations: { italian: { word: "marzo", gender: "m", conjugation: null }, english: { word: "March" } } },
+            { id: 140, french: "avril", category: "nom", gender: "m", translations: { italian: { word: "aprile", gender: "m", conjugation: null }, english: { word: "April" } } },
+            { id: 141, french: "mai", category: "nom", gender: "m", translations: { italian: { word: "maggio", gender: "m", conjugation: null }, english: { word: "May" } } },
+            { id: 142, french: "juin", category: "nom", gender: "m", translations: { italian: { word: "giugno", gender: "m", conjugation: null }, english: { word: "June" } } },
+            { id: 143, french: "juillet", category: "nom", gender: "m", translations: { italian: { word: "luglio", gender: "m", conjugation: null }, english: { word: "July" } } },
+            { id: 144, french: "aout", category: "nom", gender: "m", translations: { italian: { word: "agosto", gender: "m", conjugation: null }, english: { word: "August" } } },
+            { id: 145, french: "septembre", category: "nom", gender: "m", translations: { italian: { word: "settembre", gender: "m", conjugation: null }, english: { word: "September" } } },
+            { id: 146, french: "octobre", category: "nom", gender: "m", translations: { italian: { word: "ottobre", gender: "m", conjugation: null }, english: { word: "October" } } },
+            { id: 147, french: "novembre", category: "nom", gender: "m", translations: { italian: { word: "novembre", gender: "m", conjugation: null }, english: { word: "November" } } },
+            { id: 148, french: "decembre", category: "nom", gender: "m", translations: { italian: { word: "dicembre", gender: "m", conjugation: null }, english: { word: "December" } } },
+            { id: 149, french: "grand", category: "adjectif", gender: "m", translations: { italian: { word: "grande", conjugation: null }, english: { word: "big" } } },
+            { id: 150, french: "petit", category: "adjectif", gender: "m", translations: { italian: { word: "piccolo", conjugation: null }, english: { word: "small" } } },
+            { id: 151, french: "nouveau", category: "adjectif", gender: "m", translations: { italian: { word: "nuovo", conjugation: null }, english: { word: "new" } } },
+            { id: 152, french: "vieux", category: "adjectif", gender: "m", translations: { italian: { word: "vecchio", conjugation: null }, english: { word: "old" } } },
+            { id: 153, french: "jeune", category: "adjectif", gender: null, translations: { italian: { word: "giovane", conjugation: null }, english: { word: "young" } } },
+            { id: 154, french: "heureux", category: "adjectif", gender: "m", translations: { italian: { word: "felice", conjugation: null }, english: { word: "happy" } } },
+            { id: 155, french: "triste", category: "adjectif", gender: null, translations: { italian: { word: "triste", conjugation: null }, english: { word: "sad" } } },
+            { id: 156, french: "facile", category: "adjectif", gender: null, translations: { italian: { word: "facile", conjugation: null }, english: { word: "easy" } } },
+            { id: 157, french: "difficile", category: "adjectif", gender: null, translations: { italian: { word: "difficile", conjugation: null }, english: { word: "difficult" } } },
+            { id: 158, french: "interessant", category: "adjectif", gender: "m", translations: { italian: { word: "interessante", conjugation: null }, english: { word: "interesting" } } },
+            { id: 159, french: "manger", category: "verbe", gender: null, translations: { italian: { word: "mangiare", conjugation: { type: "are", stem: "mangi" } }, english: { word: "to eat" } } },
+            { id: 160, french: "boire", category: "verbe", gender: null, translations: { italian: { word: "bere", conjugation: { type: "irreg", forms: ["bevo","bevi","beve","beviamo","bevete","bevono"] } }, english: { word: "to drink" } } },
+            { id: 161, french: "dormir", category: "verbe", gender: null, translations: { italian: { word: "dormire", conjugation: { type: "ire", stem: "dorm" } }, english: { word: "to sleep" } } },
+            { id: 162, french: "parler", category: "verbe", gender: null, translations: { italian: { word: "parlare", conjugation: { type: "are", stem: "parl" } }, english: { word: "to speak" } } },
+            { id: 163, french: "ecouter", category: "verbe", gender: null, translations: { italian: { word: "ascoltare", conjugation: { type: "are", stem: "ascolt" } }, english: { word: "to listen" } } },
+            { id: 164, french: "regarder", category: "verbe", gender: null, translations: { italian: { word: "guardare", conjugation: { type: "are", stem: "guard" } }, english: { word: "to watch" } } },
+            { id: 165, french: "travailler", category: "verbe", gender: null, translations: { italian: { word: "lavorare", conjugation: { type: "are", stem: "lavor" } }, english: { word: "to work" } } },
+            { id: 166, french: "etudier", category: "verbe", gender: null, translations: { italian: { word: "studiare", conjugation: { type: "are", stem: "studi" } }, english: { word: "to study" } } },
+            { id: 167, french: "habiter", category: "verbe", gender: null, translations: { italian: { word: "abitare", conjugation: { type: "are", stem: "abit" } }, english: { word: "to live" } } },
+            { id: 168, french: "acheter", category: "verbe", gender: null, translations: { italian: { word: "comprare", conjugation: { type: "are", stem: "compr" } }, english: { word: "to buy" } } },
+            { id: 169, french: "payer", category: "verbe", gender: null, translations: { italian: { word: "pagare", conjugation: { type: "are", stem: "pag" } }, english: { word: "to pay" } } },
+            { id: 170, french: "ouvrir", category: "verbe", gender: null, translations: { italian: { word: "aprire", conjugation: { type: "ire-irreg", forms: ["apro","apri","apre","apriamo","aprite","aprono"] } }, english: { word: "to open" } } },
+            { id: 171, french: "fermer", category: "verbe", gender: null, translations: { italian: { word: "chiudere", conjugation: { type: "ere", stem: "chiud" } }, english: { word: "to close" } } },
+            { id: 172, french: "comprendre", category: "verbe", gender: null, translations: { italian: { word: "capire", conjugation: { type: "ire-isc", stem: "cap" } }, english: { word: "to understand" } } },
+            { id: 173, french: "repondre", category: "verbe", gender: null, translations: { italian: { word: "rispondere", conjugation: { type: "ere", stem: "rispond" } }, english: { word: "to answer" } } },
+            { id: 174, french: "attendre", category: "verbe", gender: null, translations: { italian: { word: "aspettare", conjugation: { type: "are", stem: "aspett" } }, english: { word: "to wait" } } },
+            { id: 175, french: "arriver", category: "verbe", gender: null, translations: { italian: { word: "arrivare", conjugation: { type: "are", stem: "arriv" } }, english: { word: "to arrive" } } },
+            { id: 176, french: "partir", category: "verbe", gender: null, translations: { italian: { word: "partire", conjugation: { type: "ire", stem: "part" } }, english: { word: "to leave" } } },
+            { id: 177, french: "rentrer", category: "verbe", gender: null, translations: { italian: { word: "tornare", conjugation: { type: "are", stem: "torn" } }, english: { word: "to return" } } },
+            { id: 178, french: "rester", category: "verbe", gender: null, translations: { italian: { word: "rimanere", conjugation: { type: "irreg", forms: ["rimango","rimani","rimane","rimaniamo","rimanete","rimangono"] } }, english: { word: "to stay" } } },
+            { id: 179, french: "commencer", category: "verbe", gender: null, translations: { italian: { word: "cominciare", conjugation: { type: "are", stem: "cominci" } }, english: { word: "to start" } } },
+            { id: 180, french: "finir", category: "verbe", gender: null, translations: { italian: { word: "finire", conjugation: { type: "ire-isc", stem: "fin" } }, english: { word: "to finish" } } },
+        ];
+
+        // ==================== STATE ====================
+        let words = [];
+        let favorites = [];
+        let currentFilter = 'all';
+        let currentSort = 'alpha-asc';
+        let searchQuery = '';
+        let editingId = null;
+
+        // ==================== INITIALIZATION ====================
+        function init() {
+            loadData();
+            setupEventListeners();
+            render();
+        }
+
+        function loadData() {
+            const savedVersion = localStorage.getItem('dict-version');
+            const savedWords = localStorage.getItem('dict-words');
+            const savedFavorites = localStorage.getItem('dict-favorites');
+
+            if (savedVersion !== String(DICT_VERSION)) {
+                let customWords = [];
+                if (savedWords) {
+                    const oldWords = JSON.parse(savedWords);
+                    customWords = oldWords.filter(w => w.custom);
+                }
+                words = [...defaultWords.map(w => ({...w, custom: false})), ...customWords];
+                localStorage.setItem('dict-version', DICT_VERSION);
+                saveWords();
+            } else if (savedWords) {
+                words = JSON.parse(savedWords);
+            } else {
+                words = [...defaultWords.map(w => ({...w, custom: false}))];
+                localStorage.setItem('dict-version', DICT_VERSION);
+                saveWords();
+            }
+
+            favorites = savedFavorites ? JSON.parse(savedFavorites) : [];
+        }
+
+        function saveWords() {
+            localStorage.setItem('dict-words', JSON.stringify(words));
+        }
+
+        function saveFavorites() {
+            localStorage.setItem('dict-favorites', JSON.stringify(favorites));
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        function setupEventListeners() {
+            document.getElementById('search').addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                render();
+            });
+
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    render();
+                });
+            });
+
+            document.getElementById('sort-select').addEventListener('change', (e) => {
+                currentSort = e.target.value;
+                render();
+            });
+
+            document.getElementById('add-btn').addEventListener('click', () => openModal());
+            document.getElementById('cancel-btn').addEventListener('click', closeModal);
+            document.getElementById('save-btn').addEventListener('click', saveWord);
+            document.getElementById('modal').addEventListener('click', (e) => {
+                if (e.target.id === 'modal') closeModal();
+            });
+        }
+
+        // ==================== MODAL ====================
+        function openModal(id = null) {
+            editingId = id;
+            document.getElementById('modal-title').textContent = id ? 'Modifier le mot' : 'Ajouter un mot';
+
+            if (id) {
+                const word = words.find(w => w.id === id);
+                if (word) {
+                    document.getElementById('input-french').value = word.french;
+                    document.getElementById('input-category').value = word.category;
+                    document.getElementById('input-gender').value = word.gender || '';
+                    document.getElementById('input-italian').value = word.translations?.italian?.word || '';
+                    document.getElementById('input-greek').value = word.translations?.greek?.word || '';
+                    document.getElementById('input-romanized').value = word.translations?.greek?.romanized || '';
+                    document.getElementById('input-greek-meaning').value = word.translations?.greek?.meaning || '';
+                    document.getElementById('input-english').value = word.translations?.english?.word || '';
+                }
+            } else {
+                document.getElementById('input-french').value = '';
+                document.getElementById('input-category').value = 'nom';
+                document.getElementById('input-gender').value = '';
+                document.getElementById('input-italian').value = '';
+                document.getElementById('input-greek').value = '';
+                document.getElementById('input-romanized').value = '';
+                document.getElementById('input-greek-meaning').value = '';
+                document.getElementById('input-english').value = '';
+            }
+
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            editingId = null;
+        }
+
+        function saveWord() {
+            const french = document.getElementById('input-french').value.trim();
+            if (!french) {
+                alert('Veuillez entrer le mot francais.');
+                return;
+            }
+
+            const category = document.getElementById('input-category').value;
+            const gender = document.getElementById('input-gender').value || null;
+            const italianWord = document.getElementById('input-italian').value.trim();
+            const greekWord = document.getElementById('input-greek').value.trim();
+            const romanized = document.getElementById('input-romanized').value.trim();
+            const greekMeaning = document.getElementById('input-greek-meaning').value.trim();
+            const englishWord = document.getElementById('input-english').value.trim();
+
+            const translations = {};
+            if (italianWord) {
+                translations.italian = { word: italianWord, gender: gender, conjugation: null };
+            }
+            if (greekWord) {
+                translations.greek = { word: greekWord, romanized: romanized, meaning: greekMeaning, conjugation: null };
+            }
+            if (englishWord) {
+                translations.english = { word: englishWord };
+            }
+
+            if (editingId) {
+                const index = words.findIndex(w => w.id === editingId);
+                if (index !== -1) {
+                    words[index] = { ...words[index], french, category, gender, translations };
+                }
+            } else {
+                const newWord = {
+                    id: Date.now(),
+                    french,
+                    category,
+                    gender,
+                    translations,
+                    custom: true
+                };
+                words.push(newWord);
+            }
+
+            saveWords();
+            closeModal();
+            render();
+        }
+
+        // ==================== FILTERING & SORTING ====================
+        function getFilteredWords() {
+            let filtered = words;
+
+            // Language filter
+            if (currentFilter === 'italian') {
+                filtered = filtered.filter(w => w.translations?.italian);
+            } else if (currentFilter === 'greek') {
+                filtered = filtered.filter(w => w.translations?.greek);
+            } else if (currentFilter === 'english') {
+                filtered = filtered.filter(w => w.translations?.english);
+            } else if (currentFilter === 'favorites') {
+                filtered = filtered.filter(w => favorites.includes(w.id));
+            }
+
+            // Search filter
+            if (searchQuery) {
+                filtered = filtered.filter(w => {
+                    const frenchMatch = w.french.toLowerCase().includes(searchQuery);
+                    const italianMatch = w.translations?.italian?.word?.toLowerCase().includes(searchQuery);
+                    const greekMatch = w.translations?.greek?.word?.toLowerCase().includes(searchQuery);
+                    const romanizedMatch = w.translations?.greek?.romanized?.toLowerCase().includes(searchQuery);
+                    const meaningMatch = w.translations?.greek?.meaning?.toLowerCase().includes(searchQuery);
+                    const englishMatch = w.translations?.english?.word?.toLowerCase().includes(searchQuery);
+                    return frenchMatch || italianMatch || greekMatch || romanizedMatch || meaningMatch || englishMatch;
+                });
+            }
+
+            // Sorting
+            filtered.sort((a, b) => {
+                if (currentSort === 'alpha-asc') {
+                    return a.french.localeCompare(b.french);
+                } else if (currentSort === 'alpha-desc') {
+                    return b.french.localeCompare(a.french);
+                } else if (currentSort === 'category') {
+                    return a.category.localeCompare(b.category) || a.french.localeCompare(b.french);
+                }
+                return 0;
+            });
+
+            return filtered;
+        }
+
+        // ==================== RENDERING ====================
+        function render() {
+            const filtered = getFilteredWords();
+            const container = document.getElementById('word-list');
+
+            // Stats
+            document.getElementById('total-count').textContent = words.length;
+            document.getElementById('italian-count').textContent = words.filter(w => w.translations?.italian).length;
+            document.getElementById('greek-count').textContent = words.filter(w => w.translations?.greek).length;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">&#128218;</div>
+                        <p>Aucun mot trouve</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(word => `
+                <div class="word-card" data-word-id="${word.id}">
+                    <div class="word-header">
+                        <div>
+                            <span class="french-word">${escapeHtml(word.french)}</span>
+                            <span class="category-badge">${word.category}</span>
+                            ${word.gender ? `<span class="gender-badge gender-${word.gender}">${formatGender(word.gender)}</span>` : ''}
+                        </div>
+                        <div class="word-actions">
+                            <button class="action-btn favorite ${favorites.includes(word.id) ? 'active' : ''}" onclick="toggleFavorite(${word.id})">
+                                ${favorites.includes(word.id) ? '&#9829;' : '&#9825;'}
+                            </button>
+                            <button class="action-btn" onclick="openModal(${word.id})">&#9998;</button>
+                        </div>
+                    </div>
+                    ${renderTranslations(word)}
+                </div>
+            `).join('');
+        }
+
+        function renderTranslations(word) {
+            let html = '';
+
+            // Italian
+            if (word.translations?.italian) {
+                const it = word.translations.italian;
+                html += `
+                    <div class="translation-section italian">
+                        <div class="translation-header">
+                            <span class="lang-flag">&#127470;&#127481;</span>
+                            <span class="lang-label">Italien</span>
+                        </div>
+                        <div class="translation-word">${escapeHtml(it.word)}</div>
+                        ${it.gender ? `<span class="grammar-tag">${formatGender(it.gender)}</span>` : ''}
+                        ${word.category === 'verbe' && it.conjugation ? renderItalianConjugation(word.id, it) : ''}
+                    </div>
+                `;
+            }
+
+            // Greek
+            if (word.translations?.greek) {
+                const gr = word.translations.greek;
+                html += `
+                    <div class="translation-section greek">
+                        <div class="translation-header">
+                            <span class="lang-flag">&#127468;&#127479;</span>
+                            <span class="lang-label">Grec ancien</span>
+                        </div>
+                        <div class="translation-word">
+                            ${escapeHtml(gr.word)}
+                            ${gr.romanized ? `<span class="romanized">(${escapeHtml(gr.romanized)})</span>` : ''}
+                        </div>
+                        ${gr.meaning ? `<div class="meaning">${escapeHtml(gr.meaning)}</div>` : ''}
+                        ${gr.declension ? `<span class="grammar-tag">${gr.declension} decl.</span>` : ''}
+                        ${gr.gender ? `<span class="grammar-tag">${formatGender(gr.gender)}</span>` : ''}
+                        ${word.category === 'verbe' && gr.conjugation ? renderGreekConjugation(word.id, gr) : ''}
+                        ${gr.example ? renderExample(gr.example) : ''}
+                    </div>
+                `;
+            }
+
+            // English
+            if (word.translations?.english) {
+                const en = word.translations.english;
+                html += `
+                    <div class="translation-section english">
+                        <div class="translation-header">
+                            <span class="lang-flag">&#127468;&#127463;</span>
+                            <span class="lang-label">Anglais</span>
+                        </div>
+                        <div class="translation-word">${escapeHtml(en.word)}</div>
+                    </div>
+                `;
+            }
+
+            return html;
+        }
+
+        function renderExample(example) {
+            if (!example || !example.words) return '';
+
+            const text = example.words.map(w => {
+                if (w.id === null) {
+                    return `<span>${escapeHtml(w.t)}</span>`;
+                } else {
+                    return `<span class="word-link" onclick="scrollToWord(${w.id})">${escapeHtml(w.t)}</span>`;
+                }
+            }).join(' ');
+
+            return `
+                <div class="example-sentence">
+                    <div class="example-text">${text}</div>
+                    <div class="example-translation">${escapeHtml(example.translation)}</div>
+                </div>
+            `;
+        }
+
+        // ==================== CONJUGATION ====================
+        function renderItalianConjugation(wordId, it) {
+            const forms = generateItalianConjugation(it.conjugation);
+            if (!forms) return '';
+
+            const tableId = `it-conj-${wordId}`;
+            const persons = ['1sg', '2sg', '3sg', '1pl', '2pl', '3pl'];
+            const labels = ['io', 'tu', 'lui/lei', 'noi', 'voi', 'loro'];
+
+            const rows = labels.map((label, i) => `
+                <tr>
+                    <td>${label}</td>
+                    <td>${forms[i] || '-'}</td>
+                </tr>
+            `).join('');
+
+            return `
+                <button class="conjugation-toggle" onclick="toggleTable('${tableId}', this)">
+                    <span class="arrow">&#9660;</span> Conjugaison (presente)
+                </button>
+                <div class="conjugation-table" id="${tableId}">
+                    <table>
+                        <tr><th>Personne</th><th>Presente</th></tr>
+                        ${rows}
+                    </table>
+                </div>
+            `;
+        }
+
+        function generateItalianConjugation(conj) {
+            if (!conj) return null;
+
+            if (conj.forms) {
+                return conj.forms;
+            }
+
+            const { type, stem } = conj;
+            if (!stem) return null;
+
+            if (type === 'are') {
+                return [stem + 'o', stem + 'i', stem + 'a', stem + 'iamo', stem + 'ate', stem + 'ano'];
+            } else if (type === 'ere') {
+                return [stem + 'o', stem + 'i', stem + 'e', stem + 'iamo', stem + 'ete', stem + 'ono'];
+            } else if (type === 'ire') {
+                return [stem + 'o', stem + 'i', stem + 'e', stem + 'iamo', stem + 'ite', stem + 'ono'];
+            } else if (type === 'ire-isc') {
+                return [stem + 'isco', stem + 'isci', stem + 'isce', stem + 'iamo', stem + 'ite', stem + 'iscono'];
+            }
+
+            return null;
+        }
+
+        function renderGreekConjugation(wordId, gr) {
+            const forms = generateGreekConjugation(gr.conjugation);
+            if (!forms) return '';
+
+            const tableId = `gr-conj-${wordId}`;
+            const labels = ['1sg', '2sg', '3sg', '1pl', '2pl', '3pl'];
+
+            const rows = labels.map((label, i) => `
+                <tr>
+                    <td>${label}</td>
+                    <td>${forms.sg[i % 3] || '-'}</td>
+                    <td>${forms.pl[i % 3] || '-'}</td>
+                </tr>
+            `).join('');
+
+            return `
+                <button class="conjugation-toggle" onclick="toggleTable('${tableId}', this)">
+                    <span class="arrow">&#9660;</span> Conjugaison (presente)
+                </button>
+                <div class="conjugation-table" id="${tableId}">
+                    <table>
+                        <tr><th></th><th>Singulier</th><th>Pluriel</th></tr>
+                        <tr><td>1e</td><td>${forms.sg[0]}</td><td>${forms.pl[0]}</td></tr>
+                        <tr><td>2e</td><td>${forms.sg[1]}</td><td>${forms.pl[1]}</td></tr>
+                        <tr><td>3e</td><td>${forms.sg[2]}</td><td>${forms.pl[2]}</td></tr>
+                    </table>
+                </div>
+            `;
+        }
+
+        function generateGreekConjugation(conj) {
+            if (!conj) return null;
+
+            const { type, stem } = conj;
+
+            if (type === 'ω-regular') {
+                return {
+                    sg: [stem + 'ω', stem + 'εις', stem + 'ει'],
+                    pl: [stem + 'ομεν', stem + 'ετε', stem + 'ουσι(ν)']
+                };
+            } else if (type === 'ω-contract-ε') {
+                return {
+                    sg: [stem + 'ῶ', stem + 'εῖς', stem + 'εῖ'],
+                    pl: [stem + 'οῦμεν', stem + 'εῖτε', stem + 'οῦσι(ν)']
+                };
+            } else if (type === 'εἰμί') {
+                return {
+                    sg: ['εἰμί', 'εἶ', 'ἐστί(ν)'],
+                    pl: ['ἐσμέν', 'ἐστέ', 'εἰσί(ν)']
+                };
+            } else if (type === 'μι-verb') {
+                // Simplified - would need specific handling per verb
+                return null;
+            } else if (type === 'deponent') {
+                return {
+                    sg: [stem + 'μαι', stem + 'σαι', stem + 'ται'],
+                    pl: [stem + 'μεθα', stem + 'σθε', stem + 'νται']
+                };
+            }
+
+            return null;
+        }
+
+        function toggleTable(tableId, btn) {
+            const table = document.getElementById(tableId);
+            if (table) {
+                table.classList.toggle('open');
+                btn.classList.toggle('open');
+            }
+        }
+
+        // ==================== UTILITIES ====================
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatGender(g) {
+            const genders = { 'm': 'masc.', 'f': 'fem.', 'n': 'neutre', 'm/f/n': 'tous' };
+            return genders[g] || g;
+        }
+
+        function toggleFavorite(id) {
+            const index = favorites.indexOf(id);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(id);
+            }
+            saveFavorites();
+            render();
+        }
+
+        function scrollToWord(id) {
+            const word = words.find(w => w.id === id);
+            if (!word) return;
+
+            // Reset filter to show all
+            if (currentFilter !== 'all') {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('[data-filter="all"]').classList.add('active');
+                currentFilter = 'all';
+            }
+
+            // Clear search
+            document.getElementById('search').value = '';
+            searchQuery = '';
+
+            render();
+
+            setTimeout(() => {
+                const card = document.querySelector(`[data-word-id="${id}"]`);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.style.boxShadow = '0 0 0 2px var(--accent)';
+                    setTimeout(() => { card.style.boxShadow = ''; }, 1500);
+                }
+            }, 50);
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
