@@ -945,7 +945,7 @@
 
     <script>
         // ==================== DATA ====================
-        const DICT_VERSION = 4;
+        const DICT_VERSION = 5;
 
         // Default dictionary entries
         // Structure: French as primary, translations as object
@@ -1443,6 +1443,46 @@
             { id: 603, french: "philosophe", category: "nom", gender: "m", needsReview: true, translations: { italian: { word: "filosofo", gender: "m", conjugation: null }, english: { word: "philosopher" } } },
             { id: 604, french: "dans", category: "preposition", gender: null, needsReview: true, translations: { italian: { word: "in", conjugation: null }, english: { word: "in" } } },
             { id: 605, french: "ancien", category: "adjectif", gender: "m", needsReview: true, translations: { italian: { word: "antico", conjugation: null }, english: { word: "ancient/old" } } },
+
+            // ===== ILIAD VOCABULARY (Ancient Greek → French) =====
+            { id: 700, french: "colere", category: "nom", gender: "f", needsReview: true, translations: { greek: { word: "μῆνις", romanized: "menis", meaning: "Wrath, rage, divine anger. The opening word of the Iliad.", declension: "3rd", gender: "f" }, english: { word: "wrath" } } },
+            { id: 701, french: "chanter", category: "verbe", gender: null, needsReview: true, translations: { greek: { word: "ἀείδω", romanized: "aeido", meaning: "To sing, celebrate in song.", conjugation: { type: "ω", stem: "ἀειδ" } }, english: { word: "to sing" } } },
+            { id: 702, french: "deesse", category: "nom", gender: "f", needsReview: true, translations: { greek: { word: "θεά", romanized: "thea", meaning: "Goddess (feminine of θεός).", declension: "1st", gender: "f" }, english: { word: "goddess" } } },
+            { id: 703, french: "Achille", category: "nom propre", gender: "m", needsReview: true, translations: { greek: { word: "Ἀχιλλεύς", romanized: "Achilleus", meaning: "Achilles, son of Peleus and Thetis, greatest Greek warrior." }, english: { word: "Achilles" } } },
+            { id: 704, french: "Pelide", category: "nom propre", gender: "m", needsReview: true, translations: { greek: { word: "Πηληϊάδης", romanized: "Peleïades", meaning: "Son of Peleus (patronymic for Achilles)." }, english: { word: "son of Peleus" } } },
+            { id: 705, french: "maudit", category: "adjectif", gender: "m", needsReview: true, translations: { greek: { word: "οὐλόμενος", romanized: "oulomenos", meaning: "Accursed, destructive, baneful.", declension: "1st/2nd" }, english: { word: "accursed" } } },
+            { id: 706, french: "innombrable", category: "adjectif", gender: "m", needsReview: true, translations: { greek: { word: "μυρίος", romanized: "myrios", meaning: "Countless, numberless, ten thousand.", declension: "1st/2nd" }, english: { word: "countless" } } },
+            { id: 707, french: "Acheens", category: "nom propre", gender: "m", needsReview: true, translations: { greek: { word: "Ἀχαιοί", romanized: "Achaioi", meaning: "Achaeans, one of Homer's names for the Greeks." }, english: { word: "Achaeans" } } },
+            { id: 708, french: "douleur", category: "nom", gender: "f", needsReview: true, translations: { greek: { word: "ἄλγος", romanized: "algos", meaning: "Pain, grief, sorrow.", declension: "3rd", gender: "n" }, english: { word: "pain" } } },
+            { id: 709, french: "placer", category: "verbe", gender: null, needsReview: true, translations: { greek: { word: "τίθημι", romanized: "tithemi", meaning: "To put, place, set. Irregular athematic verb.", conjugation: { type: "μι-irreg" } }, english: { word: "to put" } } },
+            { id: 710, french: "nombreux", category: "adjectif", gender: "m", needsReview: true, translations: { greek: { word: "πολύς", romanized: "polys", meaning: "Many, much, numerous.", declension: "3rd" }, english: { word: "many" } } },
+            { id: 711, french: "vaillant", category: "adjectif", gender: "m", needsReview: true, translations: { greek: { word: "ἴφθιμος", romanized: "iphthimos", meaning: "Mighty, stout, valiant.", declension: "1st/2nd" }, english: { word: "mighty" } } },
+            { id: 712, french: "Hades", category: "nom propre", gender: "m", needsReview: true, translations: { greek: { word: "Ἅιδης", romanized: "Haides", meaning: "Hades, god of the underworld; also the underworld itself." }, english: { word: "Hades" } } },
+            { id: 713, french: "envoyer", category: "verbe", gender: null, needsReview: true, translations: { greek: { word: "προϊάπτω", romanized: "proiapto", meaning: "To send forth, hurl down.", conjugation: { type: "ω", stem: "προϊαπτ" } }, english: { word: "to send forth" } } },
+            { id: 714, french: "heros", category: "nom", gender: "m", needsReview: true, translations: { greek: { word: "ἥρως", romanized: "heros", meaning: "Hero, warrior, demigod.", declension: "3rd", gender: "m" }, english: { word: "hero" } } },
+            { id: 715, french: "lui-meme", category: "pronom", gender: "m", needsReview: true, translations: { greek: { word: "αὐτός", romanized: "autos", meaning: "Self, himself; same; he/she/it.", declension: "1st/2nd" }, english: { word: "himself" } } },
+            { id: 716, french: "proie", category: "nom", gender: "f", needsReview: true, translations: { greek: { word: "ἑλώριον", romanized: "helorion", meaning: "Prey, spoil, booty.", declension: "2nd", gender: "n" }, english: { word: "prey" } } },
+            { id: 717, french: "fabriquer", category: "verbe", gender: null, needsReview: true, translations: { greek: { word: "τεύχω", romanized: "teukho", meaning: "To make, prepare, build.", conjugation: { type: "ω", stem: "τευχ" } }, english: { word: "to make" } } },
+            { id: 718, french: "chien", category: "nom", gender: "m", needsReview: true, translations: { greek: { word: "κύων", romanized: "kyon", meaning: "Dog.", declension: "3rd", gender: "m" }, italian: { word: "cane", gender: "m" }, english: { word: "dog" } } },
+            { id: 719, french: "oiseau", category: "nom", gender: "m", needsReview: true, translations: { greek: { word: "οἰωνός", romanized: "oionos", meaning: "Bird of omen, large bird.", declension: "2nd", gender: "m" }, italian: { word: "uccello", gender: "m" }, english: { word: "bird" } } },
+            { id: 720, french: "tout", category: "adjectif", gender: "m", needsReview: true, translations: { greek: { word: "πᾶς", romanized: "pas", meaning: "All, every, whole.", declension: "3rd" }, italian: { word: "tutto" }, english: { word: "all" } } },
+            { id: 721, french: "Zeus", category: "nom propre", gender: "m", needsReview: true, translations: { greek: { word: "Ζεύς", romanized: "Zeus", meaning: "Zeus, king of the gods, god of thunder." }, english: { word: "Zeus" } } },
+            { id: 722, french: "accomplir", category: "verbe", gender: null, needsReview: true, translations: { greek: { word: "τελέω", romanized: "teleo", meaning: "To complete, fulfill, accomplish.", conjugation: { type: "ω-contract-ε", stem: "τελ" } }, english: { word: "to fulfill" } } },
+            { id: 723, french: "volonte", category: "nom", gender: "f", needsReview: true, translations: { greek: { word: "βουλή", romanized: "boule", meaning: "Will, counsel, plan, decision.", declension: "1st", gender: "f" }, english: { word: "will" } } },
+            { id: 724, french: "de", category: "preposition", gender: null, needsReview: true, translations: { greek: { word: "ἐξ/ἐκ", romanized: "ex/ek", meaning: "From, out of." }, italian: { word: "di" }, english: { word: "from" } } },
+            { id: 725, french: "qui", category: "pronom", gender: null, needsReview: true, translations: { greek: { word: "ὅς", romanized: "hos", meaning: "Who, which, that (relative pronoun)." }, italian: { word: "che" }, english: { word: "who" } } },
+            { id: 726, french: "certes", category: "adverbe", gender: null, needsReview: true, translations: { greek: { word: "δή", romanized: "de", meaning: "Indeed, certainly, now (emphatic particle)." }, english: { word: "indeed" } } },
+            { id: 727, french: "premier", category: "adjectif", gender: "m", needsReview: true, translations: { greek: { word: "πρῶτος", romanized: "protos", meaning: "First, foremost.", declension: "1st/2nd" }, italian: { word: "primo" }, english: { word: "first" } } },
+            { id: 728, french: "separer", category: "verbe", gender: null, needsReview: true, translations: { greek: { word: "διίστημι", romanized: "diistemi", meaning: "To set apart, separate, stand apart.", conjugation: { type: "μι-irreg" } }, english: { word: "to separate" } } },
+            { id: 729, french: "disputer", category: "verbe", gender: null, needsReview: true, translations: { greek: { word: "ἐρίζω", romanized: "erizo", meaning: "To strive, quarrel, contend.", conjugation: { type: "ω", stem: "ἐριδ" } }, english: { word: "to quarrel" } } },
+            { id: 730, french: "Atride", category: "nom propre", gender: "m", needsReview: true, translations: { greek: { word: "Ἀτρεΐδης", romanized: "Atreides", meaning: "Son of Atreus (Agamemnon or Menelaus)." }, english: { word: "son of Atreus" } } },
+            { id: 731, french: "roi", category: "nom", gender: "m", needsReview: true, translations: { greek: { word: "ἄναξ", romanized: "anax", meaning: "Lord, king, master.", declension: "3rd", gender: "m" }, italian: { word: "re", gender: "m" }, english: { word: "king" } } },
+            { id: 732, french: "homme", category: "nom", gender: "m", needsReview: true, translations: { greek: { word: "ἀνήρ", romanized: "aner", meaning: "Man (as opposed to woman), husband, warrior.", declension: "3rd", gender: "m" }, italian: { word: "uomo", gender: "m" }, english: { word: "man" } } },
+            { id: 733, french: "et", category: "conjonction", gender: null, needsReview: true, translations: { greek: { word: "καί", romanized: "kai", meaning: "And, also, even." }, italian: { word: "e" }, english: { word: "and" } } },
+            { id: 734, french: "divin", category: "adjectif", gender: "m", needsReview: true, translations: { greek: { word: "δῖος", romanized: "dios", meaning: "Divine, godlike, noble.", declension: "1st/2nd" }, italian: { word: "divino" }, english: { word: "divine" } } },
+            { id: 735, french: "et-aussi", category: "particule", gender: null, needsReview: true, translations: { greek: { word: "τε", romanized: "te", meaning: "And (enclitic, connects closely related items)." }, english: { word: "and" } } },
+            { id: 736, french: "mais", category: "conjonction", gender: null, needsReview: true, translations: { greek: { word: "δέ", romanized: "de", meaning: "But, and, on the other hand (postpositive particle)." }, italian: { word: "ma" }, english: { word: "but" } } },
+            { id: 737, french: "article-le", category: "article", gender: "m", needsReview: true, translations: { greek: { word: "ὁ/ἡ/τό", romanized: "ho/he/to", meaning: "The (definite article)." }, english: { word: "the" } } },
         ];
 
         // ==================== PARAGRAPHS DATA ====================
@@ -1463,6 +1503,59 @@
                     { form: "les", lemma: "les", wordId: 602 },
                     { form: "livres", lemma: "livre", wordId: 500 },
                     { form: "anciens", lemma: "ancien", wordId: 605 }
+                ]
+            },
+            {
+                id: 2,
+                title: "Iliade, Chant I (v. 1-7)",
+                sourceLanguage: "greek",
+                targetLanguage: "french",
+                text: "μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος οὐλομένην, ἣ μυρί' Ἀχαιοῖς ἄλγε' ἔθηκε, πολλὰς δ' ἰφθίμους ψυχὰς Ἄϊδι προΐαψεν ἡρώων, αὐτοὺς δὲ ἑλώρια τεῦχε κύνεσσιν οἰωνοῖσί τε πᾶσι, Διὸς δ' ἐτελείετο βουλή, ἐξ οὗ δὴ τὰ πρῶτα διαστήτην ἐρίσαντε Ἀτρεΐδης τε ἄναξ ἀνδρῶν καὶ δῖος Ἀχιλλεύς.",
+                tokens: [
+                    { form: "μῆνιν", lemma: "μῆνις", wordId: 700 },
+                    { form: "ἄειδε", lemma: "ἀείδω", wordId: 701 },
+                    { form: "θεὰ", lemma: "θεά", wordId: 702 },
+                    { form: "Πηληϊάδεω", lemma: "Πηληϊάδης", wordId: 704 },
+                    { form: "Ἀχιλῆος", lemma: "Ἀχιλλεύς", wordId: 703 },
+                    { form: "οὐλομένην", lemma: "οὐλόμενος", wordId: 705 },
+                    { form: "ἣ", lemma: "ὅς", wordId: 725 },
+                    { form: "μυρί'", lemma: "μυρίος", wordId: 706 },
+                    { form: "Ἀχαιοῖς", lemma: "Ἀχαιοί", wordId: 707 },
+                    { form: "ἄλγε'", lemma: "ἄλγος", wordId: 708 },
+                    { form: "ἔθηκε", lemma: "τίθημι", wordId: 709 },
+                    { form: "πολλὰς", lemma: "πολύς", wordId: 710 },
+                    { form: "δ'", lemma: "δέ", wordId: 736 },
+                    { form: "ἰφθίμους", lemma: "ἴφθιμος", wordId: 711 },
+                    { form: "ψυχὰς", lemma: "ψυχή", wordId: 9 },
+                    { form: "Ἄϊδι", lemma: "Ἅιδης", wordId: 712 },
+                    { form: "προΐαψεν", lemma: "προϊάπτω", wordId: 713 },
+                    { form: "ἡρώων", lemma: "ἥρως", wordId: 714 },
+                    { form: "αὐτοὺς", lemma: "αὐτός", wordId: 715 },
+                    { form: "δὲ", lemma: "δέ", wordId: 736 },
+                    { form: "ἑλώρια", lemma: "ἑλώριον", wordId: 716 },
+                    { form: "τεῦχε", lemma: "τεύχω", wordId: 717 },
+                    { form: "κύνεσσιν", lemma: "κύων", wordId: 718 },
+                    { form: "οἰωνοῖσί", lemma: "οἰωνός", wordId: 719 },
+                    { form: "τε", lemma: "τε", wordId: 735 },
+                    { form: "πᾶσι", lemma: "πᾶς", wordId: 720 },
+                    { form: "Διὸς", lemma: "Ζεύς", wordId: 721 },
+                    { form: "δ'", lemma: "δέ", wordId: 736 },
+                    { form: "ἐτελείετο", lemma: "τελέω", wordId: 722 },
+                    { form: "βουλή", lemma: "βουλή", wordId: 723 },
+                    { form: "ἐξ", lemma: "ἐξ", wordId: 724 },
+                    { form: "οὗ", lemma: "ὅς", wordId: 725 },
+                    { form: "δὴ", lemma: "δή", wordId: 726 },
+                    { form: "τὰ", lemma: "ὁ", wordId: 737 },
+                    { form: "πρῶτα", lemma: "πρῶτος", wordId: 727 },
+                    { form: "διαστήτην", lemma: "διίστημι", wordId: 728 },
+                    { form: "ἐρίσαντε", lemma: "ἐρίζω", wordId: 729 },
+                    { form: "Ἀτρεΐδης", lemma: "Ἀτρεΐδης", wordId: 730 },
+                    { form: "τε", lemma: "τε", wordId: 735 },
+                    { form: "ἄναξ", lemma: "ἄναξ", wordId: 731 },
+                    { form: "ἀνδρῶν", lemma: "ἀνήρ", wordId: 732 },
+                    { form: "καὶ", lemma: "καί", wordId: 733 },
+                    { form: "δῖος", lemma: "δῖος", wordId: 734 },
+                    { form: "Ἀχιλλεύς", lemma: "Ἀχιλλεύς", wordId: 703 }
                 ]
             }
         ];
