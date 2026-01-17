@@ -52,6 +52,15 @@
             font-size: 17px;
             font-weight: 600;
             margin-bottom: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .version {
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--text-light);
         }
 
         .subtitle {
@@ -100,6 +109,9 @@
             border-bottom: 1px solid var(--border);
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            position: sticky;
+            top: 85px;
+            z-index: 99;
         }
 
         .filter-btn {
@@ -132,6 +144,9 @@
             padding: 6px 12px;
             background: var(--card-bg);
             border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 125px;
+            z-index: 98;
         }
 
         .sort-row select {
@@ -664,7 +679,7 @@
 </head>
 <body>
     <header>
-        <h1>Dictionnaire Multilingue</h1>
+        <h1>Dictionnaire Multilingue <span class="version" id="app-version"></span></h1>
         <p class="subtitle">Francais - Italien - Grec Ancien - Anglais</p>
         <div class="search-container">
             <span class="search-icon">&#128269;</span>
@@ -1307,6 +1322,7 @@
             loadData();
             setupEventListeners();
             render();
+            document.getElementById('app-version').textContent = 'v' + DICT_VERSION;
         }
 
         function loadData() {
