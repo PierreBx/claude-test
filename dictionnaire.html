@@ -782,16 +782,50 @@
         .paragraph-context {
             background: var(--card-bg);
             border-radius: 8px;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 12px;
-            font-size: 12px;
-            color: var(--text-light);
             border-left: 3px solid var(--primary);
         }
 
-        .paragraph-context .highlight {
-            color: var(--primary);
+        .paragraph-context .context-title {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .paragraph-context .context-text {
+            font-size: 14px;
+            line-height: 1.9;
+            color: var(--text);
+        }
+
+        .paragraph-context .word-token {
+            cursor: pointer;
+            padding: 2px 3px;
+            border-radius: 3px;
+            transition: all 0.15s;
+        }
+
+        .paragraph-context .word-token:hover {
+            background: var(--border);
+        }
+
+        .paragraph-context .word-token.highlight {
+            background: var(--primary);
+            color: var(--bg);
             font-weight: 600;
+        }
+
+        .paragraph-context .word-token.linked:not(.highlight) {
+            color: var(--primary-light);
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-underline-offset: 3px;
+        }
+
+        .paragraph-context .word-token.no-link:not(.highlight) {
+            color: var(--text-light);
         }
     </style>
 </head>
@@ -945,7 +979,7 @@
 
     <script>
         // ==================== DATA ====================
-        const DICT_VERSION = 5;
+        const DICT_VERSION = 6;
 
         // Default dictionary entries
         // Structure: French as primary, translations as object
@@ -2060,12 +2094,19 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
             const contextDiv = document.getElementById('paragraph-context');
             const contentDiv = document.getElementById('word-detail-content');
 
-            // Show paragraph context with highlighted word
+            // Show paragraph context with ALL words clickable
             if (paragraph) {
-                const highlightedText = paragraph.tokens.map(t =>
-                    t.wordId === wordId ? `<span class="highlight">${t.form}</span>` : t.form
-                ).join(' ');
-                contextDiv.innerHTML = `<strong>${paragraph.title}:</strong> ${highlightedText}`;
+                const clickableTokens = paragraph.tokens.map((t, idx) => {
+                    const isCurrentWord = t.wordId === wordId;
+                    const tokenWord = words.find(w => w.id === t.wordId);
+                    const hasTranslation = tokenWord && tokenWord.translations && tokenWord.translations[targetLang];
+
+                    return `<span class="word-token ${isCurrentWord ? 'highlight' : ''} ${hasTranslation ? 'linked' : 'no-link'}"
+                        onclick="openWordFromParagraph(${paragraphId}, ${t.wordId}, '${targetLang}')"
+                        title="${t.lemma}${hasTranslation ? ' → ' + tokenWord.translations[targetLang].word : ''}"
+                    >${t.form}</span>${idx < paragraph.tokens.length - 1 ? ' ' : ''}`;
+                }).join('');
+                contextDiv.innerHTML = `<div class="context-title">${paragraph.title}</div><div class="context-text">${clickableTokens}</div>`;
             }
 
             // Render the word card
