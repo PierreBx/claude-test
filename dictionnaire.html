@@ -869,28 +869,233 @@
             border-radius: 4px;
             border-left: 3px solid var(--greek);
         }
+
+        /* Navigation tabs */
+        .nav-tabs {
+            display: flex;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-light);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .nav-tab:hover:not(.active) {
+            color: var(--text);
+        }
+
+        /* Text cards on main page */
+        .text-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .text-card:hover {
+            border-color: var(--primary);
+        }
+
+        .text-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .text-card-author {
+            font-size: 12px;
+            color: var(--text-light);
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+
+        .text-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        .text-card-langs {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Sentence display */
+        .sentence-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .sentence-num {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            background: var(--primary);
+            color: var(--bg);
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .sentence-content {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .sentence-text-area {
+            flex: 1;
+        }
+
+        .sentence-source {
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+
+        .sentence-translation {
+            font-size: 13px;
+            color: var(--text-light);
+            font-style: italic;
+            padding-left: 10px;
+            border-left: 2px solid var(--border);
+        }
+
+        /* Sentence context in word detail */
+        .sentence-context-box {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .sentence-context-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .sentence-context-source {
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 8px;
+        }
+
+        .sentence-context-translation {
+            font-size: 13px;
+            color: var(--text);
+            background: rgba(212, 162, 124, 0.1);
+            padding: 8px 10px;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary);
+        }
+
+        /* Text header when viewing a text */
+        .text-header {
+            background: var(--card-bg);
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 85px;
+            z-index: 98;
+        }
+
+        .text-header-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .text-header-meta {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        .back-to-texts {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 6px;
+            cursor: pointer;
+        }
+
+        .back-to-texts:hover {
+            color: var(--primary);
+        }
+
+        /* Appears in - dictionary cross-references */
+        .appears-in {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .appears-in-label {
+            margin-right: 6px;
+        }
+
+        .appears-in-link {
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .appears-in-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Dictionnaire Multilingue <span class="version" id="app-version"></span></h1>
-        <p class="subtitle">Francais - Italien - Grec Ancien - Anglais</p>
-        <div class="search-container">
+        <h1>Lecteur Multilingue <span class="version" id="app-version"></span></h1>
+        <p class="subtitle">Textes en Francais, Italien, Grec Ancien, Anglais</p>
+        <div class="search-container" id="search-container" style="display: none;">
             <span class="search-icon">&#128269;</span>
-            <input type="text" id="search" placeholder="Rechercher...">
+            <input type="text" id="search" placeholder="Rechercher dans le dictionnaire...">
         </div>
     </header>
 
-    <div class="filters">
-        <button class="filter-btn active" data-filter="all">Tous</button>
-        <button class="filter-btn" data-filter="italian"><span class="flag">&#127470;&#127481;</span>Italien</button>
-        <button class="filter-btn" data-filter="greek"><span class="flag">&#127468;&#127479;</span>Grec</button>
-        <button class="filter-btn" data-filter="english"><span class="flag">&#127468;&#127463;</span>Anglais</button>
-        <button class="filter-btn" data-filter="favorites"><span class="flag">&#9829;</span>Favoris</button>
-        <button class="filter-btn" data-filter="textes"><span class="flag">&#128220;</span>Textes</button>
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-view="texts">&#128220; Textes</button>
+        <button class="nav-tab" data-view="dictionary">&#128218; Dictionnaire</button>
     </div>
 
-    <div class="sort-row">
+    <div class="sort-row" id="dict-controls" style="display: none;">
         <div class="stats">
             <span class="stat-item"><span id="total-count">0</span> mots</span>
             <span class="stat-item">&#127470;&#127481; <span id="italian-count">0</span></span>
@@ -1021,7 +1226,7 @@
 
     <script>
         // ==================== DATA ====================
-        const DICT_VERSION = 7;
+        const DICT_VERSION = 8;
 
         // Default dictionary entries
         // Structure: French as primary, translations as object
@@ -1561,90 +1766,146 @@
             { id: 737, french: "article-le", category: "article", gender: "m", needsReview: true, translations: { greek: { word: "ὁ/ἡ/τό", romanized: "ho/he/to", meaning: "The (definite article)." }, english: { word: "the" } } },
         ];
 
-        // ==================== PARAGRAPHS DATA ====================
-        const defaultParagraphs = [
+        // ==================== TEXTS DATA (Text-first architecture) ====================
+        const defaultTexts = [
             {
                 id: 1,
-                title: "La quete du philosophe",
+                title: "La quête du philosophe",
                 sourceLanguage: "french",
                 targetLanguage: "italian",
-                text: "Le philosophe cherche la sagesse dans les livres anciens.",
-                tokens: [
-                    { form: "Le", lemma: "le", wordId: 600 },
-                    { form: "philosophe", lemma: "philosophe", wordId: 603 },
-                    { form: "cherche", lemma: "chercher", wordId: 60 },
-                    { form: "la", lemma: "la", wordId: 601 },
-                    { form: "sagesse", lemma: "sagesse", wordId: 2 },
-                    { form: "dans", lemma: "dans", wordId: 604 },
-                    { form: "les", lemma: "les", wordId: 602 },
-                    { form: "livres", lemma: "livre", wordId: 500 },
-                    { form: "anciens", lemma: "ancien", wordId: 605 }
+                sentences: [
+                    {
+                        num: 1,
+                        text: "Le philosophe cherche la sagesse dans les livres anciens.",
+                        translation: "Il filosofo cerca la saggezza nei libri antichi.",
+                        tokens: [
+                            { form: "Le", lemma: "le", wordId: 600 },
+                            { form: "philosophe", lemma: "philosophe", wordId: 603 },
+                            { form: "cherche", lemma: "chercher", wordId: 60 },
+                            { form: "la", lemma: "la", wordId: 601 },
+                            { form: "sagesse", lemma: "sagesse", wordId: 2 },
+                            { form: "dans", lemma: "dans", wordId: 604 },
+                            { form: "les", lemma: "les", wordId: 602 },
+                            { form: "livres", lemma: "livre", wordId: 500 },
+                            { form: "anciens", lemma: "ancien", wordId: 605 }
+                        ]
+                    }
                 ]
             },
             {
                 id: 2,
                 title: "Iliade, Chant I (v. 1-7)",
+                author: "Homère",
                 sourceLanguage: "greek",
                 targetLanguage: "french",
-                text: "μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος οὐλομένην, ἣ μυρί' Ἀχαιοῖς ἄλγε' ἔθηκε, πολλὰς δ' ἰφθίμους ψυχὰς Ἄϊδι προΐαψεν ἡρώων, αὐτοὺς δὲ ἑλώρια τεῦχε κύνεσσιν οἰωνοῖσί τε πᾶσι, Διὸς δ' ἐτελείετο βουλή, ἐξ οὗ δὴ τὰ πρῶτα διαστήτην ἐρίσαντε Ἀτρεΐδης τε ἄναξ ἀνδρῶν καὶ δῖος Ἀχιλλεύς.",
-                tokens: [
-                    { form: "μῆνιν", lemma: "μῆνις", wordId: 700, formInfo: "Accusatif singulier féminin — objet direct de ἄειδε" },
-                    { form: "ἄειδε", lemma: "ἀείδω", wordId: 701, formInfo: "Impératif aoriste, 2ème personne du singulier" },
-                    { form: "θεὰ", lemma: "θεά", wordId: 702, formInfo: "Nominatif singulier féminin — vocatif (invocation à la Muse)" },
-                    { form: "Πηληϊάδεω", lemma: "Πηληϊάδης", wordId: 704, formInfo: "Génitif singulier masculin — forme ionique/épique en -εω" },
-                    { form: "Ἀχιλῆος", lemma: "Ἀχιλλεύς", wordId: 703, formInfo: "Génitif singulier masculin — complément de Πηληϊάδεω" },
-                    { form: "οὐλομένην", lemma: "οὐλόμενος", wordId: 705, formInfo: "Accusatif singulier féminin — participe moyen/passif, accord avec μῆνιν" },
-                    { form: "ἣ", lemma: "ὅς", wordId: 725, formInfo: "Nominatif singulier féminin — pronom relatif, antécédent: μῆνιν" },
-                    { form: "μυρί'", lemma: "μυρίος", wordId: 706, formInfo: "Accusatif pluriel neutre — élision de μυρία devant voyelle" },
-                    { form: "Ἀχαιοῖς", lemma: "Ἀχαιοί", wordId: 707, formInfo: "Datif pluriel masculin — complément d'attribution" },
-                    { form: "ἄλγε'", lemma: "ἄλγος", wordId: 708, formInfo: "Accusatif pluriel neutre — élision de ἄλγεα, objet de ἔθηκε" },
-                    { form: "ἔθηκε", lemma: "τίθημι", wordId: 709, formInfo: "Aoriste indicatif actif, 3ème personne du singulier" },
-                    { form: "πολλὰς", lemma: "πολύς", wordId: 710, formInfo: "Accusatif pluriel féminin — accord avec ψυχάς" },
-                    { form: "δ'", lemma: "δέ", wordId: 736, formInfo: "Particule postpositive — élision de δέ, valeur adversative légère" },
-                    { form: "ἰφθίμους", lemma: "ἴφθιμος", wordId: 711, formInfo: "Accusatif pluriel féminin — épithète de ψυχάς" },
-                    { form: "ψυχὰς", lemma: "ψυχή", wordId: 9, formInfo: "Accusatif pluriel féminin — objet de προΐαψεν" },
-                    { form: "Ἄϊδι", lemma: "Ἅιδης", wordId: 712, formInfo: "Datif singulier masculin — complément de direction (vers Hadès)" },
-                    { form: "προΐαψεν", lemma: "προϊάπτω", wordId: 713, formInfo: "Aoriste indicatif actif, 3ème personne du singulier" },
-                    { form: "ἡρώων", lemma: "ἥρως", wordId: 714, formInfo: "Génitif pluriel masculin — complément de ψυχάς" },
-                    { form: "αὐτοὺς", lemma: "αὐτός", wordId: 715, formInfo: "Accusatif pluriel masculin — pronom intensif, réfère aux héros" },
-                    { form: "δὲ", lemma: "δέ", wordId: 736, formInfo: "Particule postpositive — opposition avec la proposition précédente" },
-                    { form: "ἑλώρια", lemma: "ἑλώριον", wordId: 716, formInfo: "Accusatif pluriel neutre — attribut de αὐτούς (double accusatif)" },
-                    { form: "τεῦχε", lemma: "τεύχω", wordId: 717, formInfo: "Imparfait indicatif actif, 3ème personne du singulier" },
-                    { form: "κύνεσσιν", lemma: "κύων", wordId: 718, formInfo: "Datif pluriel masculin — forme épique en -εσσι, complément d'attribution" },
-                    { form: "οἰωνοῖσί", lemma: "οἰωνός", wordId: 719, formInfo: "Datif pluriel masculin — forme épique avec -ι final mobile" },
-                    { form: "τε", lemma: "τε", wordId: 735, formInfo: "Particule enclitique — coordination étroite (κύνεσσιν... τε... τε)" },
-                    { form: "πᾶσι", lemma: "πᾶς", wordId: 720, formInfo: "Datif pluriel masculin/neutre — accord avec οἰωνοῖσί" },
-                    { form: "Διὸς", lemma: "Ζεύς", wordId: 721, formInfo: "Génitif singulier masculin — complément de βουλή" },
-                    { form: "δ'", lemma: "δέ", wordId: 736, formInfo: "Particule postpositive — transition vers nouvelle proposition" },
-                    { form: "ἐτελείετο", lemma: "τελέω", wordId: 722, formInfo: "Imparfait indicatif moyen/passif, 3ème personne du singulier" },
-                    { form: "βουλή", lemma: "βουλή", wordId: 723, formInfo: "Nominatif singulier féminin — sujet de ἐτελείετο" },
-                    { form: "ἐξ", lemma: "ἐξ", wordId: 724, formInfo: "Préposition + génitif — sens temporel 'depuis que'" },
-                    { form: "οὗ", lemma: "ὅς", wordId: 725, formInfo: "Génitif singulier masculin/neutre — pronom relatif temporel" },
-                    { form: "δὴ", lemma: "δή", wordId: 726, formInfo: "Particule emphatique — renforce τὰ πρῶτα" },
-                    { form: "τὰ", lemma: "ὁ", wordId: 737, formInfo: "Accusatif pluriel neutre — article avec πρῶτα (adverbial)" },
-                    { form: "πρῶτα", lemma: "πρῶτος", wordId: 727, formInfo: "Accusatif pluriel neutre — emploi adverbial 'pour la première fois'" },
-                    { form: "διαστήτην", lemma: "διίστημι", wordId: 728, formInfo: "Aoriste indicatif actif, 3ème personne du DUEL — deux sujets" },
-                    { form: "ἐρίσαντε", lemma: "ἐρίζω", wordId: 729, formInfo: "Participe aoriste actif, nominatif DUEL — accord avec le sujet duel" },
-                    { form: "Ἀτρεΐδης", lemma: "Ἀτρεΐδης", wordId: 730, formInfo: "Nominatif singulier masculin — premier sujet du duel (Agamemnon)" },
-                    { form: "τε", lemma: "τε", wordId: 735, formInfo: "Particule enclitique — lie les deux sujets du duel" },
-                    { form: "ἄναξ", lemma: "ἄναξ", wordId: 731, formInfo: "Nominatif singulier masculin — apposition à Ἀτρεΐδης" },
-                    { form: "ἀνδρῶν", lemma: "ἀνήρ", wordId: 732, formInfo: "Génitif pluriel masculin — complément de ἄναξ" },
-                    { form: "καὶ", lemma: "καί", wordId: 733, formInfo: "Conjonction de coordination — introduit le second sujet" },
-                    { form: "δῖος", lemma: "δῖος", wordId: 734, formInfo: "Nominatif singulier masculin — épithète homérique d'Achille" },
-                    { form: "Ἀχιλλεύς", lemma: "Ἀχιλλεύς", wordId: 703, formInfo: "Nominatif singulier masculin — second sujet du duel" }
+                sentences: [
+                    {
+                        num: 1,
+                        text: "μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος",
+                        translation: "Chante, déesse, la colère d'Achille fils de Pélée,",
+                        tokens: [
+                            { form: "μῆνιν", lemma: "μῆνις", wordId: 700, formInfo: "Accusatif singulier féminin — objet direct de ἄειδε" },
+                            { form: "ἄειδε", lemma: "ἀείδω", wordId: 701, formInfo: "Impératif aoriste, 2ème personne du singulier" },
+                            { form: "θεὰ", lemma: "θεά", wordId: 702, formInfo: "Nominatif singulier féminin — vocatif (invocation à la Muse)" },
+                            { form: "Πηληϊάδεω", lemma: "Πηληϊάδης", wordId: 704, formInfo: "Génitif singulier masculin — forme ionique/épique en -εω" },
+                            { form: "Ἀχιλῆος", lemma: "Ἀχιλλεύς", wordId: 703, formInfo: "Génitif singulier masculin — complément de Πηληϊάδεω" }
+                        ]
+                    },
+                    {
+                        num: 2,
+                        text: "οὐλομένην, ἣ μυρί' Ἀχαιοῖς ἄλγε' ἔθηκε,",
+                        translation: "cette colère funeste, qui causa aux Achéens d'innombrables maux,",
+                        tokens: [
+                            { form: "οὐλομένην", lemma: "οὐλόμενος", wordId: 705, formInfo: "Accusatif singulier féminin — participe moyen/passif, accord avec μῆνιν" },
+                            { form: "ἣ", lemma: "ὅς", wordId: 725, formInfo: "Nominatif singulier féminin — pronom relatif, antécédent: μῆνιν" },
+                            { form: "μυρί'", lemma: "μυρίος", wordId: 706, formInfo: "Accusatif pluriel neutre — élision de μυρία devant voyelle" },
+                            { form: "Ἀχαιοῖς", lemma: "Ἀχαιοί", wordId: 707, formInfo: "Datif pluriel masculin — complément d'attribution" },
+                            { form: "ἄλγε'", lemma: "ἄλγος", wordId: 708, formInfo: "Accusatif pluriel neutre — élision de ἄλγεα, objet de ἔθηκε" },
+                            { form: "ἔθηκε", lemma: "τίθημι", wordId: 709, formInfo: "Aoriste indicatif actif, 3ème personne du singulier" }
+                        ]
+                    },
+                    {
+                        num: 3,
+                        text: "πολλὰς δ' ἰφθίμους ψυχὰς Ἄϊδι προΐαψεν",
+                        translation: "et précipita chez Hadès maintes âmes vaillantes",
+                        tokens: [
+                            { form: "πολλὰς", lemma: "πολύς", wordId: 710, formInfo: "Accusatif pluriel féminin — accord avec ψυχάς" },
+                            { form: "δ'", lemma: "δέ", wordId: 736, formInfo: "Particule postpositive — élision de δέ, valeur adversative légère" },
+                            { form: "ἰφθίμους", lemma: "ἴφθιμος", wordId: 711, formInfo: "Accusatif pluriel féminin — épithète de ψυχάς" },
+                            { form: "ψυχὰς", lemma: "ψυχή", wordId: 9, formInfo: "Accusatif pluriel féminin — objet de προΐαψεν" },
+                            { form: "Ἄϊδι", lemma: "Ἅιδης", wordId: 712, formInfo: "Datif singulier masculin — complément de direction (vers Hadès)" },
+                            { form: "προΐαψεν", lemma: "προϊάπτω", wordId: 713, formInfo: "Aoriste indicatif actif, 3ème personne du singulier" }
+                        ]
+                    },
+                    {
+                        num: 4,
+                        text: "ἡρώων, αὐτοὺς δὲ ἑλώρια τεῦχε κύνεσσιν",
+                        translation: "de héros, livrant leurs corps en proie aux chiens",
+                        tokens: [
+                            { form: "ἡρώων", lemma: "ἥρως", wordId: 714, formInfo: "Génitif pluriel masculin — complément de ψυχάς" },
+                            { form: "αὐτοὺς", lemma: "αὐτός", wordId: 715, formInfo: "Accusatif pluriel masculin — pronom intensif, réfère aux héros" },
+                            { form: "δὲ", lemma: "δέ", wordId: 736, formInfo: "Particule postpositive — opposition avec la proposition précédente" },
+                            { form: "ἑλώρια", lemma: "ἑλώριον", wordId: 716, formInfo: "Accusatif pluriel neutre — attribut de αὐτούς (double accusatif)" },
+                            { form: "τεῦχε", lemma: "τεύχω", wordId: 717, formInfo: "Imparfait indicatif actif, 3ème personne du singulier" },
+                            { form: "κύνεσσιν", lemma: "κύων", wordId: 718, formInfo: "Datif pluriel masculin — forme épique en -εσσι, complément d'attribution" }
+                        ]
+                    },
+                    {
+                        num: 5,
+                        text: "οἰωνοῖσί τε πᾶσι, Διὸς δ' ἐτελείετο βουλή,",
+                        translation: "et à tous les oiseaux — ainsi s'accomplissait la volonté de Zeus —",
+                        tokens: [
+                            { form: "οἰωνοῖσί", lemma: "οἰωνός", wordId: 719, formInfo: "Datif pluriel masculin — forme épique avec -ι final mobile" },
+                            { form: "τε", lemma: "τε", wordId: 735, formInfo: "Particule enclitique — coordination étroite (κύνεσσιν... τε... τε)" },
+                            { form: "πᾶσι", lemma: "πᾶς", wordId: 720, formInfo: "Datif pluriel masculin/neutre — accord avec οἰωνοῖσί" },
+                            { form: "Διὸς", lemma: "Ζεύς", wordId: 721, formInfo: "Génitif singulier masculin — complément de βουλή" },
+                            { form: "δ'", lemma: "δέ", wordId: 736, formInfo: "Particule postpositive — transition vers nouvelle proposition" },
+                            { form: "ἐτελείετο", lemma: "τελέω", wordId: 722, formInfo: "Imparfait indicatif moyen/passif, 3ème personne du singulier" },
+                            { form: "βουλή", lemma: "βουλή", wordId: 723, formInfo: "Nominatif singulier féminin — sujet de ἐτελείετο" }
+                        ]
+                    },
+                    {
+                        num: 6,
+                        text: "ἐξ οὗ δὴ τὰ πρῶτα διαστήτην ἐρίσαντε",
+                        translation: "depuis le jour où une querelle divisa",
+                        tokens: [
+                            { form: "ἐξ", lemma: "ἐξ", wordId: 724, formInfo: "Préposition + génitif — sens temporel 'depuis que'" },
+                            { form: "οὗ", lemma: "ὅς", wordId: 725, formInfo: "Génitif singulier masculin/neutre — pronom relatif temporel" },
+                            { form: "δὴ", lemma: "δή", wordId: 726, formInfo: "Particule emphatique — renforce τὰ πρῶτα" },
+                            { form: "τὰ", lemma: "ὁ", wordId: 737, formInfo: "Accusatif pluriel neutre — article avec πρῶτα (adverbial)" },
+                            { form: "πρῶτα", lemma: "πρῶτος", wordId: 727, formInfo: "Accusatif pluriel neutre — emploi adverbial 'pour la première fois'" },
+                            { form: "διαστήτην", lemma: "διίστημι", wordId: 728, formInfo: "Aoriste indicatif actif, 3ème personne du DUEL — deux sujets" },
+                            { form: "ἐρίσαντε", lemma: "ἐρίζω", wordId: 729, formInfo: "Participe aoriste actif, nominatif DUEL — accord avec le sujet duel" }
+                        ]
+                    },
+                    {
+                        num: 7,
+                        text: "Ἀτρεΐδης τε ἄναξ ἀνδρῶν καὶ δῖος Ἀχιλλεύς.",
+                        translation: "l'Atride, roi des hommes, et le divin Achille.",
+                        tokens: [
+                            { form: "Ἀτρεΐδης", lemma: "Ἀτρεΐδης", wordId: 730, formInfo: "Nominatif singulier masculin — premier sujet du duel (Agamemnon)" },
+                            { form: "τε", lemma: "τε", wordId: 735, formInfo: "Particule enclitique — lie les deux sujets du duel" },
+                            { form: "ἄναξ", lemma: "ἄναξ", wordId: 731, formInfo: "Nominatif singulier masculin — apposition à Ἀτρεΐδης" },
+                            { form: "ἀνδρῶν", lemma: "ἀνήρ", wordId: 732, formInfo: "Génitif pluriel masculin — complément de ἄναξ" },
+                            { form: "καὶ", lemma: "καί", wordId: 733, formInfo: "Conjonction de coordination — introduit le second sujet" },
+                            { form: "δῖος", lemma: "δῖος", wordId: 734, formInfo: "Nominatif singulier masculin — épithète homérique d'Achille" },
+                            { form: "Ἀχιλλεύς", lemma: "Ἀχιλλεύς", wordId: 703, formInfo: "Nominatif singulier masculin — second sujet du duel" }
+                        ]
+                    }
                 ]
             }
         ];
 
         // ==================== STATE ====================
         let words = [];
-        let paragraphs = [];
+        let texts = [];
         let favorites = [];
-        let currentFilter = 'all';
+        let currentView = 'texts'; // 'texts' or 'dictionary'
+        let currentTextId = null;
+        let currentSentenceNum = null;
         let currentSort = 'alpha-asc';
         let searchQuery = '';
         let editingId = null;
-        let currentParagraphId = null; // For back navigation
 
         // ==================== INITIALIZATION ====================
         function init() {
@@ -1658,7 +1919,7 @@
             const savedVersion = localStorage.getItem('dict-version');
             const savedWords = localStorage.getItem('dict-words');
             const savedFavorites = localStorage.getItem('dict-favorites');
-            const savedParagraphs = localStorage.getItem('dict-paragraphs');
+            const savedTexts = localStorage.getItem('dict-texts');
 
             if (savedVersion !== String(DICT_VERSION)) {
                 let customWords = [];
@@ -1667,19 +1928,19 @@
                     customWords = oldWords.filter(w => w.custom);
                 }
                 words = [...defaultWords.map(w => ({...w, custom: false})), ...customWords];
-                paragraphs = [...defaultParagraphs];
+                texts = [...defaultTexts];
                 localStorage.setItem('dict-version', DICT_VERSION);
                 saveWords();
-                saveParagraphs();
+                saveTexts();
             } else if (savedWords) {
                 words = JSON.parse(savedWords);
-                paragraphs = savedParagraphs ? JSON.parse(savedParagraphs) : [...defaultParagraphs];
+                texts = savedTexts ? JSON.parse(savedTexts) : [...defaultTexts];
             } else {
                 words = [...defaultWords.map(w => ({...w, custom: false}))];
-                paragraphs = [...defaultParagraphs];
+                texts = [...defaultTexts];
                 localStorage.setItem('dict-version', DICT_VERSION);
                 saveWords();
-                saveParagraphs();
+                saveTexts();
             }
 
             favorites = savedFavorites ? JSON.parse(savedFavorites) : [];
@@ -1689,8 +1950,8 @@
             localStorage.setItem('dict-words', JSON.stringify(words));
         }
 
-        function saveParagraphs() {
-            localStorage.setItem('dict-paragraphs', JSON.stringify(paragraphs));
+        function saveTexts() {
+            localStorage.setItem('dict-texts', JSON.stringify(texts));
         }
 
         function saveFavorites() {
@@ -1699,18 +1960,21 @@
 
         // ==================== EVENT LISTENERS ====================
         function setupEventListeners() {
+            // Navigation tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentView = tab.dataset.view;
+                    currentTextId = null;
+                    updateUIForView();
+                    render();
+                });
+            });
+
             document.getElementById('search').addEventListener('input', (e) => {
                 searchQuery = e.target.value.toLowerCase();
                 render();
-            });
-
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentFilter = btn.dataset.filter;
-                    render();
-                });
             });
 
             document.getElementById('sort-select').addEventListener('change', (e) => {
@@ -2031,21 +2295,127 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
             return filtered;
         }
 
+        // ==================== UI HELPERS ====================
+        function updateUIForView() {
+            const searchContainer = document.getElementById('search-container');
+            const dictControls = document.getElementById('dict-controls');
+
+            if (currentView === 'dictionary') {
+                searchContainer.style.display = 'block';
+                dictControls.style.display = 'flex';
+            } else {
+                searchContainer.style.display = 'none';
+                dictControls.style.display = 'none';
+            }
+        }
+
+        const langFlags = {
+            french: '&#127467;&#127479;',
+            italian: '&#127470;&#127481;',
+            greek: '&#127468;&#127479;',
+            english: '&#127468;&#127463;'
+        };
+
         // ==================== RENDERING ====================
         function render() {
             const container = document.getElementById('word-list');
 
-            // Stats
+            // Stats for dictionary
             document.getElementById('total-count').textContent = words.length;
             document.getElementById('italian-count').textContent = words.filter(w => w.translations?.italian).length;
             document.getElementById('greek-count').textContent = words.filter(w => w.translations?.greek).length;
 
-            // Handle Textes filter separately
-            if (currentFilter === 'textes') {
-                renderParagraphs(container);
+            if (currentView === 'texts') {
+                if (currentTextId) {
+                    renderTextDetail(container);
+                } else {
+                    renderTextsList(container);
+                }
+            } else {
+                renderDictionary(container);
+            }
+        }
+
+        function renderTextsList(container) {
+            if (texts.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">&#128220;</div>
+                        <p>Aucun texte disponible</p>
+                    </div>
+                `;
                 return;
             }
 
+            container.innerHTML = texts.map(t => `
+                <div class="text-card" onclick="openText(${t.id})">
+                    <div class="text-card-title">${escapeHtml(t.title)}</div>
+                    ${t.author ? `<div class="text-card-author">${escapeHtml(t.author)}</div>` : ''}
+                    <div class="text-card-meta">
+                        <div class="text-card-langs">
+                            ${langFlags[t.sourceLanguage] || ''} → ${langFlags[t.targetLanguage] || ''}
+                        </div>
+                        <span>${t.sentences.length} vers</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openText(textId) {
+            currentTextId = textId;
+            render();
+        }
+
+        function backToTexts() {
+            currentTextId = null;
+            render();
+        }
+
+        function renderTextDetail(container) {
+            const text = texts.find(t => t.id === currentTextId);
+            if (!text) return;
+
+            let html = `
+                <div class="text-header">
+                    <div class="back-to-texts" onclick="backToTexts()">← Retour aux textes</div>
+                    <div class="text-header-title">${escapeHtml(text.title)}</div>
+                    <div class="text-header-meta">
+                        ${text.author ? text.author + ' — ' : ''}${langFlags[text.sourceLanguage]} → ${langFlags[text.targetLanguage]}
+                    </div>
+                </div>
+            `;
+
+            html += text.sentences.map(s => `
+                <div class="sentence-card">
+                    <div class="sentence-content">
+                        <span class="sentence-num">${s.num}</span>
+                        <div class="sentence-text-area">
+                            <div class="sentence-source">
+                                ${renderSentenceTokens(text, s)}
+                            </div>
+                            <div class="sentence-translation">${escapeHtml(s.translation)}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        function renderSentenceTokens(text, sentence) {
+            return sentence.tokens.map((token, idx) => {
+                const word = words.find(w => w.id === token.wordId);
+                const hasTranslation = word && word.translations && word.translations[text.targetLanguage];
+                const cssClass = hasTranslation ? 'linked' : 'no-link';
+
+                return `<span class="word-token ${cssClass}"
+                    onclick="openWordFromSentence(${text.id}, ${sentence.num}, ${token.wordId})"
+                    title="${token.lemma}${hasTranslation ? ' → ' + word.translations[text.targetLanguage].word : ''}"
+                >${token.form}</span>${idx < sentence.tokens.length - 1 ? ' ' : ''}`;
+            }).join('');
+        }
+
+        function renderDictionary(container) {
             const filtered = getFilteredWords();
 
             if (filtered.length === 0) {
@@ -2075,81 +2445,76 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                         </div>
                     </div>
                     ${renderTranslations(word)}
+                    ${renderAppearsIn(word.id)}
                 </div>
             `).join('');
         }
 
-        function renderParagraphs(container) {
-            if (paragraphs.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">&#128220;</div>
-                        <p>Aucun texte disponible</p>
-                    </div>
-                `;
-                return;
-            }
+        function renderAppearsIn(wordId) {
+            const appearances = [];
+            texts.forEach(text => {
+                text.sentences.forEach(sentence => {
+                    if (sentence.tokens.some(t => t.wordId === wordId)) {
+                        appearances.push({
+                            textId: text.id,
+                            textTitle: text.title,
+                            sentenceNum: sentence.num
+                        });
+                    }
+                });
+            });
 
-            const langFlags = {
-                french: '&#127467;&#127479;',
-                italian: '&#127470;&#127481;',
-                greek: '&#127468;&#127479;',
-                english: '&#127468;&#127463;'
-            };
+            if (appearances.length === 0) return '';
 
-            container.innerHTML = paragraphs.map(p => `
-                <div class="paragraph-card" data-paragraph-id="${p.id}">
-                    <div class="paragraph-header">
-                        <div class="paragraph-lang">
-                            ${langFlags[p.sourceLanguage] || ''} ${p.sourceLanguage} → ${langFlags[p.targetLanguage] || ''} ${p.targetLanguage}
-                        </div>
-                        <span>${p.title || 'Texte #' + p.id}</span>
-                    </div>
-                    <div class="paragraph-text">
-                        ${renderParagraphTokens(p)}
-                    </div>
+            return `
+                <div class="appears-in">
+                    <span class="appears-in-label">Apparaît dans :</span>
+                    ${appearances.map(a => `
+                        <span class="appears-in-link" onclick="openWordFromSentence(${a.textId}, ${a.sentenceNum}, ${wordId})">
+                            ${escapeHtml(a.textTitle)} v.${a.sentenceNum}
+                        </span>
+                    `).join(', ')}
                 </div>
-            `).join('');
+            `;
         }
 
-        function renderParagraphTokens(paragraph) {
-            return paragraph.tokens.map((token, idx) => {
-                const word = words.find(w => w.id === token.wordId);
-                const hasTranslation = word && word.translations && word.translations[paragraph.targetLanguage];
-                const cssClass = hasTranslation ? 'linked' : 'no-link';
-
-                return `<span class="word-token ${cssClass}"
-                    onclick="openWordFromParagraph(${paragraph.id}, ${token.wordId}, '${paragraph.targetLanguage}')"
-                    title="${token.lemma}${hasTranslation ? ' → ' + word.translations[paragraph.targetLanguage].word : ' (pas de traduction)'}"
-                >${token.form}</span>${idx < paragraph.tokens.length - 1 ? ' ' : ''}`;
-            }).join('');
-        }
-
-        function openWordFromParagraph(paragraphId, wordId, targetLang) {
+        function openWordFromSentence(textId, sentenceNum, wordId) {
             const word = words.find(w => w.id === wordId);
             if (!word) return;
 
-            currentParagraphId = paragraphId;
-            const paragraph = paragraphs.find(p => p.id === paragraphId);
-            const currentToken = paragraph?.tokens.find(t => t.wordId === wordId);
+            currentTextId = textId;
+            currentSentenceNum = sentenceNum;
+            const text = texts.find(t => t.id === textId);
+            const sentence = text?.sentences.find(s => s.num === sentenceNum);
+            const currentToken = sentence?.tokens.find(t => t.wordId === wordId);
 
             const overlay = document.getElementById('word-detail-overlay');
             const contextDiv = document.getElementById('paragraph-context');
             const contentDiv = document.getElementById('word-detail-content');
 
-            // Show paragraph context with ALL words clickable
-            if (paragraph) {
-                const clickableTokens = paragraph.tokens.map((t, idx) => {
+            // Build sentence context with clickable words
+            if (text && sentence) {
+                const clickableTokens = sentence.tokens.map((t, idx) => {
                     const isCurrentWord = t.wordId === wordId;
                     const tokenWord = words.find(w => w.id === t.wordId);
-                    const hasTranslation = tokenWord && tokenWord.translations && tokenWord.translations[targetLang];
+                    const hasTranslation = tokenWord && tokenWord.translations && tokenWord.translations[text.targetLanguage];
 
                     return `<span class="word-token ${isCurrentWord ? 'highlight' : ''} ${hasTranslation ? 'linked' : 'no-link'}"
-                        onclick="openWordFromParagraph(${paragraphId}, ${t.wordId}, '${targetLang}')"
-                        title="${t.lemma}${hasTranslation ? ' → ' + tokenWord.translations[targetLang].word : ''}"
-                    >${t.form}</span>${idx < paragraph.tokens.length - 1 ? ' ' : ''}`;
+                        onclick="openWordFromSentence(${textId}, ${sentenceNum}, ${t.wordId})"
+                        title="${t.lemma}${hasTranslation ? ' → ' + tokenWord.translations[text.targetLanguage].word : ''}"
+                    >${t.form}</span>${idx < sentence.tokens.length - 1 ? ' ' : ''}`;
                 }).join('');
-                contextDiv.innerHTML = `<div class="context-title">${paragraph.title}</div><div class="context-text">${clickableTokens}</div>`;
+
+                contextDiv.innerHTML = `
+                    <div class="sentence-context-box">
+                        <div class="sentence-context-header">
+                            <span class="sentence-num">${sentence.num}</span>
+                            <span style="font-size: 12px; color: var(--text-light);">${escapeHtml(text.title)}</span>
+                        </div>
+                        <div class="sentence-context-source">${clickableTokens}</div>
+                        <div class="sentence-context-translation">${escapeHtml(sentence.translation)}</div>
+                    </div>
+                `;
             }
 
             // Build form info display if available
@@ -2176,12 +2541,12 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                             ${word.needsReview ? `<span class="review-badge">A VERIFIER</span>` : ''}
                         </div>
                         <div class="word-actions">
-                            <button class="action-btn favorite ${favorites.includes(word.id) ? 'active' : ''}" onclick="toggleFavorite(${word.id}); openWordFromParagraph(${paragraphId}, ${wordId}, '${targetLang}');">
+                            <button class="action-btn favorite ${favorites.includes(word.id) ? 'active' : ''}" onclick="toggleFavorite(${word.id}); openWordFromSentence(${textId}, ${sentenceNum}, ${wordId});">
                                 ${favorites.includes(word.id) ? '&#9829;' : '&#9825;'}
                             </button>
                         </div>
                     </div>
-                    ${renderTranslations(word, paragraph?.sourceLanguage)}
+                    ${renderTranslations(word, text?.sourceLanguage)}
                 </div>
             `;
 
@@ -2190,7 +2555,8 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
 
         function closeWordDetail() {
             document.getElementById('word-detail-overlay').classList.remove('active');
-            currentParagraphId = null;
+            currentTextId = null;
+            currentSentenceNum = null;
         }
 
         function renderTranslations(word, priorityLang = null) {
