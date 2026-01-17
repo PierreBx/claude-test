@@ -827,6 +827,48 @@
         .paragraph-context .word-token.no-link:not(.highlight) {
             color: var(--text-light);
         }
+
+        /* Form info box for grammatical details */
+        .form-info-box {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(212, 162, 124, 0.1) 100%);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-info-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .form-info-form {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-info-arrow {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .form-info-lemma {
+            font-size: 14px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .form-info-details {
+            font-size: 13px;
+            color: var(--text);
+            background: var(--bg);
+            padding: 6px 10px;
+            border-radius: 4px;
+            border-left: 3px solid var(--greek);
+        }
     </style>
 </head>
 <body>
@@ -979,7 +1021,7 @@
 
     <script>
         // ==================== DATA ====================
-        const DICT_VERSION = 6;
+        const DICT_VERSION = 7;
 
         // Default dictionary entries
         // Structure: French as primary, translations as object
@@ -1546,50 +1588,50 @@
                 targetLanguage: "french",
                 text: "μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος οὐλομένην, ἣ μυρί' Ἀχαιοῖς ἄλγε' ἔθηκε, πολλὰς δ' ἰφθίμους ψυχὰς Ἄϊδι προΐαψεν ἡρώων, αὐτοὺς δὲ ἑλώρια τεῦχε κύνεσσιν οἰωνοῖσί τε πᾶσι, Διὸς δ' ἐτελείετο βουλή, ἐξ οὗ δὴ τὰ πρῶτα διαστήτην ἐρίσαντε Ἀτρεΐδης τε ἄναξ ἀνδρῶν καὶ δῖος Ἀχιλλεύς.",
                 tokens: [
-                    { form: "μῆνιν", lemma: "μῆνις", wordId: 700 },
-                    { form: "ἄειδε", lemma: "ἀείδω", wordId: 701 },
-                    { form: "θεὰ", lemma: "θεά", wordId: 702 },
-                    { form: "Πηληϊάδεω", lemma: "Πηληϊάδης", wordId: 704 },
-                    { form: "Ἀχιλῆος", lemma: "Ἀχιλλεύς", wordId: 703 },
-                    { form: "οὐλομένην", lemma: "οὐλόμενος", wordId: 705 },
-                    { form: "ἣ", lemma: "ὅς", wordId: 725 },
-                    { form: "μυρί'", lemma: "μυρίος", wordId: 706 },
-                    { form: "Ἀχαιοῖς", lemma: "Ἀχαιοί", wordId: 707 },
-                    { form: "ἄλγε'", lemma: "ἄλγος", wordId: 708 },
-                    { form: "ἔθηκε", lemma: "τίθημι", wordId: 709 },
-                    { form: "πολλὰς", lemma: "πολύς", wordId: 710 },
-                    { form: "δ'", lemma: "δέ", wordId: 736 },
-                    { form: "ἰφθίμους", lemma: "ἴφθιμος", wordId: 711 },
-                    { form: "ψυχὰς", lemma: "ψυχή", wordId: 9 },
-                    { form: "Ἄϊδι", lemma: "Ἅιδης", wordId: 712 },
-                    { form: "προΐαψεν", lemma: "προϊάπτω", wordId: 713 },
-                    { form: "ἡρώων", lemma: "ἥρως", wordId: 714 },
-                    { form: "αὐτοὺς", lemma: "αὐτός", wordId: 715 },
-                    { form: "δὲ", lemma: "δέ", wordId: 736 },
-                    { form: "ἑλώρια", lemma: "ἑλώριον", wordId: 716 },
-                    { form: "τεῦχε", lemma: "τεύχω", wordId: 717 },
-                    { form: "κύνεσσιν", lemma: "κύων", wordId: 718 },
-                    { form: "οἰωνοῖσί", lemma: "οἰωνός", wordId: 719 },
-                    { form: "τε", lemma: "τε", wordId: 735 },
-                    { form: "πᾶσι", lemma: "πᾶς", wordId: 720 },
-                    { form: "Διὸς", lemma: "Ζεύς", wordId: 721 },
-                    { form: "δ'", lemma: "δέ", wordId: 736 },
-                    { form: "ἐτελείετο", lemma: "τελέω", wordId: 722 },
-                    { form: "βουλή", lemma: "βουλή", wordId: 723 },
-                    { form: "ἐξ", lemma: "ἐξ", wordId: 724 },
-                    { form: "οὗ", lemma: "ὅς", wordId: 725 },
-                    { form: "δὴ", lemma: "δή", wordId: 726 },
-                    { form: "τὰ", lemma: "ὁ", wordId: 737 },
-                    { form: "πρῶτα", lemma: "πρῶτος", wordId: 727 },
-                    { form: "διαστήτην", lemma: "διίστημι", wordId: 728 },
-                    { form: "ἐρίσαντε", lemma: "ἐρίζω", wordId: 729 },
-                    { form: "Ἀτρεΐδης", lemma: "Ἀτρεΐδης", wordId: 730 },
-                    { form: "τε", lemma: "τε", wordId: 735 },
-                    { form: "ἄναξ", lemma: "ἄναξ", wordId: 731 },
-                    { form: "ἀνδρῶν", lemma: "ἀνήρ", wordId: 732 },
-                    { form: "καὶ", lemma: "καί", wordId: 733 },
-                    { form: "δῖος", lemma: "δῖος", wordId: 734 },
-                    { form: "Ἀχιλλεύς", lemma: "Ἀχιλλεύς", wordId: 703 }
+                    { form: "μῆνιν", lemma: "μῆνις", wordId: 700, formInfo: "Accusatif singulier féminin — objet direct de ἄειδε" },
+                    { form: "ἄειδε", lemma: "ἀείδω", wordId: 701, formInfo: "Impératif aoriste, 2ème personne du singulier" },
+                    { form: "θεὰ", lemma: "θεά", wordId: 702, formInfo: "Nominatif singulier féminin — vocatif (invocation à la Muse)" },
+                    { form: "Πηληϊάδεω", lemma: "Πηληϊάδης", wordId: 704, formInfo: "Génitif singulier masculin — forme ionique/épique en -εω" },
+                    { form: "Ἀχιλῆος", lemma: "Ἀχιλλεύς", wordId: 703, formInfo: "Génitif singulier masculin — complément de Πηληϊάδεω" },
+                    { form: "οὐλομένην", lemma: "οὐλόμενος", wordId: 705, formInfo: "Accusatif singulier féminin — participe moyen/passif, accord avec μῆνιν" },
+                    { form: "ἣ", lemma: "ὅς", wordId: 725, formInfo: "Nominatif singulier féminin — pronom relatif, antécédent: μῆνιν" },
+                    { form: "μυρί'", lemma: "μυρίος", wordId: 706, formInfo: "Accusatif pluriel neutre — élision de μυρία devant voyelle" },
+                    { form: "Ἀχαιοῖς", lemma: "Ἀχαιοί", wordId: 707, formInfo: "Datif pluriel masculin — complément d'attribution" },
+                    { form: "ἄλγε'", lemma: "ἄλγος", wordId: 708, formInfo: "Accusatif pluriel neutre — élision de ἄλγεα, objet de ἔθηκε" },
+                    { form: "ἔθηκε", lemma: "τίθημι", wordId: 709, formInfo: "Aoriste indicatif actif, 3ème personne du singulier" },
+                    { form: "πολλὰς", lemma: "πολύς", wordId: 710, formInfo: "Accusatif pluriel féminin — accord avec ψυχάς" },
+                    { form: "δ'", lemma: "δέ", wordId: 736, formInfo: "Particule postpositive — élision de δέ, valeur adversative légère" },
+                    { form: "ἰφθίμους", lemma: "ἴφθιμος", wordId: 711, formInfo: "Accusatif pluriel féminin — épithète de ψυχάς" },
+                    { form: "ψυχὰς", lemma: "ψυχή", wordId: 9, formInfo: "Accusatif pluriel féminin — objet de προΐαψεν" },
+                    { form: "Ἄϊδι", lemma: "Ἅιδης", wordId: 712, formInfo: "Datif singulier masculin — complément de direction (vers Hadès)" },
+                    { form: "προΐαψεν", lemma: "προϊάπτω", wordId: 713, formInfo: "Aoriste indicatif actif, 3ème personne du singulier" },
+                    { form: "ἡρώων", lemma: "ἥρως", wordId: 714, formInfo: "Génitif pluriel masculin — complément de ψυχάς" },
+                    { form: "αὐτοὺς", lemma: "αὐτός", wordId: 715, formInfo: "Accusatif pluriel masculin — pronom intensif, réfère aux héros" },
+                    { form: "δὲ", lemma: "δέ", wordId: 736, formInfo: "Particule postpositive — opposition avec la proposition précédente" },
+                    { form: "ἑλώρια", lemma: "ἑλώριον", wordId: 716, formInfo: "Accusatif pluriel neutre — attribut de αὐτούς (double accusatif)" },
+                    { form: "τεῦχε", lemma: "τεύχω", wordId: 717, formInfo: "Imparfait indicatif actif, 3ème personne du singulier" },
+                    { form: "κύνεσσιν", lemma: "κύων", wordId: 718, formInfo: "Datif pluriel masculin — forme épique en -εσσι, complément d'attribution" },
+                    { form: "οἰωνοῖσί", lemma: "οἰωνός", wordId: 719, formInfo: "Datif pluriel masculin — forme épique avec -ι final mobile" },
+                    { form: "τε", lemma: "τε", wordId: 735, formInfo: "Particule enclitique — coordination étroite (κύνεσσιν... τε... τε)" },
+                    { form: "πᾶσι", lemma: "πᾶς", wordId: 720, formInfo: "Datif pluriel masculin/neutre — accord avec οἰωνοῖσί" },
+                    { form: "Διὸς", lemma: "Ζεύς", wordId: 721, formInfo: "Génitif singulier masculin — complément de βουλή" },
+                    { form: "δ'", lemma: "δέ", wordId: 736, formInfo: "Particule postpositive — transition vers nouvelle proposition" },
+                    { form: "ἐτελείετο", lemma: "τελέω", wordId: 722, formInfo: "Imparfait indicatif moyen/passif, 3ème personne du singulier" },
+                    { form: "βουλή", lemma: "βουλή", wordId: 723, formInfo: "Nominatif singulier féminin — sujet de ἐτελείετο" },
+                    { form: "ἐξ", lemma: "ἐξ", wordId: 724, formInfo: "Préposition + génitif — sens temporel 'depuis que'" },
+                    { form: "οὗ", lemma: "ὅς", wordId: 725, formInfo: "Génitif singulier masculin/neutre — pronom relatif temporel" },
+                    { form: "δὴ", lemma: "δή", wordId: 726, formInfo: "Particule emphatique — renforce τὰ πρῶτα" },
+                    { form: "τὰ", lemma: "ὁ", wordId: 737, formInfo: "Accusatif pluriel neutre — article avec πρῶτα (adverbial)" },
+                    { form: "πρῶτα", lemma: "πρῶτος", wordId: 727, formInfo: "Accusatif pluriel neutre — emploi adverbial 'pour la première fois'" },
+                    { form: "διαστήτην", lemma: "διίστημι", wordId: 728, formInfo: "Aoriste indicatif actif, 3ème personne du DUEL — deux sujets" },
+                    { form: "ἐρίσαντε", lemma: "ἐρίζω", wordId: 729, formInfo: "Participe aoriste actif, nominatif DUEL — accord avec le sujet duel" },
+                    { form: "Ἀτρεΐδης", lemma: "Ἀτρεΐδης", wordId: 730, formInfo: "Nominatif singulier masculin — premier sujet du duel (Agamemnon)" },
+                    { form: "τε", lemma: "τε", wordId: 735, formInfo: "Particule enclitique — lie les deux sujets du duel" },
+                    { form: "ἄναξ", lemma: "ἄναξ", wordId: 731, formInfo: "Nominatif singulier masculin — apposition à Ἀτρεΐδης" },
+                    { form: "ἀνδρῶν", lemma: "ἀνήρ", wordId: 732, formInfo: "Génitif pluriel masculin — complément de ἄναξ" },
+                    { form: "καὶ", lemma: "καί", wordId: 733, formInfo: "Conjonction de coordination — introduit le second sujet" },
+                    { form: "δῖος", lemma: "δῖος", wordId: 734, formInfo: "Nominatif singulier masculin — épithète homérique d'Achille" },
+                    { form: "Ἀχιλλεύς", lemma: "Ἀχιλλεύς", wordId: 703, formInfo: "Nominatif singulier masculin — second sujet du duel" }
                 ]
             }
         ];
@@ -2089,6 +2131,7 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
 
             currentParagraphId = paragraphId;
             const paragraph = paragraphs.find(p => p.id === paragraphId);
+            const currentToken = paragraph?.tokens.find(t => t.wordId === wordId);
 
             const overlay = document.getElementById('word-detail-overlay');
             const contextDiv = document.getElementById('paragraph-context');
@@ -2109,8 +2152,21 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                 contextDiv.innerHTML = `<div class="context-title">${paragraph.title}</div><div class="context-text">${clickableTokens}</div>`;
             }
 
+            // Build form info display if available
+            const formInfoHtml = currentToken?.formInfo ? `
+                <div class="form-info-box">
+                    <div class="form-info-header">
+                        <span class="form-info-form">${currentToken.form}</span>
+                        <span class="form-info-arrow">→</span>
+                        <span class="form-info-lemma">${currentToken.lemma}</span>
+                    </div>
+                    <div class="form-info-details">${currentToken.formInfo}</div>
+                </div>
+            ` : '';
+
             // Render the word card
             contentDiv.innerHTML = `
+                ${formInfoHtml}
                 <div class="word-card" data-word-id="${word.id}">
                     <div class="word-header">
                         <div>
@@ -2125,7 +2181,7 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                             </button>
                         </div>
                     </div>
-                    ${renderTranslations(word)}
+                    ${renderTranslations(word, paragraph?.sourceLanguage)}
                 </div>
             `;
 
@@ -2137,13 +2193,15 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
             currentParagraphId = null;
         }
 
-        function renderTranslations(word) {
-            let html = '';
+        function renderTranslations(word, priorityLang = null) {
+            const sections = [];
 
             // Italian
             if (word.translations?.italian) {
                 const it = word.translations.italian;
-                html += `
+                sections.push({
+                    lang: 'italian',
+                    html: `
                     <div class="translation-section italian">
                         <div class="translation-header">
                             <span class="lang-flag">&#127470;&#127481;</span>
@@ -2153,13 +2211,15 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                         ${it.gender ? `<span class="grammar-tag">${formatGender(it.gender)}</span>` : ''}
                         ${word.category === 'verbe' && it.conjugation ? renderItalianConjugation(word.id, it) : ''}
                     </div>
-                `;
+                `});
             }
 
             // Greek
             if (word.translations?.greek) {
                 const gr = word.translations.greek;
-                html += `
+                sections.push({
+                    lang: 'greek',
+                    html: `
                     <div class="translation-section greek">
                         <div class="translation-header">
                             <span class="lang-flag">&#127468;&#127479;</span>
@@ -2175,13 +2235,15 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                         ${word.category === 'verbe' && gr.conjugation ? renderGreekConjugation(word.id, gr) : ''}
                         ${gr.example ? renderExample(gr.example) : ''}
                     </div>
-                `;
+                `});
             }
 
             // English
             if (word.translations?.english) {
                 const en = word.translations.english;
-                html += `
+                sections.push({
+                    lang: 'english',
+                    html: `
                     <div class="translation-section english">
                         <div class="translation-header">
                             <span class="lang-flag">&#127468;&#127463;</span>
@@ -2189,10 +2251,19 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                         </div>
                         <div class="translation-word">${escapeHtml(en.word)}</div>
                     </div>
-                `;
+                `});
             }
 
-            return html;
+            // Reorder if priority language specified
+            if (priorityLang) {
+                sections.sort((a, b) => {
+                    if (a.lang === priorityLang) return -1;
+                    if (b.lang === priorityLang) return 1;
+                    return 0;
+                });
+            }
+
+            return sections.map(s => s.html).join('');
         }
 
         function renderExample(example) {
