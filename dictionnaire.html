@@ -675,6 +675,124 @@
             font-size: 36px;
             margin-bottom: 12px;
         }
+
+        /* Review badge for auto-generated entries */
+        .review-badge {
+            display: inline-block;
+            font-size: 8px;
+            padding: 1px 4px;
+            background: #d97706;
+            color: white;
+            border-radius: 3px;
+            margin-left: 4px;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
+        /* Paragraph/Textes styles */
+        .paragraph-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--primary);
+        }
+
+        .paragraph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 10px;
+            color: var(--text-light);
+        }
+
+        .paragraph-lang {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .paragraph-text {
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .word-token {
+            display: inline;
+            cursor: pointer;
+            padding: 2px 1px;
+            border-radius: 3px;
+            transition: background 0.2s;
+        }
+
+        .word-token:hover {
+            background: var(--border);
+        }
+
+        .word-token.linked {
+            color: var(--primary);
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-underline-offset: 3px;
+        }
+
+        .word-token.no-link {
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Word detail view (when clicking from paragraph) */
+        .word-detail-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg);
+            z-index: 200;
+            overflow-y: auto;
+            padding: 16px;
+            display: none;
+        }
+
+        .word-detail-overlay.active {
+            display: block;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 13px;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        .back-btn:hover {
+            background: var(--border);
+        }
+
+        .paragraph-context {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: var(--text-light);
+            border-left: 3px solid var(--primary);
+        }
+
+        .paragraph-context .highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -693,6 +811,7 @@
         <button class="filter-btn" data-filter="greek"><span class="flag">&#127468;&#127479;</span>Grec</button>
         <button class="filter-btn" data-filter="english"><span class="flag">&#127468;&#127463;</span>Anglais</button>
         <button class="filter-btn" data-filter="favorites"><span class="flag">&#9829;</span>Favoris</button>
+        <button class="filter-btn" data-filter="textes"><span class="flag">&#128220;</span>Textes</button>
     </div>
 
     <div class="sort-row">
@@ -735,6 +854,15 @@
     </div>
     <input type="file" id="import-input" class="file-input" accept=".json" onchange="importData(event)">
     <div class="toast" id="toast"></div>
+
+    <!-- Word detail overlay (for paragraph word clicks) -->
+    <div class="word-detail-overlay" id="word-detail-overlay">
+        <button class="back-btn" onclick="closeWordDetail()">
+            &#8592; Retour au texte
+        </button>
+        <div class="paragraph-context" id="paragraph-context"></div>
+        <div id="word-detail-content"></div>
+    </div>
 
     <div class="modal-overlay" id="modal">
         <div class="modal">
@@ -817,7 +945,7 @@
 
     <script>
         // ==================== DATA ====================
-        const DICT_VERSION = 3;
+        const DICT_VERSION = 4;
 
         // Default dictionary entries
         // Structure: French as primary, translations as object
@@ -1307,15 +1435,47 @@
             { id: 548, french: "fievre", category: "nom", gender: "f", translations: { italian: { word: "febbre", gender: "f", conjugation: null }, english: { word: "fever" } } },
             { id: 549, french: "douleur", category: "nom", gender: "f", translations: { italian: { word: "dolore", gender: "m", conjugation: null }, english: { word: "pain" } } },
             { id: 550, french: "voix", category: "nom", gender: "f", translations: { italian: { word: "voce", gender: "f", conjugation: null }, english: { word: "voice" } } },
+
+            // ===== AUTO-GENERATED FOR PARAGRAPHS (needs review) =====
+            { id: 600, french: "le", category: "article", gender: "m", needsReview: true, translations: { italian: { word: "il", gender: "m", conjugation: null }, english: { word: "the" } } },
+            { id: 601, french: "la", category: "article", gender: "f", needsReview: true, translations: { italian: { word: "la", gender: "f", conjugation: null }, english: { word: "the" } } },
+            { id: 602, french: "les", category: "article", gender: "p", needsReview: true, translations: { italian: { word: "i/le", gender: "p", conjugation: null }, english: { word: "the" } } },
+            { id: 603, french: "philosophe", category: "nom", gender: "m", needsReview: true, translations: { italian: { word: "filosofo", gender: "m", conjugation: null }, english: { word: "philosopher" } } },
+            { id: 604, french: "dans", category: "preposition", gender: null, needsReview: true, translations: { italian: { word: "in", conjugation: null }, english: { word: "in" } } },
+            { id: 605, french: "ancien", category: "adjectif", gender: "m", needsReview: true, translations: { italian: { word: "antico", conjugation: null }, english: { word: "ancient/old" } } },
+        ];
+
+        // ==================== PARAGRAPHS DATA ====================
+        const defaultParagraphs = [
+            {
+                id: 1,
+                title: "La quete du philosophe",
+                sourceLanguage: "french",
+                targetLanguage: "italian",
+                text: "Le philosophe cherche la sagesse dans les livres anciens.",
+                tokens: [
+                    { form: "Le", lemma: "le", wordId: 600 },
+                    { form: "philosophe", lemma: "philosophe", wordId: 603 },
+                    { form: "cherche", lemma: "chercher", wordId: 60 },
+                    { form: "la", lemma: "la", wordId: 601 },
+                    { form: "sagesse", lemma: "sagesse", wordId: 2 },
+                    { form: "dans", lemma: "dans", wordId: 604 },
+                    { form: "les", lemma: "les", wordId: 602 },
+                    { form: "livres", lemma: "livre", wordId: 500 },
+                    { form: "anciens", lemma: "ancien", wordId: 605 }
+                ]
+            }
         ];
 
         // ==================== STATE ====================
         let words = [];
+        let paragraphs = [];
         let favorites = [];
         let currentFilter = 'all';
         let currentSort = 'alpha-asc';
         let searchQuery = '';
         let editingId = null;
+        let currentParagraphId = null; // For back navigation
 
         // ==================== INITIALIZATION ====================
         function init() {
@@ -1329,6 +1489,7 @@
             const savedVersion = localStorage.getItem('dict-version');
             const savedWords = localStorage.getItem('dict-words');
             const savedFavorites = localStorage.getItem('dict-favorites');
+            const savedParagraphs = localStorage.getItem('dict-paragraphs');
 
             if (savedVersion !== String(DICT_VERSION)) {
                 let customWords = [];
@@ -1337,14 +1498,19 @@
                     customWords = oldWords.filter(w => w.custom);
                 }
                 words = [...defaultWords.map(w => ({...w, custom: false})), ...customWords];
+                paragraphs = [...defaultParagraphs];
                 localStorage.setItem('dict-version', DICT_VERSION);
                 saveWords();
+                saveParagraphs();
             } else if (savedWords) {
                 words = JSON.parse(savedWords);
+                paragraphs = savedParagraphs ? JSON.parse(savedParagraphs) : [...defaultParagraphs];
             } else {
                 words = [...defaultWords.map(w => ({...w, custom: false}))];
+                paragraphs = [...defaultParagraphs];
                 localStorage.setItem('dict-version', DICT_VERSION);
                 saveWords();
+                saveParagraphs();
             }
 
             favorites = savedFavorites ? JSON.parse(savedFavorites) : [];
@@ -1352,6 +1518,10 @@
 
         function saveWords() {
             localStorage.setItem('dict-words', JSON.stringify(words));
+        }
+
+        function saveParagraphs() {
+            localStorage.setItem('dict-paragraphs', JSON.stringify(paragraphs));
         }
 
         function saveFavorites() {
@@ -1694,13 +1864,20 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
 
         // ==================== RENDERING ====================
         function render() {
-            const filtered = getFilteredWords();
             const container = document.getElementById('word-list');
 
             // Stats
             document.getElementById('total-count').textContent = words.length;
             document.getElementById('italian-count').textContent = words.filter(w => w.translations?.italian).length;
             document.getElementById('greek-count').textContent = words.filter(w => w.translations?.greek).length;
+
+            // Handle Textes filter separately
+            if (currentFilter === 'textes') {
+                renderParagraphs(container);
+                return;
+            }
+
+            const filtered = getFilteredWords();
 
             if (filtered.length === 0) {
                 container.innerHTML = `
@@ -1719,6 +1896,7 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                             <span class="french-word">${escapeHtml(word.french)}</span>
                             <span class="category-badge">${word.category}</span>
                             ${word.gender ? `<span class="gender-badge gender-${word.gender}">${formatGender(word.gender)}</span>` : ''}
+                            ${word.needsReview ? `<span class="review-badge">A VERIFIER</span>` : ''}
                         </div>
                         <div class="word-actions">
                             <button class="action-btn favorite ${favorites.includes(word.id) ? 'active' : ''}" onclick="toggleFavorite(${word.id})">
@@ -1730,6 +1908,99 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                     ${renderTranslations(word)}
                 </div>
             `).join('');
+        }
+
+        function renderParagraphs(container) {
+            if (paragraphs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">&#128220;</div>
+                        <p>Aucun texte disponible</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const langFlags = {
+                french: '&#127467;&#127479;',
+                italian: '&#127470;&#127481;',
+                greek: '&#127468;&#127479;',
+                english: '&#127468;&#127463;'
+            };
+
+            container.innerHTML = paragraphs.map(p => `
+                <div class="paragraph-card" data-paragraph-id="${p.id}">
+                    <div class="paragraph-header">
+                        <div class="paragraph-lang">
+                            ${langFlags[p.sourceLanguage] || ''} ${p.sourceLanguage} → ${langFlags[p.targetLanguage] || ''} ${p.targetLanguage}
+                        </div>
+                        <span>${p.title || 'Texte #' + p.id}</span>
+                    </div>
+                    <div class="paragraph-text">
+                        ${renderParagraphTokens(p)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderParagraphTokens(paragraph) {
+            return paragraph.tokens.map((token, idx) => {
+                const word = words.find(w => w.id === token.wordId);
+                const hasTranslation = word && word.translations && word.translations[paragraph.targetLanguage];
+                const cssClass = hasTranslation ? 'linked' : 'no-link';
+
+                return `<span class="word-token ${cssClass}"
+                    onclick="openWordFromParagraph(${paragraph.id}, ${token.wordId}, '${paragraph.targetLanguage}')"
+                    title="${token.lemma}${hasTranslation ? ' → ' + word.translations[paragraph.targetLanguage].word : ' (pas de traduction)'}"
+                >${token.form}</span>${idx < paragraph.tokens.length - 1 ? ' ' : ''}`;
+            }).join('');
+        }
+
+        function openWordFromParagraph(paragraphId, wordId, targetLang) {
+            const word = words.find(w => w.id === wordId);
+            if (!word) return;
+
+            currentParagraphId = paragraphId;
+            const paragraph = paragraphs.find(p => p.id === paragraphId);
+
+            const overlay = document.getElementById('word-detail-overlay');
+            const contextDiv = document.getElementById('paragraph-context');
+            const contentDiv = document.getElementById('word-detail-content');
+
+            // Show paragraph context with highlighted word
+            if (paragraph) {
+                const highlightedText = paragraph.tokens.map(t =>
+                    t.wordId === wordId ? `<span class="highlight">${t.form}</span>` : t.form
+                ).join(' ');
+                contextDiv.innerHTML = `<strong>${paragraph.title}:</strong> ${highlightedText}`;
+            }
+
+            // Render the word card
+            contentDiv.innerHTML = `
+                <div class="word-card" data-word-id="${word.id}">
+                    <div class="word-header">
+                        <div>
+                            <span class="french-word">${escapeHtml(word.french)}</span>
+                            <span class="category-badge">${word.category}</span>
+                            ${word.gender ? `<span class="gender-badge gender-${word.gender}">${formatGender(word.gender)}</span>` : ''}
+                            ${word.needsReview ? `<span class="review-badge">A VERIFIER</span>` : ''}
+                        </div>
+                        <div class="word-actions">
+                            <button class="action-btn favorite ${favorites.includes(word.id) ? 'active' : ''}" onclick="toggleFavorite(${word.id}); openWordFromParagraph(${paragraphId}, ${wordId}, '${targetLang}');">
+                                ${favorites.includes(word.id) ? '&#9829;' : '&#9825;'}
+                            </button>
+                        </div>
+                    </div>
+                    ${renderTranslations(word)}
+                </div>
+            `;
+
+            overlay.classList.add('active');
+        }
+
+        function closeWordDetail() {
+            document.getElementById('word-detail-overlay').classList.remove('active');
+            currentParagraphId = null;
         }
 
         function renderTranslations(word) {
