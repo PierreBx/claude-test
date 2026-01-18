@@ -1328,7 +1328,7 @@
 
     <script>
         // ==================== DATA ====================
-        const DICT_VERSION = 10;
+        const DICT_VERSION = 11;
 
         // Default dictionary entries
         // Structure: French as primary, translations as object
@@ -1828,8 +1828,8 @@
             { id: 605, french: "ancien", category: "adjectif", gender: "m", needsReview: true, translations: { italian: { word: "antico", conjugation: null }, english: { word: "ancient/old" } } },
 
             // ===== ILIAD VOCABULARY (Ancient Greek → French) =====
-            { id: 700, french: "colere", category: "nom", gender: "f", needsReview: true, translations: { greek: { word: "μῆνις", romanized: "menis", meaning: "Wrath, rage, divine anger. The opening word of the Iliad.", declension: "3rd", gender: "f" }, english: { word: "wrath" } } },
-            { id: 701, french: "chanter", category: "verbe", gender: null, needsReview: true, translations: { greek: { word: "ἀείδω", romanized: "aeido", meaning: "To sing, celebrate in song.", conjugation: { type: "ω", stem: "ἀειδ" } }, english: { word: "to sing" } } },
+            { id: 700, french: "colère", category: "nom", gender: "f", needsReview: false, translations: { greek: { word: "μῆνις", romanized: "menis", meaning: "Colère sacrée, rage divine. Distinct de χόλος (colère ordinaire). Implique une sanction cosmique contre une transgression morale. Mot inaugural de l'Iliade.", declension: "3rd", gender: "f" }, english: { word: "wrath" } } },
+            { id: 701, french: "chanter", category: "verbe", gender: null, needsReview: false, translations: { greek: { word: "ἀείδω", romanized: "aeido", meaning: "Chanter, célébrer en vers. Forme épique non contractée (attique: ᾄδω). Transitif avec accusatif du thème chanté.", conjugation: { type: "ω", stem: "ἀειδ" } }, english: { word: "to sing" } } },
             { id: 702, french: "deesse", category: "nom", gender: "f", needsReview: true, translations: { greek: { word: "θεά", romanized: "thea", meaning: "Goddess (feminine of θεός).", declension: "1st", gender: "f" }, english: { word: "goddess" } } },
             { id: 703, french: "Achille", category: "nom propre", gender: "m", needsReview: true, translations: { greek: { word: "Ἀχιλλεύς", romanized: "Achilleus", meaning: "Achilles, son of Peleus and Thetis, greatest Greek warrior." }, english: { word: "Achilles" } } },
             { id: 704, french: "Pelide", category: "nom propre", gender: "m", needsReview: true, translations: { greek: { word: "Πηληϊάδης", romanized: "Peleïades", meaning: "Son of Peleus (patronymic for Achilles)." }, english: { word: "son of Peleus" } } },
@@ -1908,7 +1908,7 @@
                         tokens: [
                             { form: "μῆνιν", lemma: "μῆνις", wordId: 700, formInfo: "Accusatif singulier féminin — objet direct de ἄειδε" },
                             { form: "ἄειδε", lemma: "ἀείδω", wordId: 701, formInfo: "Impératif aoriste, 2ème personne du singulier" },
-                            { form: "θεὰ", lemma: "θεά", wordId: 702, formInfo: "Nominatif singulier féminin — vocatif (invocation à la Muse)" },
+                            { form: "θεὰ", lemma: "θεά", wordId: 702, formInfo: "Vocatif singulier féminin (= nominatif en -ᾱ) — invocation à la Muse (Calliope)" },
                             { form: "Πηληϊάδεω", lemma: "Πηληϊάδης", wordId: 704, formInfo: "Génitif singulier masculin — forme ionique/épique en -εω" },
                             { form: "Ἀχιλῆος", lemma: "Ἀχιλλεύς", wordId: 703, formInfo: "Génitif singulier masculin — complément de Πηληϊάδεω" }
                         ]
