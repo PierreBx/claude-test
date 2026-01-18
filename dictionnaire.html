@@ -1011,6 +1011,15 @@
             margin-bottom: 8px;
         }
 
+        .sentence-context-gloss {
+            font-size: 12px;
+            color: var(--text-light);
+            font-style: italic;
+            margin-bottom: 8px;
+            padding: 6px 0;
+            border-bottom: 1px dashed var(--border);
+        }
+
         .sentence-context-translation {
             font-size: 13px;
             color: var(--text);
@@ -1018,6 +1027,74 @@
             padding: 8px 10px;
             border-radius: 6px;
             border-left: 3px solid var(--primary);
+        }
+
+        /* Word definition block in text detail */
+        .word-definition-block {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 14px;
+            border: 1px solid var(--border);
+        }
+
+        .definition-form-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 16px;
+        }
+
+        .definition-form-header .form-info-form {
+            font-weight: 600;
+            color: var(--greek);
+        }
+
+        .definition-form-header .form-info-arrow {
+            color: var(--text-light);
+        }
+
+        .definition-form-header .form-info-lemma {
+            color: var(--text);
+        }
+
+        .definition-translation,
+        .definition-meaning,
+        .definition-usage {
+            margin-bottom: 10px;
+        }
+
+        .definition-translation:last-child,
+        .definition-meaning:last-child,
+        .definition-usage:last-child {
+            margin-bottom: 0;
+        }
+
+        .definition-label {
+            font-size: 11px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .definition-value {
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .definition-translation .definition-value {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .definition-usage .definition-value {
+            font-size: 13px;
+            font-style: italic;
         }
 
         /* Text header when viewing a text */
@@ -1226,7 +1303,7 @@
 
     <script>
         // ==================== DATA ====================
-        const DICT_VERSION = 8;
+        const DICT_VERSION = 9;
 
         // Default dictionary entries
         // Structure: French as primary, translations as object
@@ -2492,7 +2569,7 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
             const contextDiv = document.getElementById('paragraph-context');
             const contentDiv = document.getElementById('word-detail-content');
 
-            // Build sentence context with clickable words
+            // Build sentence context with clickable words and word-per-word gloss
             if (text && sentence) {
                 const clickableTokens = sentence.tokens.map((t, idx) => {
                     const isCurrentWord = t.wordId === wordId;
@@ -2505,6 +2582,13 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                     >${t.form}</span>${idx < sentence.tokens.length - 1 ? ' ' : ''}`;
                 }).join('');
 
+                // Build word-per-word gloss
+                const glossTokens = sentence.tokens.map(t => {
+                    const tokenWord = words.find(w => w.id === t.wordId);
+                    return tokenWord ? tokenWord.french : '?';
+                });
+                const wordPerWordGloss = glossTokens.join(' · ');
+
                 contextDiv.innerHTML = `
                     <div class="sentence-context-box">
                         <div class="sentence-context-header">
@@ -2512,43 +2596,14 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                             <span style="font-size: 12px; color: var(--text-light);">${escapeHtml(text.title)}</span>
                         </div>
                         <div class="sentence-context-source">${clickableTokens}</div>
+                        <div class="sentence-context-gloss">${wordPerWordGloss}</div>
                         <div class="sentence-context-translation">${escapeHtml(sentence.translation)}</div>
                     </div>
                 `;
             }
 
-            // Build form info display if available
-            const formInfoHtml = currentToken?.formInfo ? `
-                <div class="form-info-box">
-                    <div class="form-info-header">
-                        <span class="form-info-form">${currentToken.form}</span>
-                        <span class="form-info-arrow">→</span>
-                        <span class="form-info-lemma">${currentToken.lemma}</span>
-                    </div>
-                    <div class="form-info-details">${currentToken.formInfo}</div>
-                </div>
-            ` : '';
-
-            // Render the word card
-            contentDiv.innerHTML = `
-                ${formInfoHtml}
-                <div class="word-card" data-word-id="${word.id}">
-                    <div class="word-header">
-                        <div>
-                            <span class="french-word">${escapeHtml(word.french)}</span>
-                            <span class="category-badge">${word.category}</span>
-                            ${word.gender ? `<span class="gender-badge gender-${word.gender}">${formatGender(word.gender)}</span>` : ''}
-                            ${word.needsReview ? `<span class="review-badge">A VERIFIER</span>` : ''}
-                        </div>
-                        <div class="word-actions">
-                            <button class="action-btn favorite ${favorites.includes(word.id) ? 'active' : ''}" onclick="toggleFavorite(${word.id}); openWordFromSentence(${textId}, ${sentenceNum}, ${wordId});">
-                                ${favorites.includes(word.id) ? '&#9829;' : '&#9825;'}
-                            </button>
-                        </div>
-                    </div>
-                    ${renderTranslations(word, text?.sourceLanguage)}
-                </div>
-            `;
+            // Render the unified definition block
+            contentDiv.innerHTML = renderWordDefinition(word, text?.targetLanguage, currentToken);
 
             overlay.classList.add('active');
         }
@@ -2557,6 +2612,58 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
             document.getElementById('word-detail-overlay').classList.remove('active');
             currentTextId = null;
             currentSentenceNum = null;
+        }
+
+        function renderWordDefinition(word, targetLang, token) {
+            // Get the source language translation data
+            const text = texts.find(t => t.id === currentTextId);
+            const sourceLang = text?.sourceLanguage;
+            const sourceTranslation = word.translations?.[sourceLang];
+
+            // Build form header if token has formInfo
+            const formHeaderHtml = token ? `
+                <div class="definition-form-header">
+                    <span class="form-info-form">${token.form}</span>
+                    <span class="form-info-arrow">→</span>
+                    <span class="form-info-lemma">${token.lemma}</span>
+                </div>
+            ` : '';
+
+            // Translation in target language (e.g., French for Greek texts)
+            const translationHtml = `
+                <div class="definition-translation">
+                    <span class="definition-label">Traduction :</span>
+                    <span class="definition-value">${escapeHtml(word.french)}</span>
+                    <span class="category-badge">${word.category}</span>
+                    ${word.gender ? `<span class="gender-badge gender-${word.gender}">${formatGender(word.gender)}</span>` : ''}
+                </div>
+            `;
+
+            // Definition/meaning from source language
+            const meaning = sourceTranslation?.meaning;
+            const definitionHtml = meaning ? `
+                <div class="definition-meaning">
+                    <span class="definition-label">Définition :</span>
+                    <span class="definition-value">${escapeHtml(meaning)}</span>
+                </div>
+            ` : '';
+
+            // Usage in sentence (formInfo)
+            const usageHtml = token?.formInfo ? `
+                <div class="definition-usage">
+                    <span class="definition-label">Emploi :</span>
+                    <span class="definition-value">${token.formInfo}</span>
+                </div>
+            ` : '';
+
+            return `
+                <div class="word-definition-block">
+                    ${formHeaderHtml}
+                    ${translationHtml}
+                    ${definitionHtml}
+                    ${usageHtml}
+                </div>
+            `;
         }
 
         function renderTranslations(word, priorityLang = null) {
