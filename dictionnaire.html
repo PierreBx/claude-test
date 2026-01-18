@@ -914,6 +914,31 @@
             border-color: var(--primary);
         }
 
+        .text-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .text-num {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            background: var(--primary);
+            color: var(--bg);
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .text-card-info {
+            flex: 1;
+        }
+
         .text-card-title {
             font-size: 16px;
             font-weight: 600;
@@ -1303,7 +1328,7 @@
 
     <script>
         // ==================== DATA ====================
-        const DICT_VERSION = 9;
+        const DICT_VERSION = 10;
 
         // Default dictionary entries
         // Structure: French as primary, translations as object
@@ -2426,8 +2451,13 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
 
             container.innerHTML = texts.map(t => `
                 <div class="text-card" onclick="openText(${t.id})">
-                    <div class="text-card-title">${escapeHtml(t.title)}</div>
-                    ${t.author ? `<div class="text-card-author">${escapeHtml(t.author)}</div>` : ''}
+                    <div class="text-card-header">
+                        <span class="text-num">${t.id}</span>
+                        <div class="text-card-info">
+                            <div class="text-card-title">${escapeHtml(t.title)}</div>
+                            ${t.author ? `<div class="text-card-author">${escapeHtml(t.author)}</div>` : ''}
+                        </div>
+                    </div>
                     <div class="text-card-meta">
                         <div class="text-card-langs">
                             ${langFlags[t.sourceLanguage] || ''} → ${langFlags[t.targetLanguage] || ''}
