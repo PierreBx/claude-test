@@ -828,6 +828,168 @@
             color: var(--text-light);
         }
 
+        /* Syntax highlighting colors for grammatical roles */
+        .syntax-subject { color: #6ba3d6 !important; } /* Blue - Subject/Nominative */
+        .syntax-verb { color: #e06c75 !important; } /* Red - Main verbs */
+        .syntax-object { color: #98c379 !important; } /* Green - Direct object */
+        .syntax-dative { color: #e5c07b !important; } /* Yellow - Indirect object/Dative */
+        .syntax-genitive { color: #c678dd !important; } /* Purple - Genitive/Possession */
+        .syntax-adjective { color: #d19a66 !important; } /* Brown/Orange - Adjectives/Participles */
+        .syntax-particle { color: #7f848e !important; } /* Gray - Particles/Connectors */
+        .syntax-vocative { color: #56b6c2 !important; } /* Cyan - Vocative (invocations) */
+
+        .word-token.syntax-subject,
+        .word-token.syntax-verb,
+        .word-token.syntax-object,
+        .word-token.syntax-dative,
+        .word-token.syntax-genitive,
+        .word-token.syntax-adjective,
+        .word-token.syntax-particle,
+        .word-token.syntax-vocative {
+            text-decoration: none;
+        }
+
+        /* Syntax toggle control */
+        .syntax-toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: var(--input-bg);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .syntax-toggle-label {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        .syntax-toggle {
+            position: relative;
+            width: 36px;
+            height: 20px;
+            background: var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .syntax-toggle.active {
+            background: var(--primary);
+        }
+
+        .syntax-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: var(--text);
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+
+        .syntax-toggle.active::after {
+            transform: translateX(16px);
+        }
+
+        .syntax-legend-btn {
+            padding: 4px 8px;
+            font-size: 10px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .syntax-legend-btn:hover {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        /* Syntax legend modal */
+        .syntax-legend-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .syntax-legend-modal.active {
+            display: flex;
+        }
+
+        .syntax-legend-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            max-width: 320px;
+            width: 90%;
+            border: 1px solid var(--border);
+        }
+
+        .syntax-legend-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .syntax-legend-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .syntax-legend-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .syntax-legend-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .syntax-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .syntax-legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .syntax-legend-name {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .syntax-legend-desc {
+            color: var(--text-light);
+            font-size: 11px;
+        }
+
         /* Form info box for grammatical details */
         .form-info-box {
             background: linear-gradient(135deg, var(--card-bg) 0%, rgba(212, 162, 124, 0.1) 100%);
@@ -1247,6 +1409,74 @@
         <div id="word-detail-content"></div>
     </div>
 
+    <!-- Syntax Legend Modal -->
+    <div class="syntax-legend-modal" id="syntax-legend-modal" onclick="if(event.target === this) closeSyntaxLegend()">
+        <div class="syntax-legend-content">
+            <div class="syntax-legend-header">
+                <span class="syntax-legend-title">Legende syntaxique</span>
+                <button class="syntax-legend-close" onclick="closeSyntaxLegend()">&times;</button>
+            </div>
+            <div class="syntax-legend-items">
+                <div class="syntax-legend-item">
+                    <div class="syntax-legend-color" style="background: #6ba3d6;"></div>
+                    <div>
+                        <div class="syntax-legend-name">Sujet</div>
+                        <div class="syntax-legend-desc">Nominatif - agent de l'action</div>
+                    </div>
+                </div>
+                <div class="syntax-legend-item">
+                    <div class="syntax-legend-color" style="background: #e06c75;"></div>
+                    <div>
+                        <div class="syntax-legend-name">Verbe</div>
+                        <div class="syntax-legend-desc">Action principale</div>
+                    </div>
+                </div>
+                <div class="syntax-legend-item">
+                    <div class="syntax-legend-color" style="background: #98c379;"></div>
+                    <div>
+                        <div class="syntax-legend-name">Objet direct</div>
+                        <div class="syntax-legend-desc">Accusatif - recoit l'action</div>
+                    </div>
+                </div>
+                <div class="syntax-legend-item">
+                    <div class="syntax-legend-color" style="background: #e5c07b;"></div>
+                    <div>
+                        <div class="syntax-legend-name">Objet indirect</div>
+                        <div class="syntax-legend-desc">Datif - destinataire</div>
+                    </div>
+                </div>
+                <div class="syntax-legend-item">
+                    <div class="syntax-legend-color" style="background: #c678dd;"></div>
+                    <div>
+                        <div class="syntax-legend-name">Genitif</div>
+                        <div class="syntax-legend-desc">Possession, origine</div>
+                    </div>
+                </div>
+                <div class="syntax-legend-item">
+                    <div class="syntax-legend-color" style="background: #d19a66;"></div>
+                    <div>
+                        <div class="syntax-legend-name">Adjectif/Participe</div>
+                        <div class="syntax-legend-desc">Modifie un nom</div>
+                    </div>
+                </div>
+                <div class="syntax-legend-item">
+                    <div class="syntax-legend-color" style="background: #56b6c2;"></div>
+                    <div>
+                        <div class="syntax-legend-name">Vocatif</div>
+                        <div class="syntax-legend-desc">Invocation, apostrophe</div>
+                    </div>
+                </div>
+                <div class="syntax-legend-item">
+                    <div class="syntax-legend-color" style="background: #7f848e;"></div>
+                    <div>
+                        <div class="syntax-legend-name">Particule</div>
+                        <div class="syntax-legend-desc">Connecteur, particule</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="modal">
         <div class="modal">
             <h2 id="modal-title">Ajouter un mot</h2>
@@ -1328,7 +1558,7 @@
 
     <script>
         // ==================== DATA ====================
-        const DICT_VERSION = 11;
+        const DICT_VERSION = 12;
 
         // Default dictionary entries
         // Structure: French as primary, translations as object
@@ -2008,6 +2238,7 @@
         let currentSort = 'alpha-asc';
         let searchQuery = '';
         let editingId = null;
+        let syntaxHighlighting = false;
 
         // ==================== INITIALIZATION ====================
         function init() {
@@ -2046,6 +2277,10 @@
             }
 
             favorites = savedFavorites ? JSON.parse(savedFavorites) : [];
+
+            // Load syntax highlighting preference
+            const savedSyntaxHighlighting = localStorage.getItem('dict-syntax-highlighting');
+            syntaxHighlighting = savedSyntaxHighlighting === 'true';
         }
 
         function saveWords() {
@@ -2058,6 +2293,97 @@
 
         function saveFavorites() {
             localStorage.setItem('dict-favorites', JSON.stringify(favorites));
+        }
+
+        function saveSyntaxHighlighting() {
+            localStorage.setItem('dict-syntax-highlighting', syntaxHighlighting);
+        }
+
+        // ==================== SYNTAX HIGHLIGHTING ====================
+        function getSyntaxRole(token, word) {
+            const formInfo = token?.formInfo || '';
+            const category = word?.category || '';
+
+            // Check for particles first (highest priority for small words)
+            if (/particule|postpositive|enclitique/i.test(formInfo) ||
+                category === 'particule' || category === 'conjonction') {
+                return 'particle';
+            }
+
+            // Check for verbs (based on tense/mood indicators and no case)
+            if (/impératif|indicatif|aoriste|imparfait|parfait|présent|futur|optatif|subjonctif|infinitif/i.test(formInfo) &&
+                !/nominatif|accusatif|génitif|datif|vocatif/i.test(formInfo)) {
+                return 'verb';
+            }
+            if (category === 'verbe' && !/participe/i.test(formInfo)) {
+                return 'verb';
+            }
+
+            // Check for vocative (invocations)
+            if (/vocatif/i.test(formInfo)) {
+                return 'vocative';
+            }
+
+            // Check for nominative (subjects)
+            if (/nominatif/i.test(formInfo)) {
+                // Participles are adjectives, not subjects
+                if (/participe/i.test(formInfo)) {
+                    return 'adjective';
+                }
+                return 'subject';
+            }
+
+            // Check for accusative (objects)
+            if (/accusatif/i.test(formInfo)) {
+                // Participles and adjectives modifying objects
+                if (/participe|épithète|accord avec/i.test(formInfo) || category === 'adjectif') {
+                    return 'adjective';
+                }
+                return 'object';
+            }
+
+            // Check for dative
+            if (/datif/i.test(formInfo)) {
+                return 'dative';
+            }
+
+            // Check for genitive
+            if (/génitif/i.test(formInfo)) {
+                return 'genitive';
+            }
+
+            // Adjectives and participles as modifiers
+            if (category === 'adjectif' || /participe/i.test(formInfo)) {
+                return 'adjective';
+            }
+
+            // Adverbs and prepositions as particles
+            if (category === 'adverbe' || category === 'préposition') {
+                return 'particle';
+            }
+
+            // No specific role detected
+            return null;
+        }
+
+        function toggleSyntaxHighlighting() {
+            syntaxHighlighting = !syntaxHighlighting;
+            saveSyntaxHighlighting();
+            render();
+
+            // Update toggle button state
+            const toggle = document.querySelector('.syntax-toggle');
+            if (toggle) {
+                toggle.classList.toggle('active', syntaxHighlighting);
+            }
+        }
+
+        function showSyntaxLegend() {
+            document.getElementById('syntax-legend-modal').classList.add('active');
+        }
+
+        function closeSyntaxLegend() {
+            document.getElementById('syntax-legend-modal').classList.remove('active');
         }
 
         // ==================== EVENT LISTENERS ====================
@@ -2482,6 +2808,9 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
             const text = texts.find(t => t.id === currentTextId);
             if (!text) return;
 
+            // Only show syntax toggle for Greek texts (which have formInfo data)
+            const showSyntaxToggle = text.sourceLanguage === 'greek';
+
             let html = `
                 <div class="text-header">
                     <div class="back-to-texts" onclick="backToTexts()">← Retour aux textes</div>
@@ -2489,6 +2818,13 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                     <div class="text-header-meta">
                         ${text.author ? text.author + ' — ' : ''}${langFlags[text.sourceLanguage]} → ${langFlags[text.targetLanguage]}
                     </div>
+                    ${showSyntaxToggle ? `
+                    <div class="syntax-toggle-container">
+                        <span class="syntax-toggle-label">Coloration syntaxique</span>
+                        <div class="syntax-toggle ${syntaxHighlighting ? 'active' : ''}" onclick="toggleSyntaxHighlighting()"></div>
+                        <button class="syntax-legend-btn" onclick="showSyntaxLegend()">Legende</button>
+                    </div>
+                    ` : ''}
                 </div>
             `;
 
@@ -2513,7 +2849,15 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
             return sentence.tokens.map((token, idx) => {
                 const word = words.find(w => w.id === token.wordId);
                 const hasTranslation = word && word.translations && word.translations[text.targetLanguage];
-                const cssClass = hasTranslation ? 'linked' : 'no-link';
+                let cssClass = hasTranslation ? 'linked' : 'no-link';
+
+                // Add syntax highlighting class if enabled
+                if (syntaxHighlighting) {
+                    const syntaxRole = getSyntaxRole(token, word);
+                    if (syntaxRole) {
+                        cssClass += ` syntax-${syntaxRole}`;
+                    }
+                }
 
                 return `<span class="word-token ${cssClass}"
                     onclick="openWordFromSentence(${text.id}, ${sentence.num}, ${token.wordId})"
@@ -2606,7 +2950,20 @@ Stockage local utilise: ~${Math.round(JSON.stringify(words).length / 1024)} Ko
                     const tokenWord = words.find(w => w.id === t.wordId);
                     const hasTranslation = tokenWord && tokenWord.translations && tokenWord.translations[text.targetLanguage];
 
-                    return `<span class="word-token ${isCurrentWord ? 'highlight' : ''} ${hasTranslation ? 'linked' : 'no-link'}"
+                    // Build CSS classes
+                    let tokenClasses = 'word-token';
+                    if (isCurrentWord) tokenClasses += ' highlight';
+                    tokenClasses += hasTranslation ? ' linked' : ' no-link';
+
+                    // Add syntax highlighting if enabled (and not the highlighted word)
+                    if (syntaxHighlighting && !isCurrentWord) {
+                        const syntaxRole = getSyntaxRole(t, tokenWord);
+                        if (syntaxRole) {
+                            tokenClasses += ` syntax-${syntaxRole}`;
+                        }
+                    }
+
+                    return `<span class="${tokenClasses}"
                         onclick="openWordFromSentence(${textId}, ${sentenceNum}, ${t.wordId})"
                         title="${t.lemma}${hasTranslation ? ' → ' + tokenWord.translations[text.targetLanguage].word : ''}"
                     >${t.form}</span>${idx < sentence.tokens.length - 1 ? ' ' : ''}`;
